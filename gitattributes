@@ -1,0 +1,5 @@
+*.png  diff=spaceman-diff
+*.jpg  diff=spaceman-diff
+*.jpeg diff=spaceman-diff
+*.gif  diff=spaceman-diff
+
