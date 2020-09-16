@@ -1,4 +1,5 @@
 set relativenumber number
+set mouse=a
 
 set diffopt+=vertical
 set clipboard+=unnamedplus
