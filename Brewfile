@@ -14,6 +14,7 @@ cask 'vlc'
 cask 'bettertouchtool'
 cask 'alfred'
 cask '1password'
+cask 'spotify'
 
 brew 'fzf'
 brew 'nvm'
