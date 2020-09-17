@@ -101,12 +101,12 @@ try
   " Mnemonic: *F*ind *B*uffers
   nnoremap <leader>fb :Denite buffer<CR>
   " Mnemonic: *F*ind by *G*reping
-  nnoremap <leader>fg :<C-U>Denite grep:. -no-empty -source-names=short -auto-action=preview<CR>
+  nnoremap <leader>fg :<C-U>Denite grep:. -no-empty -source-names=short<CR>
   " Mnemonic: *F*ind usages of *T*his file
-  vnoremap <leader>ft :<C-U>exec 'Denite -input="' . expand("%:t:r") . '" grep:. -no-start-filter' -auto-action=preview<CR>
+  vnoremap <leader>ft :<C-U>exec 'Denite -input="' . expand("%:t:r") . '" grep:. -no-start-filter'<CR>
 
   "Mnemonic: `j` is like clicking a link (down).
-  vnoremap <leader>j :<C-U>exec 'Denite -input="' . GetVisual() . '" grep:. -no-start-filter' -auto-action=preview<CR>
+  vnoremap <leader>j :<C-U>exec 'Denite -input="' . GetVisual() . '" grep:. -no-start-filter'<CR>
   nnoremap <leader>j :<C-U>DeniteCursorWord grep:. -no-start-filter<CR>
 
 catch
