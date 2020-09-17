@@ -5,6 +5,7 @@ try
     nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
     nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
     nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
+    nnoremap <silent><buffer><expr> P denite#do_map('do_action', 'preview')
     nnoremap <silent><buffer><expr> s denite#do_map('do_action', 'splitswitch')
     nnoremap <silent><buffer><expr> v denite#do_map('do_action', 'vsplitswitch')
     nnoremap <silent><buffer><expr> t denite#do_map('do_action', 'tabswitch')
@@ -27,6 +28,12 @@ try
     inoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
     imap <silent><buffer> <ESC> <Plug>(denite_filter_quit)
   endfunction
+
+	autocmd User denite-preview call s:denite_preview()
+	function! s:denite_preview() abort
+    setlocal relativenumber number
+	endfunction
+
 
   " Use ripgrep for searching current directory for files
   " By default, ripgrep will respect rules in .gitignore
@@ -58,10 +65,10 @@ try
   " Custom options for Denite
   let s:denite_options = {}
   let s:denite_options.default = {
-  \ 'auto_resize': 1,
-  \ 'prompt': '➜ ',
+  \ 'vertical_preview': v:true,
+  \ 'auto_highlight': v:true,
+  \ 'prompt': ' ',
   \ 'direction': 'dynamicbottom',
-  \ 'split': 'floating',
   \ 'highlight_mode_insert': 'Underline',
   \ 'highlight_mode_normal': 'CursorLine',
   \ 'highlight_prompt': 'Identifier',
@@ -72,7 +79,9 @@ try
   \ 'smartcase': v:true,
   \ 'start_filter': v:true,
   \ 'statusline': v:false,
-  \ 'default_action': 'switch'
+  \ 'default_action': 'switch',
+  \ 'split': 'horizontal',
+  \ 'preview_width': &columns / 2,
   \ }
 
   " Loop through denite options and enable them
@@ -92,12 +101,12 @@ try
   " Mnemonic: *F*ind *B*uffers
   nnoremap <leader>fb :Denite buffer<CR>
   " Mnemonic: *F*ind by *G*reping
-  nnoremap <leader>fg :<C-U>Denite grep:. -no-empty -source-names=short<CR>
+  nnoremap <leader>fg :<C-U>Denite grep:. -no-empty -source-names=short -auto-action=preview<CR>
   " Mnemonic: *F*ind usages of *T*his file
-  vnoremap <leader>ft :<C-U>exec 'Denite -input="' . expand("%:t:r") . '" grep:. -no-start-filter'<CR>
+  vnoremap <leader>ft :<C-U>exec 'Denite -input="' . expand("%:t:r") . '" grep:. -no-start-filter' -auto-action=preview<CR>
 
   "Mnemonic: `j` is like clicking a link (down).
-  vnoremap <leader>j :<C-U>exec 'Denite -input="' . GetVisual() . '" grep:. -no-start-filter'<CR>
+  vnoremap <leader>j :<C-U>exec 'Denite -input="' . GetVisual() . '" grep:. -no-start-filter' -auto-action=preview<CR>
   nnoremap <leader>j :<C-U>DeniteCursorWord grep:. -no-start-filter<CR>
 
 catch
