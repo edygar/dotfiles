@@ -12,13 +12,7 @@ endif
 
 set background=dark
 
-if has("gui_running")
-  if has("gui_gtk2")
-    set guifont=Fira\ Code\ h14
-  else
-    set guifont=Fira\ Code:h14
-  end
-endif
+let g:airline_powerline_fonts = 1
 
 " Highlight VCS conflict markers
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
