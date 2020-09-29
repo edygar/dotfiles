@@ -18,7 +18,7 @@ cask 'spotify'
 
 brew 'fzf'
 brew 'nvm'
-brew 'vim'
+brew 'vim', args: ['HEAD']
 brew 'neovim', args: ['HEAD']
 brew 'python3'
 brew 'unrar'

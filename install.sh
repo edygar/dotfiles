@@ -50,3 +50,5 @@ pip install --user pynvim
 
 npm install -g neovim
 npm install -g typescript typescript-language-server
+
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions

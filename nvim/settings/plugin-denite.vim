@@ -103,12 +103,11 @@ try
   " Mnemonic: *F*ind by *G*reping
   nnoremap <leader>fg :<C-U>Denite grep:. -no-empty -source-names=short<CR>
   " Mnemonic: *F*ind usages of *T*his file
-  vnoremap <leader>ft :<C-U>exec 'Denite -input="' . expand("%:t:r") . '" grep:. -no-start-filter'<CR>
+  vnoremap <leader>ft :Denite tab
 
   "Mnemonic: `j` is like clicking a link (down).
   vnoremap <leader>j :<C-U>exec 'Denite -input="' . GetVisual() . '" grep:. -no-start-filter'<CR>
   nnoremap <leader>j :<C-U>DeniteCursorWord grep:. -no-start-filter<CR>
-
 catch
   echo 'Denite not installed. It should work after running :PlugInstall'
 endtry
