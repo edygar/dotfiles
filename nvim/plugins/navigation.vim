@@ -8,3 +8,4 @@ else
 endif
 
 Plug 'scrooloose/nerdtree'
+Plug 'neoclide/coc-denite'

@@ -3,13 +3,25 @@ set hidden
 
 " coc config
 let g:coc_global_extensions = [
-  \ 'coc-snippets',
-  \ 'coc-pairs',
-  \ 'coc-tsserver',
-  \ 'coc-eslint', 
-  \ 'coc-prettier', 
-  \ 'coc-json', 
-  \ ]
+\ 'coc-eslint',
+\ 'coc-tsserver',
+\ 'coc-emmet',
+\ 'coc-css',
+\ 'coc-html',
+\ 'coc-json',
+\ 'coc-yank',
+\ 'coc-prettier',
+\ 'coc-svg',
+\ 'coc-lists',
+\ 'coc-snippets',
+\ 'coc-git',
+\ 'coc-pairs',
+\ 'coc-marketplace',
+\ 'coc-stylelint',
+\ 'coc-jest',
+\ 'coc-project',
+\ 'coc-vimlsp',
+\ ]
 
 " Some servers have issues with backup files, see #649.
 set nobackup
@@ -59,6 +71,10 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Use `g[` and `g]` to navigate forward and backward
+nmap <silent> g[ <C-O>
+nmap <silent> g] <C-I>
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
