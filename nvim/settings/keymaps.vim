@@ -73,10 +73,9 @@ nnoremap tk  :tabnext<CR>
 nnoremap tj  :tabprev<CR>
 nnoremap tl  :tablast<CR>
 nnoremap tt  :tabedit<Space>
-nnoremap tn  :tabnext<Space>
 nnoremap tm  :tabm<Space>
 nnoremap td  :tabclose<CR>
-" Alternatively use
-"nnoremap th :tabnext<CR>
-"nnoremap tl :tabprev<CR>
-"nnoremap tn :tabnew<CR>
+nnoremap tn :tabnew<CR>
+nnoremap tc :tabclose<CR>
+
+noremap <leader>gg :tab term lazygit<CR>
