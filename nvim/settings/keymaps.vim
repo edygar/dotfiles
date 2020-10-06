@@ -68,6 +68,8 @@ if has('macos')
   map <silent> <leader>hp :!open -a Safari %<CR><CR>
 endif
 
+nnoremap <D-s> :w<CR>
+
 nnoremap th  :tabfirst<CR>
 nnoremap tk  :tabnext<CR>
 nnoremap tj  :tabprev<CR>
@@ -75,7 +77,26 @@ nnoremap tl  :tablast<CR>
 nnoremap tt  :tabedit<Space>
 nnoremap tm  :tabm<Space>
 nnoremap td  :tabclose<CR>
-nnoremap tn :tabnew<CR>
 nnoremap tc :tabclose<CR>
 
-noremap <leader>gg :tab term lazygit<CR>
+
+nnoremap t] :tabnext<CR>
+nnoremap t[ :tabprevious<CR>
+nnoremap tn :tabnext<CR>
+nnoremap tp :tabprevious<CR>
+nnoremap tk  :tabnext<CR>
+nnoremap tj  :tabprev<CR>
+
+noremap t1 1gt
+noremap t2 2gt
+noremap t3 3gt
+noremap t4 4gt
+noremap t5 5gt
+noremap t6 6gt
+noremap t7 7gt
+noremap t8 8gt
+noremap t9 9gt
+noremap t0 :tablast<cr>
+
+noremap <leader>gg :tabedit<CR>:term lazygit<CR>i
+noremap <leader>tt :tabedit<CR>:term<CR>i
