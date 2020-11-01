@@ -1,8 +1,5 @@
 language: generic
 
-services:
-  - docker
-
 git:
   depth: 1
 
