@@ -74,7 +74,6 @@ nnoremap th  :tabfirst<CR>
 nnoremap tk  :tabnext<CR>
 nnoremap tj  :tabprev<CR>
 nnoremap tl  :tablast<CR>
-nnoremap tt  :tabedit<Space>
 nnoremap tm  :tabm<Space>
 nnoremap td  :tabclose<CR>
 nnoremap tc :tabclose<CR>
@@ -84,8 +83,6 @@ nnoremap t] :tabnext<CR>
 nnoremap t[ :tabprevious<CR>
 nnoremap tn :tabnext<CR>
 nnoremap tp :tabprevious<CR>
-nnoremap tk  :tabnext<CR>
-nnoremap tj  :tabprev<CR>
 
 noremap t1 1gt
 noremap t2 2gt

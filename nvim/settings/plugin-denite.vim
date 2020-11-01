@@ -3,9 +3,7 @@ try
   autocmd FileType denite call s:denite_my_settings()
   function! s:denite_my_settings() abort
     nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
-    nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
     nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
-    nnoremap <silent><buffer><expr> P denite#do_map('do_action', 'preview')
     nnoremap <silent><buffer><expr> s denite#do_map('do_action', 'splitswitch')
     nnoremap <silent><buffer><expr> v denite#do_map('do_action', 'vsplitswitch')
     nnoremap <silent><buffer><expr> t denite#do_map('do_action', 'tabswitch')
@@ -19,7 +17,6 @@ try
   function! s:denite_filter_my_settings() abort
     setlocal nonumber norelativenumber
     inoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
-    inoremap <silent><buffer><expr> <C-d> denite#do_map('do_action', 'delete')
     inoremap <silent><buffer><expr> <C-p> denite#do_map('do_action', 'preview')
     inoremap <silent><buffer><expr> <C-s> denite#do_map('do_action', 'splitswitch')
     inoremap <silent><buffer><expr> <C-v> denite#do_map('do_action', 'vsplitswitch')
@@ -27,6 +24,19 @@ try
     inoremap <silent><buffer><expr> <C-o> denite#do_map('do_action', 'switch')
     inoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
     imap <silent><buffer> <ESC> <Plug>(denite_filter_quit)
+    inoremap <silent><buffer><expr> <C-Space> denite#do_map('do_action', 'preview')
+    inoremap <silent><buffer> <C-j>
+      \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'filter')<CR>
+    inoremap <silent><buffer> <C-n>
+      \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'filter')<CR>
+    inoremap <silent><buffer> <C-k>
+      \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 1, 'filter')<CR>
+    inoremap <silent><buffer> <C-p>
+      \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 1, 'filter')<CR>
+    inoremap <silent><buffer> <C-u>
+      \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 12, 'filter')<CR>
+    inoremap <silent><buffer> <C-d>
+      \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 12, 'filter')<CR>
   endfunction
 
 	autocmd User denite-preview call s:denite_preview()
@@ -34,7 +44,23 @@ try
     setlocal relativenumber number
 	endfunction
 
-
+  function! s:DeniteMoveCursorCandidateWindow(dir, lines, mode) abort
+    " noautocmd is needed to preserve proper cursorline highlight
+    if a:mode ==# 'filter'
+      noautocmd call win_gotoid(win_findbuf(g:denite#_filter_parent)[0])
+    endif
+    execute 'normal! ' . a:lines . a:dir
+    for nr in range(1, winnr('$'))
+      if getwinvar(nr, '&previewwindow') == 1
+        call denite#call_map('do_action', 'preview')
+        break
+      endif
+    endfor
+    if a:mode ==# 'filter'
+      noautocmd call win_gotoid(g:denite#_filter_winid)
+      startinsert!
+    endif
+  endfunction
   " Use ripgrep for searching current directory for files
   " By default, ripgrep will respect rules in .gitignore
   "   --files: Print each file that would be searched (but don't search)
@@ -102,8 +128,6 @@ try
   nnoremap <leader>fb :Denite buffer<CR>
   " Mnemonic: *F*ind by *G*reping
   nnoremap <leader>fg :<C-U>Denite grep:. -no-empty -source-names=short<CR>
-  " Mnemonic: *F*ind usages of *T*his file
-  vnoremap <leader>ft :Denite tab
 
   "Mnemonic: `j` is like clicking a link (down).
   vnoremap <leader>j :<C-U>exec 'Denite -input="' . GetVisual() . '" grep:. -no-start-filter'<CR>
