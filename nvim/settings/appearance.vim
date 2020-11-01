@@ -1,8 +1,3 @@
-" colorscheme base16-lfilho
-" let base16colorspace=256
-" let g:hybrid_custom_term_colors = 1
-" let g:hybrid_reduced_contrast = 1
-"
 set encoding=UTF-8
 
 
@@ -12,7 +7,7 @@ endif
 
 set background=dark
 
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 
 " Highlight VCS conflict markers
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'

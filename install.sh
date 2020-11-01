@@ -1,6 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/sh
+if [ ! -d "$HOME/.dotfiles" ]; then
+    echo "=== Installing .dotfiles for the first time ==="
+    git clone --depth=1 https://github.com/edygar/dotfiles.git "$HOME/.dotfiles"
+    cd "$HOME/.dotfiles"
+fi
 
-echo "=== Installing Brew"
+echo "=== Installing Brew ==="
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
 cd ~/.dotfiles
@@ -32,7 +37,7 @@ done;
 
 source ~/.zshrc
 
-echo "=== Installing dependencies ==="
+echo "=== Installing Node ==="
 if [ ! -f "~/.nvm" ]; then
     mkdir ~/.nvm
 fi
@@ -41,14 +46,16 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
+# Installing Node
 nvm install node
 nvm use node
 nvm alias default node
 
+echo "=== Installing neovim dependencies ==="
+# Installing neovim's dependencies
 sudo gem install neovim
 pip install --user pynvim
+npm install -g neovim prettier typescript typescript-language-server
 
-npm install -g neovim
-npm install -g typescript typescript-language-server
-
+echo "=== Fetching Oh-My-Zsh custom plugins ==="
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
