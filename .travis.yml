@@ -1,0 +1,14 @@
+language: generic
+
+services:
+  - docker
+
+git:
+  depth: 1
+
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10.1
+
+install: sh -c "`curl -fsSL https://raw.githubusercontent.com/edygar/dotfiles/master/install.sh`"
