@@ -3,6 +3,8 @@ if [ ! -d "$HOME/.dotfiles" ]; then
     echo "=== Installing .dotfiles for the first time ==="
     git clone --depth=1 https://github.com/edygar/dotfiles.git "$HOME/.dotfiles"
     cd "$HOME/.dotfiles"
+else
+    cd "$HOME/.dotfiles"
 fi
 
 echo "=== Installing Brew ==="
