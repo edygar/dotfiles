@@ -1,5 +1,8 @@
 #!/bin/sh
 if [ ! -d "$HOME/.dotfiles" ]; then
+    echo "=== Install devtools if needed ==="
+    xcode-select --install
+
     echo "=== Installing .dotfiles for the first time ==="
     git clone --depth=1 https://github.com/edygar/dotfiles.git "$HOME/.dotfiles"
     cd "$HOME/.dotfiles"
@@ -7,15 +10,12 @@ else
     cd "$HOME/.dotfiles"
 fi
 
-
-echo "=== Install devtools needed ==="
-xcode-select --install
-
 echo "=== Installing Brew ==="
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
 cd ~/.dotfiles
 echo "=== Installing bundled applications ==="
+brew update
 brew bundle
 
 echo "=== Installing ZSH ==="

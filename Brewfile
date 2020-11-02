@@ -4,6 +4,7 @@ tap 'homebrew/cask-fonts'
 tap 'homebrew/core'
 tap 'neovim/neovim'
 
+cask 'docker'
 cask 'slack'
 cask 'google-chrome'
 cask 'firefox'
