@@ -7,6 +7,10 @@ else
     cd "$HOME/.dotfiles"
 fi
 
+
+echo "=== Install devtools needed ==="
+xcode-select --install
+
 echo "=== Installing Brew ==="
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
