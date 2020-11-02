@@ -8,4 +8,4 @@ matrix:
     - os: osx
       osx_image: xcode10.1
 
-install: sh -c "`curl -fsSL https://raw.githubusercontent.com/edygar/dotfiles/master/install.sh`"
+install: sh -c "yes | `curl -fsSL https://raw.githubusercontent.com/edygar/dotfiles/master/install.sh`"
