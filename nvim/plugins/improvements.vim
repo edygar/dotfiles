@@ -9,5 +9,5 @@ Plug 'tpope/vim-surround' " quoting/parenthesizing made simple
 Plug 'vim-scripts/camelcasemotion' " Motion through CamelCaseWords and underscore_notation
 Plug 'vim-scripts/lastpos.vim' " Passive. Last position jump improved.
 Plug 'vim-scripts/matchit.zip' "extended % matching for HTML, LaTeX, and many other languages
-
+Plug 'terryma/vim-multiple-cursors'
 
