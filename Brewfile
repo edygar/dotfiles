@@ -18,7 +18,7 @@ cask '1password'
 cask 'spotify'
 
 brew 'fzf'
-brew 'nvm'
+brew 'nvim', args: ['HEAD']
 brew 'vim'
 brew 'neovim'
 brew 'python3'
