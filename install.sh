@@ -61,7 +61,7 @@ echo "=== Installing neovim dependencies ==="
 # Installing neovim's dependencies
 sudo gem install neovim
 pip install --user pynvim
-npm install -g neovim prettier typescript typescript-language-server eslint markdownlint prettier-eslint
+npm install -g neovim prettier typescript typescript-language-server eslint eslint_d markdownlint prettier-eslint
 
 echo "=== Fetching Oh-My-Zsh custom plugins ==="
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
