@@ -2,6 +2,9 @@
 " General vim sanity improvements
 " ========================================
 "
+imap <C-s> <esc>:w<CR>i
+nmap <C-s> :w<CR>
+vmap <C-s> <esc>:w<CR>gv
 
 "make Y consistent with C and D
 nnoremap Y y$
