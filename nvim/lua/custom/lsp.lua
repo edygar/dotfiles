@@ -25,31 +25,12 @@ local eslint = {
   formatStdin = true
 }
 
-local function eslint_config_exists()
-  local eslintrc = vim.fn.glob(".eslintrc*", 0, 1)
-
-  if not vim.tbl_isempty(eslintrc) then
-    return true
-  end
-
-  if vim.fn.filereadable("package.json") then
-    if vim.fn.json_decode(vim.fn.readfile("package.json"))["eslintConfig"] then
-      return true
-    end
-  end
-
-  return false
-end
-
 lspconfig.efm.setup {
   on_attach = function(client)
     client.resolved_capabilities.document_formatting = true
     client.resolved_capabilities.goto_definition = false
   end,
   root_dir = function()
-    if not eslint_config_exists() then
-      return nil
-    end
     return vim.fn.getcwd()
   end,
   settings = {
@@ -73,10 +54,10 @@ lspconfig.efm.setup {
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-vim.lsp.diagnostic.on_publish_diagnostics, {
-  signs = true,
-  underline = true,
-  update_in_insert = true,
-  virtual_text = false,
-}
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    signs = true,
+    underline = true,
+    update_in_insert = true,
+    virtual_text = false,
+  }
 )

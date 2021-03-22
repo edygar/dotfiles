@@ -46,8 +46,8 @@ tnoremap <Esc><Esc> <C-\><C-n>
 " Please also see the mappings for navigating out of a terminal window in
 " plugin-tmux-navigator.vim file
 "
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-L> <C-W>l
-nnoremap <C-H> <C-W>h
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-l> <C-W>l
+nmap <C-h> <C-W>h
 
