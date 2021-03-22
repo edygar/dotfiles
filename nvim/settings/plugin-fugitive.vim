@@ -23,7 +23,6 @@ nnoremap <leader>gb :Gblame<cr>
 nnoremap <leader>gco :Gcheckout<cr>
 nnoremap <leader>gci :Gcommit<cr>
 nnoremap <leader>gm :Gmove
-nnoremap <leader>gr :Gremove<cr>
 
 " For fugitive.git, dp means :diffput. Define dg to mean :diffget
 nnoremap <silent> <leader>dg :diffget<CR>

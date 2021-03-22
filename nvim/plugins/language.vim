@@ -9,6 +9,8 @@ Plug 'tjdevries/lsp_extensions.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'haorenW1025/diagnostic-nvim'
 
+Plug 'sbdchd/neoformat'
+
 Plug 'craigemery/vim-autotag' " Automatically discover and update ctags files on save
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 Plug 'pangloss/vim-javascript'
