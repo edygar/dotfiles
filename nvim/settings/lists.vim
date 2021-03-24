@@ -1,11 +1,8 @@
 nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
-nnoremap <C-[> :cprev<CR>
-nnoremap <C-]> :cnext<CR>
-
-nmap <silent> g[ <C-O>
-nmap <silent> g] <C-I>
+nnoremap g[ <C-O>
+nnoremap g] <C-I>
 
 augroup vimrcQfClose
     autocmd!

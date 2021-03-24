@@ -17,7 +17,8 @@ function! CloseWindowOrKillBuffer()
   endif
 endfunction
 
-nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
+
+nnoremap <silent> Q :q<CR>
 
 """"""""""""""""
 " Easier window resizing

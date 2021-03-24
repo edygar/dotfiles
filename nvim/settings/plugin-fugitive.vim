@@ -15,14 +15,14 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 
 " Mappings
 " ============================
-nnoremap <leader>gd :Gdiff<cr>
-nnoremap <leader>gs :Gstatus<cr>
-nnoremap <leader>gw :Gwrite<cr>
-nnoremap <leader>ga :Gadd<cr>
-nnoremap <leader>gb :Gblame<cr>
-nnoremap <leader>gco :Gcheckout<cr>
-nnoremap <leader>gci :Gcommit<cr>
-nnoremap <leader>gm :Gmove
+nnoremap <leader>gd :Git diff<cr>
+nnoremap <leader>gs :Git status<cr>
+nnoremap <leader>gw :Git write<cr>
+nnoremap <leader>ga :Git add<cr>
+nnoremap <leader>gb :Git blame<cr>
+nnoremap <leader>gco :Git checkout<cr>
+nnoremap <leader>gci :Git commit<cr>
+nnoremap <leader>gm :Git move
 
 " For fugitive.git, dp means :diffput. Define dg to mean :diffget
 nnoremap <silent> <leader>dg :diffget<CR>
