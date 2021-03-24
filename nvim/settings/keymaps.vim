@@ -31,7 +31,7 @@ nnoremap <leader>. '.
 "
 " the first quote will autoclose so you'll get 'foo' and hitting <c-a> will
 " put the cursor right after the quote
-imap <C-a> <esc>wa
+imap <C-a> <esc>ea
 
 " ============================
 " Shortcuts for everyday tasks
@@ -52,7 +52,7 @@ nmap <silent> <leader>vc yy:<C-f>p<C-c><CR>
 "(v)im (r)eload
 nmap <silent> <leader>vr :so %<CR>
 
-" Type ,hl to toggle highlighting on/off, and show current value.
+" Type <space>hl to toggle highlighting on/off, and show current value.
 noremap <leader>hl :set hlsearch! hlsearch?<CR>
 
 " These are very similar keys. Typing 'a will jump to the line in the current
@@ -73,6 +73,7 @@ endif
 
 nnoremap <D-s> :w<CR>
 
+"{{{ Tab Management
 nnoremap th  :tabfirst<CR>
 nnoremap tk  :tabnext<CR>
 nnoremap tj  :tabprev<CR>
@@ -100,3 +101,31 @@ noremap t0 :tablast<cr>
 
 noremap <leader>gg :tabedit<CR>:term lazygit<CR>i
 noremap <leader>tt :tabedit<CR>:term<CR>i
+"}}}
+
+"{{{ CHAD Tree
+nmap <silent><leader>p <cmd>CHADopen<cr>
+"}}}
+
+""{{{ Buffer managament
+nmap <Leader>b [buffer]
+
+map <silent> [buffer]d :Bdelete<CR>
+map <silent> [buffer]D :bd<CR>
+"}}}
+"
+""{{{ Easy align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+"}}}
+
+"{{{ Hop.nvim
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+"}}}

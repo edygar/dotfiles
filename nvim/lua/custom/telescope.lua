@@ -23,6 +23,11 @@ require('telescope').setup{
         ["<C-s>"] = actions.select_horizontal,
         ["<C-n>"] = actions.move_selection_next,
         ["<C-p>"] = actions.move_selection_previous
+      },
+      i = {
+        ["<C-s>"] = actions.select_horizontal,
+        ["<C-n>"] = actions.move_selection_next,
+        ["<C-p>"] = actions.move_selection_previous
       }
     }
   }

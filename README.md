@@ -9,7 +9,7 @@
 
 ---
 
-This repository was highly inspirated by [Luiz Filho's dotfiles](https://github.com/lfilho/dotfiles).
+This repository was highly inspirated by [Luiz Filho's dotfiles](https://github.com/lfilho/dotfiles) and by (tomaskallup)(https://github.com/tomaskallup/dotfiles).
 
 ## Installation
 
