@@ -43,7 +43,7 @@ Plug 'kyazdani42/nvim-web-devicons' " Icons
 Plug 'itchyny/lightline.vim' " Nicer bar
 Plug 'vim-airline/vim-airline' " Important info on bars
 Plug 'flazz/vim-colorschemes'
-Plug 'gruvbox-community/gruvbox' " Colorscheme
+Plug 'morhetz/gruvbox' " My current favorite colorscheme
 Plug 'szw/vim-maximizer' " Maximizes and restores the current window
 
 "======================================="
@@ -51,6 +51,15 @@ Plug 'szw/vim-maximizer' " Maximizes and restores the current window
 "======================================="
 Plug 'powerman/vim-plugin-AnsiEsc' " Ensure ansi color codes are handled
 Plug 'sheerun/vim-polyglot'
+Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'mattn/emmet-vim'
+Plug 'plasticboy/vim-markdown'
+Plug 'jxnblk/vim-mdx-js'
+Plug 'jparise/vim-graphql' 
 
 "======================================="
 "      IDE (completion, debugging)      "

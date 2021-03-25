@@ -1,5 +1,9 @@
 {
   "coc.preferences.formatOnSaveFiletypes": ["mdx", "javascript", "javascriptreact", "typescript", "typescriptreact", "css", "markdown", "graphql"],
   "coc.preferences.formatOnType": true,
-  "tsserver.npm": "/usr/bin/npm"
+  "tsserver.npm": "/usr/bin/npm",
+	"list.normalMappings": {
+		"<C-n>": "normal:j",
+		"<C-p>": "normal:k"
+	}
 }

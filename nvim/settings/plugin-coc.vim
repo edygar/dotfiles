@@ -139,9 +139,10 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-hi default link CocWarningVirtualText CocWarningSign
-
-hi CocWarningSign  ctermfg=Brown guifg=Orange
+hi CocInfoFloat guifg=#E8D4AA guibg=#000000
+hi CocErrorFloat guifg=#FF4035 guibg=#000000
+hi CocWarningFloat guifg=#FFB43C guibg=#000000
+hi CocHintFloat guifg=#E8D4AA guibg=#000000
 
 " nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
 " nnoremap <silent> gD :lua vim.lsp.buf.type_definition()<CR>
