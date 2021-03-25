@@ -103,10 +103,6 @@ noremap <leader>gg :tabedit<CR>:term lazygit<CR>i
 noremap <leader>tt :tabedit<CR>:term<CR>i
 "}}}
 
-"{{{ CHAD Tree
-nmap <silent><leader>p <cmd>CHADopen<cr>
-"}}}
-
 ""{{{ Buffer managament
 nmap <Leader>b [buffer]
 
