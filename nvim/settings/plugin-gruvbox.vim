@@ -5,3 +5,9 @@ endif
 
 let g:gruvbox_italic=1
 let g:gruvbox_italicize_comments=0
+
+
+" Making webicons' folder not purple / green
+autocmd filetype nerdtree hi NERDTreeFlags guifg=#F5C06F ctermfg=gray
+autocmd filetype nerdtree hi Directory guifg=#F#F5C06F5C06F ctermfg=gray
+autocmd filetype nerdtree hi NERDTreeDir guifg=#F5C06F ctermfg=gray
