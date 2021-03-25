@@ -1,0 +1,5 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": ["mdx", "javascript", "javascriptreact", "typescript", "typescriptreact", "css", "markdown", "graphql"],
+  "coc.preferences.formatOnType": true,
+  "tsserver.npm": "/usr/bin/npm"
+}

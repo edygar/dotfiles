@@ -31,7 +31,7 @@ nnoremap <leader>. '.
 "
 " the first quote will autoclose so you'll get 'foo' and hitting <c-a> will
 " put the cursor right after the quote
-imap <C-a> <esc>ea
+imap <C-a> <esc>lla
 
 " ============================
 " Shortcuts for everyday tasks
