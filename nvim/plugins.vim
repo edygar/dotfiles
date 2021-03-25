@@ -50,23 +50,15 @@ Plug 'szw/vim-maximizer' " Maximizes and restores the current window
 "             Syntax plugins            "
 "======================================="
 Plug 'powerman/vim-plugin-AnsiEsc' " Ensure ansi color codes are handled
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Godly highlight (not yet)
-Plug 'nvim-treesitter/playground'
+Plug 'sheerun/vim-polyglot'
 
 "======================================="
 "      IDE (completion, debugging)      "
 "======================================="
-Plug 'puremourning/vimspector'
-Plug 'plytophogy/vim-virtualenv' " Virtual env
-Plug 'neovim/nvim-lspconfig' " LSP configurations for builtin LSP client
-Plug 'RishabhRD/nvim-lsputils' " Enhance built in LSP functions
-Plug 'hrsh7th/nvim-compe' " LSP Completion
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 
-if !&diff
-    "Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-endif
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 "======================================="
 "           Workflow plugins            "
