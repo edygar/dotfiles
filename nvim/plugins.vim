@@ -64,11 +64,19 @@ Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 "           Workflow plugins            "
 "======================================="
 Plug 'mbbill/undotree' " visualize your Vim undo tree
-Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'} " Explorer
+
+" File tree
+Plug 'scrooloose/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+" Git
 Plug 'gregsexton/gitv', {'on': ['Gitv']} " gitk for vim. Extends vim fugitive
 Plug 'tpope/vim-fugitive' " Git commands and workflow for vim
 Plug 'tpope/vim-git' " syntax, indent, and filetype plugin files for git related buffers
 
+" Telescope
 Plug 'nvim-telescope/telescope.nvim' " Better than fzf, amazing search
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
