@@ -24,13 +24,13 @@ Plug 'RishabhRD/popfix' " Required by lsputils
 Plug 'tpope/vim-repeat' " Use `.` to repeat surrount and other commands
 Plug 'tpope/vim-surround' " (o_o) -> ca([ -> [o_o]
 Plug 'scrooloose/nerdcommenter' " Comments
-Plug 'jiangmiao/auto-pairs' " Matching parens, quotes etc.
 Plug 'vim-scripts/lastpos.vim' " Passive. Last position jump improved.
 Plug 'nelstrom/vim-visual-star-search' " Start a * or # search from a visual block
 Plug 'tpope/vim-unimpaired' " Mappings for e[ e] q[ q] l[ l], etc
 Plug 'terryma/vim-multiple-cursors' " Multiple-cursor a la Sublime Text
 Plug 'mattn/emmet-vim' " Expansion for HTML 
 
+Plug 'austintaylor/vim-indentobject' " indentation as textobj
 Plug 'kana/vim-textobj-user' " required by the some of the other textobjects above
 Plug 'lucapette/vim-textobj-underscore'
 Plug 'wellle/targets.vim' " provides additional text objects (see their full description!)
@@ -52,7 +52,6 @@ Plug 'szw/vim-maximizer' " Maximizes and restores the current window
 Plug 'powerman/vim-plugin-AnsiEsc' " Ensure ansi color codes are handled
 Plug 'sheerun/vim-polyglot'
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
-Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'

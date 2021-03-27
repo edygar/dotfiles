@@ -22,3 +22,6 @@ hi Visual term=inverse ctermbg=247 ctermfg=NONE
 
 " Highlight current line number
 hi CursorLineNR cterm=bold ctermfg=1
+
+autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
