@@ -4,8 +4,9 @@ lua require('custom/telescope')
 nmap <Leader>f [telescope]
 nnoremap [telescope]f <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap [telescope]g <cmd>lua require('telescope.builtin').live_grep()<cr>
-nnoremap [telescope]b <cmd>lua require('telescope.builtin').buffers()<cr>
-nnoremap [telescope]e <cmd>lua require('telescope.builtin').file_browser()<cr>
+nnoremap [telescope]b <cmd>lua require('custom/telescope').buffers()<cr>
+nnoremap [telescope]e <cmd>lua require('custom/telescope').browse_current_folder()<CR>
+nnoremap [telescope]E <cmd>lua require('telescope.builtin').file_browser()<cr>
 nnoremap [telescope]h <cmd>lua require('telescope.builtin').help_tags()<cr>
 nnoremap [telescope]c <cmd>lua require('telescope.builtin').commands()<cr>
 nnoremap [telescope]k <cmd>lua require('telescope.builtin').keymaps()<cr>

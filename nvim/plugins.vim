@@ -27,6 +27,7 @@ Plug 'scrooloose/nerdcommenter' " Comments
 Plug 'vim-scripts/lastpos.vim' " Passive. Last position jump improved.
 Plug 'nelstrom/vim-visual-star-search' " Start a * or # search from a visual block
 Plug 'tpope/vim-unimpaired' " Mappings for e[ e] q[ q] l[ l], etc
+Plug 'jiangmiao/auto-pairs' " Matching parens, quotes etc.
 Plug 'terryma/vim-multiple-cursors' " Multiple-cursor a la Sublime Text
 Plug 'mattn/emmet-vim' " Expansion for HTML 
 
@@ -43,30 +44,27 @@ Plug 'kyazdani42/nvim-web-devicons' " Icons
 Plug 'itchyny/lightline.vim' " Nicer bar
 Plug 'vim-airline/vim-airline' " Important info on bars
 Plug 'flazz/vim-colorschemes'
-Plug 'morhetz/gruvbox' " My current favorite colorscheme
+Plug 'gruvbox-community/gruvbox' " Colorscheme
 Plug 'szw/vim-maximizer' " Maximizes and restores the current window
 
 "======================================="
 "             Syntax plugins            "
 "======================================="
-Plug 'powerman/vim-plugin-AnsiEsc' " Ensure ansi color codes are handled
-Plug 'sheerun/vim-polyglot'
-Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
-Plug 'mxw/vim-jsx'
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
+Plug 'powerman/vim-plugin-AnsiEsc' " Ensure ansi color codes are handled                
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Godly highlight (not yet)
+Plug 'nvim-treesitter/playground'                                                       
 Plug 'mattn/emmet-vim'
-Plug 'plasticboy/vim-markdown'
-Plug 'jxnblk/vim-mdx-js'
-Plug 'jparise/vim-graphql' 
 
 "======================================="
 "      IDE (completion, debugging)      "
 "======================================="
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
-
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neovim/nvim-lspconfig' " LSP configurations for builtin LSP client
+Plug 'kabouzeid/nvim-lspinstall' " LSP automatic installation
+Plug ('h-michael/lsp-ext.nvim')
+Plug 'RishabhRD/nvim-lsputils' " Enhance built in LSP functions
+Plug 'hrsh7th/nvim-compe' " LSP Completion
 
 "======================================="
 "           Workflow plugins            "
