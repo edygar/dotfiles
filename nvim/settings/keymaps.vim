@@ -82,6 +82,7 @@ nnoremap tl  :tablast<CR>
 nnoremap tm  :tabm<Space>
 nnoremap td  :tabclose<CR>
 nnoremap tc :tabclose<CR>
+nnoremap tt :tabedit %<CR>
 
 
 nnoremap t] :tabnext<CR>

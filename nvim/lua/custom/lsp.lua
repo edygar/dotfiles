@@ -14,7 +14,7 @@ end
 
 -- TypeScript setup
 customizations.typescript = {
-    on_attach = function(client, bufnr)
+    on_attach = function(client)
         -- This makes sure tsserver is not used for formatting (I prefer prettier)
         client.resolved_capabilities.document_formatting = false
     end,
@@ -26,13 +26,7 @@ customizations.typescript = {
 
 -- Deno lsp
 customizations.deno = {
-  on_attach = function(client, bufnr)
-    -- This makes sure tsserver is not used for formatting (I prefer prettier)
-    client.resolved_capabilities.document_formatting = false
-  end,
-
   root_dir = lspconfig.util.root_pattern("mod.ts"),
-  settings = {documentFormatting = false},
   capabilities = capabilities,
 }
 
