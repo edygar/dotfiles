@@ -9,7 +9,8 @@ nnoremap <silent> gh <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gsd <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 nnoremap <silent> gl <cmd>lua vim.lsp.diagnostic.set_loclist({open_loclist = true})<CR>
 nnoremap <silent> gq <cmd>lua vim.lsp.diagnostic.set_qflist({open_loclist = true})<CR>
-nnoremap <silent> gf <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <silent> <leader>= <cmd>lua vim.lsp.buf.formatting()<CR>
+xnoremap <silent> <leader>= <cmd>lua vim.lsp.buf.range_formatting()<CR>
 
 nnoremap <silent> gca <cmd>lua vim.lsp.buf.code_action()<CR>
 nnoremap <silent> <leader>a <cmd>lua vim.lsp.buf.code_action()<CR>
@@ -30,4 +31,6 @@ augroup END
 augroup filetype_jsx
     autocmd!
     autocmd FileType javascript set filetype=typescriptreact
+    autocmd FileType javascript LspStart typescript
+    autocmd FileType javascript LspStart efm
 augroup END
