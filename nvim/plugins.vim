@@ -41,7 +41,6 @@ Plug 'wellle/targets.vim' " provides additional text objects (see their full des
 "======================================="
 Plug 'ryanoasis/vim-devicons' " Icons
 Plug 'kyazdani42/nvim-web-devicons' " Icons
-Plug 'itchyny/lightline.vim' " Nicer bar
 Plug 'vim-airline/vim-airline' " Important info on bars
 Plug 'flazz/vim-colorschemes'
 Plug 'gruvbox-community/gruvbox' " Colorscheme
