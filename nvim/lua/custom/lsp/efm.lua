@@ -24,7 +24,7 @@ return {
         client.resolved_capabilities.goto_definition = false
     end,
 
-    root_dir = lspconfig.util.root_pattern("package.json", "yarn.lock", "lerna.json", ".git"),
+    root_dir = lspconfig.util.root_pattern("package.json", "yarn.lock", "lerna.json"),
     filetypes = vim.tbl_keys(languages),
     init_options = {
       documentFormatting = true,

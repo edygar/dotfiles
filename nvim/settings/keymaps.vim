@@ -2,6 +2,8 @@
 " General vim sanity improvements
 " ========================================
 "
+"
+map <silent> <f5> :e! %<cr>
 imap <C-s> <esc>:w<CR>i
 nmap <C-s> :w<CR>
 nmap <leader>w :w<CR>

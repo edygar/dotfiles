@@ -39,11 +39,12 @@ Plug 'wellle/targets.vim' " provides additional text objects (see their full des
 "======================================="
 "               UI plugins              "
 "======================================="
+Plug 'gruvbox-community/gruvbox' " Colorscheme
 Plug 'ryanoasis/vim-devicons' " Icons
 Plug 'kyazdani42/nvim-web-devicons' " Icons
-Plug 'vim-airline/vim-airline' " Important info on bars
+Plug 'itchyny/lightline.vim' " Nicer bar
+Plug 'shinchu/lightline-gruvbox.vim' " Nicer bar theme
 Plug 'flazz/vim-colorschemes'
-Plug 'gruvbox-community/gruvbox' " Colorscheme
 Plug 'szw/vim-maximizer' " Maximizes and restores the current window
 
 "======================================="
@@ -69,6 +70,7 @@ Plug 'hrsh7th/nvim-compe' " LSP Completion
 "           Workflow plugins            "
 "======================================="
 Plug 'mbbill/undotree' " visualize your Vim undo tree
+Plug 'skwp/greplace.vim' " search and edit globally
 
 " File tree
 Plug 'scrooloose/nerdtree'
