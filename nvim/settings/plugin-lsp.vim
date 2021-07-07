@@ -23,10 +23,13 @@ inoremap <silent> <C-k> <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> [g <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
 nnoremap <silent> ]g <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
-augroup LSP_CUSTOMIZATION
-  autocmd! *
-  autocmd BufWritePre * lua vim.lsp.buf.formatting()
+
+augroup LSP_FORMATTING
+  autocmd!
+  autocmd BufWritePre * if get(b:, 'auto_formatting_enabled', 1) | execute 'lua vim.lsp.buf.formatting()' | endif
 augroup END
+
+nnoremap <silent> <f4> :<c-u>let b:auto_formatting_enabled = !get(b:, 'auto_formatting_enabled', 1)<cr>
 
 augroup filetype_jsx
     autocmd!

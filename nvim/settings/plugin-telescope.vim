@@ -11,7 +11,6 @@ nnoremap [telescope]h <cmd>lua require('telescope.builtin').help_tags()<cr>
 nnoremap [telescope]c <cmd>lua require('telescope.builtin').commands()<cr>
 nnoremap [telescope]k <cmd>lua require('telescope.builtin').keymaps()<cr>
 
-
 nnoremap [telescope]q <cmd>lua require('telescope.builtin').quickfix()<cr>
 nnoremap [telescope]l <cmd>lua require('telescope.builtin').loclist()<cr>
 nnoremap [telescope]r <cmd>lua require('telescope.builtin').registers()<cr>
