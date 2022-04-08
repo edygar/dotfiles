@@ -18,6 +18,8 @@
 	<true/>
 	<key>ClosingHotkeySwitchesSpaces</key>
 	<true/>
+	<key>Command</key>
+	<string>/usr/local/bin/zsh</string>
 	<key>CommandSelection</key>
 	<true/>
 	<key>Control</key>
@@ -1491,7 +1493,7 @@
 			<key>Columns</key>
 			<integer>400</integer>
 			<key>Command</key>
-			<string></string>
+			<string>zsh</string>
 			<key>Cursor Boost</key>
 			<real>0.0</real>
 			<key>Cursor Color</key>
