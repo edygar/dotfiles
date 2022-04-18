@@ -3,6 +3,7 @@ if [[ ! -v ZSH ]]; then
 fi
 source $HOME/.dotfiles/nvm.zsh
 
+ZSH_DISABLE_COMPFIX=true
 ZSH_THEME="agnoster"
 SOLARIZED_THEME="dark"
 HYPHEN_INSENSITIVE="true"
