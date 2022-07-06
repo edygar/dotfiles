@@ -15,13 +15,12 @@ call plug#begin('~/.local/share/nvim/site/plugged')
 "======================================="
 Plug 'nvim-lua/popup.nvim' " Required by telescope
 Plug 'nvim-lua/plenary.nvim' " Required by popup.nvim
-
 Plug 'RishabhRD/popfix' " Required by lsputils
 
 "======================================="
 "     Movement & editation plugins      "
 "======================================="
-Plug 'tpope/vim-repeat' " Use `.` to repeat surrount and other commands
+Plug 'tpope/vim-repeat' " Use `.` to repeat surround and other commands
 Plug 'tpope/vim-surround' " (o_o) -> ca([ -> [o_o]
 Plug 'scrooloose/nerdcommenter' " Comments
 Plug 'vim-scripts/lastpos.vim' " Passive. Last position jump improved.
@@ -44,7 +43,10 @@ Plug 'ryanoasis/vim-devicons' " Icons
 Plug 'kyazdani42/nvim-web-devicons' " Icons
 Plug 'itchyny/lightline.vim' " Nicer bar
 Plug 'shinchu/lightline-gruvbox.vim' " Nicer bar theme
+Plug 'Mofiqul/vscode.nvim' " VS Code theme
 Plug 'flazz/vim-colorschemes'
+Plug 'tjdevries/colorbuddy.vim'
+Plug 'tjdevries/gruvbuddy.nvim'
 Plug 'szw/vim-maximizer' " Maximizes and restores the current window
 
 "======================================="
@@ -60,10 +62,10 @@ Plug 'mattn/emmet-vim'
 "======================================="
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig' " LSP configurations for builtin LSP client
-Plug 'kabouzeid/nvim-lspinstall' " LSP automatic installation
-Plug ('h-michael/lsp-ext.nvim')
-Plug 'RishabhRD/nvim-lsputils' " Enhance built in LSP functions
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'MunifTanjim/prettier.nvim'
 Plug 'hrsh7th/nvim-compe' " LSP Completion
 
 "======================================="
@@ -71,6 +73,7 @@ Plug 'hrsh7th/nvim-compe' " LSP Completion
 "======================================="
 Plug 'mbbill/undotree' " visualize your Vim undo tree
 Plug 'skwp/greplace.vim' " search and edit globally
+Plug 'christoomey/vim-tmux-navigator' " Seamless navigation between vim and tmux windows
 
 " File tree
 Plug 'scrooloose/nerdtree'
@@ -85,13 +88,17 @@ Plug 'tpope/vim-git' " syntax, indent, and filetype plugin files for git related
 
 " Telescope
 Plug 'nvim-telescope/telescope.nvim' " Better than fzf, amazing search
-Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'nvim-telescope/telescope-file-browser.nvim'
 
 "======================================="
 "    Experimental (testing plugins)     "
 "======================================="
+"
 Plug 'moll/vim-bbye' " Better buffer management
 Plug 'junegunn/vim-easy-align' " Align stuff
+Plug 'stevearc/dressing.nvim' " Testing
+
 
 call plug#end()
 

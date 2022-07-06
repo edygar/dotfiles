@@ -80,3 +80,5 @@ nnoremap <silent> <leader>gf   :vertical botright wincmd F<CR>
 " Externally open a file
 nnoremap gO :!open <cfile><CR>
 
+
+nnoremap <silent> <leader>noh :noh<CR>

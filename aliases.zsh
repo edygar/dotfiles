@@ -7,6 +7,9 @@ elif [[ $unamestr == 'Darwin' ]]; then
   platform='darwin'
 fi
 
+[[ -f $HOME/.aliases.zsh ]] && . $HOME/.aliases.zsh
+
+
 alias .dotfiles="cd ~/.dotfiles && nvim ~/.dotfiles"
 
 # Finder

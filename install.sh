@@ -33,7 +33,7 @@ mkdir -p $HOME/.config
 ln -nfs $HOME/.dotfiles/nvim $HOME/.config/nvim
 
 echo "=== Link config files ==="
-for file in vimrc zshrc gitconfig ctags; do
+for file in vimrc zshrc gitconfig ctags tmux.conf; do
   if [[ -f "$HOME/.$file" ]]; then
     mv "$HOME/.$file" "$HOME/.$file.bkp"
   fi
