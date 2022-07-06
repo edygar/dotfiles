@@ -2,7 +2,6 @@
 " General vim sanity improvements
 " ========================================
 "
-"
 map <silent> <f5> :e! %<cr>
 imap <C-s> <esc>:w<CR>i
 nmap <C-s> :w<CR>
@@ -53,7 +52,7 @@ nnoremap <silent> <leader>cn :let @* = expand("%:t")<CR>
 nmap <silent> <leader>vc yy:<C-f>p<C-c><CR>
 
 "(v)im (r)eload
-nmap <silent> <leader>vr :so %<CR>
+nmap <silent> <leader>vr :so ~/.config/nvim/init.vim<CR>
 
 " Type <space>hl to toggle highlighting on/off, and show current value.
 noremap <leader>hl :set hlsearch! hlsearch?<CR>

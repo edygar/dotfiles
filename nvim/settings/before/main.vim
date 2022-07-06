@@ -11,7 +11,7 @@ let customSettingsPath = '~/.config/nvim/settings/before'
 " Change leader to a space because the backslash is too far away
 " That means all \x commands turn into <space>x
 " The mapleader has to be set before loading all the plugins.
-let mapleader = "\<space>"
+let mapleader = " "
 
 for fpath in split(globpath(customSettingsPath, '*.vim'), '\n')
   if (fpath != expand(customSettingsPath) . "/main.vim") " skip main.vim (this file)

@@ -9,13 +9,7 @@ if has("termguicolors")
   set termguicolors
 endif
 
-colorscheme gruvbox
-set background=dark
-
-let g:gruvbox_contrast_dark       = 'hard'
-let g:gruvbox_invert_selection    = 0
-let g:gruvbox_transparent_bg      = 1
-let g:diagnostic_enable_underline = 1
+lua require('colorbuddy').colorscheme('gruvbuddy')
 
 hi! Normal     ctermbg=NONE guibg=NONE
 hi! LineNr     ctermbg=NONE guibg=NONE

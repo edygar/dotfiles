@@ -7,11 +7,11 @@
 	<key>AdjustWindowForFontSizeChange</key>
 	<true/>
 	<key>AllowClipboardAccess</key>
-	<false/>
+	<true/>
 	<key>AnimateDimming</key>
 	<false/>
 	<key>AutoHideTmuxClientSession</key>
-	<false/>
+	<true/>
 	<key>CheckTestRelease</key>
 	<false/>
 	<key>CloseBookmarksWindowAfterOpening</key>
@@ -19,7 +19,7 @@
 	<key>ClosingHotkeySwitchesSpaces</key>
 	<true/>
 	<key>Command</key>
-	<string>/usr/local/bin/zsh</string>
+	<string></string>
 	<key>CommandSelection</key>
 	<true/>
 	<key>Control</key>
@@ -1069,48 +1069,6 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
-		<key>0xf700-0x300000</key>
-		<dict>
-			<key>Action</key>
-			<integer>7</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
-		<key>0xf701-0x300000</key>
-		<dict>
-			<key>Action</key>
-			<integer>6</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
-		<key>0xf702-0x300000</key>
-		<dict>
-			<key>Action</key>
-			<integer>2</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
-		<key>0xf702-0x320000</key>
-		<dict>
-			<key>Action</key>
-			<integer>33</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
-		<key>0xf703-0x300000</key>
-		<dict>
-			<key>Action</key>
-			<integer>0</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
-		<key>0xf703-0x320000</key>
-		<dict>
-			<key>Action</key>
-			<integer>34</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
 		<key>0xf729-0x100000</key>
 		<dict>
 			<key>Action</key>
@@ -1163,7 +1121,7 @@
 	<key>HideActivityIndicator</key>
 	<false/>
 	<key>HideMenuBarInFullscreen</key>
-	<false/>
+	<true/>
 	<key>HideScrollbar</key>
 	<true/>
 	<key>HideTab</key>
@@ -1194,6 +1152,10 @@
 	<integer>2</integer>
 	<key>MaxVertically</key>
 	<false/>
+	<key>NeverWarnAboutMeta</key>
+	<true/>
+	<key>NeverWarnAboutMeta_selection</key>
+	<integer>0</integer>
 	<key>NeverWarnAboutShortLivedSessions_012B423B-2E80-45EC-B5F7-006CBFD0FE61</key>
 	<true/>
 	<key>NeverWarnAboutShortLivedSessions_012B423B-2E80-45EC-B5F7-006CBFD0FE61_selection</key>
@@ -1472,7 +1434,7 @@
 			<key>Blur</key>
 			<true/>
 			<key>Blur Radius</key>
-			<real>13.24693845177665</real>
+			<real>22.735275672313552</real>
 			<key>Bold Color</key>
 			<dict>
 				<key>Alpha Component</key>
@@ -1493,7 +1455,7 @@
 			<key>Columns</key>
 			<integer>400</integer>
 			<key>Command</key>
-			<string>zsh</string>
+			<string></string>
 			<key>Cursor Boost</key>
 			<real>0.0</real>
 			<key>Cursor Color</key>
@@ -1569,7 +1531,7 @@
 			<key>Hide After Opening</key>
 			<false/>
 			<key>Horizontal Spacing</key>
-			<real>0.85999999999999999</real>
+			<real>0.88</real>
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
@@ -1897,19 +1859,19 @@
 			<key>Name</key>
 			<string>Default</string>
 			<key>Non Ascii Font</key>
-			<string>Menlo-Regular 11</string>
+			<string>FiraCodeNerdFontCompleteM-Regular 11</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>FiraCodeNerdFontCompleteM-Regular 14</string>
+			<string>MesloLGLNerdFontComplete-Regular 14</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<true/>
 			<key>Option Key Sends</key>
-			<integer>0</integer>
+			<integer>2</integer>
 			<key>Prompt Before Closing 2</key>
 			<integer>0</integer>
 			<key>Right Option Key Sends</key>
-			<integer>0</integer>
+			<integer>2</integer>
 			<key>Rows</key>
 			<integer>100</integer>
 			<key>Screen</key>
@@ -2472,7 +2434,7 @@
 			<key>Thin Strokes</key>
 			<integer>2</integer>
 			<key>Transparency</key>
-			<real>0.062103426395939083</real>
+			<real>0.15595482359541224</real>
 			<key>Triggers</key>
 			<array>
 				<dict>
@@ -2515,7 +2477,7 @@
 	<key>OpenNoWindowsAtStartup</key>
 	<false/>
 	<key>OpenTmuxWindowsIn</key>
-	<integer>0</integer>
+	<integer>2</integer>
 	<key>PMPrintingExpandedStateForPrint2</key>
 	<false/>
 	<key>PassOnControlClick</key>
@@ -2572,7 +2534,7 @@
 	<key>ShowBookmarkName</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<true/>
+	<false/>
 	<key>ShowPaneTitles</key>
 	<true/>
 	<key>SmartPlacement</key>
@@ -2593,6 +2555,10 @@
 	<false/>
 	<key>TmuxDashboardLimit</key>
 	<integer>10</integer>
+	<key>TmuxUnpauseAutomatically</key>
+	<true/>
+	<key>TmuxUsesDedicatedProfile</key>
+	<true/>
 	<key>ToolbeltTools</key>
 	<array>
 		<string>Profiles</string>

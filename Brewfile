@@ -17,11 +17,13 @@ cask 'alfred'
 cask '1password'
 cask 'spotify'
 
+brew 'bpytop'
 brew 'fzf'
 brew 'nvim', args: ['HEAD']
 brew 'vim'
 brew 'neovim'
 brew 'python3'
+brew 'youtube-dl'
 brew 'zsh'
 brew 'ripgrep'
 brew 'fasd'

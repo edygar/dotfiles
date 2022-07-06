@@ -14,7 +14,11 @@ HIST_STAMPS="yyyy-mm-dd"
 FZF_BASE=$(brew --prefix)/opt/fzf/install
 plugins=(git fasd vi-mode zsh-autosuggestions fzf)
 
+export MANPAGER="nvim -c 'Man!' o -"
+
 source $ZSH/oh-my-zsh.sh
 source $HOME/.dotfiles/aliases.zsh
 source $HOME/.dotfiles/key-bindings.zsh
+
 [[ -f $HOME/.env.zsh ]] && . $HOME/.env.zsh
+

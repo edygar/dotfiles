@@ -1,5 +1,7 @@
 " Make nerdtree look nice
 let NERDTreeMinimalUI = 1
+let g:NERDTreeWinPos = "right"
+let g:NERDTreeWinSize = 60
 
 " Mnemonic: *p*roject
 " Open or close a NERDTree window:

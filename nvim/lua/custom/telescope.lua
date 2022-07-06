@@ -1,3 +1,4 @@
+local telescope = require('telescope')
 local actions = require('telescope.actions')
 local builtin = require('telescope.builtin')
 local action_state = require('telescope.actions.state')
@@ -8,7 +9,7 @@ local close_buffer = function(prompt_bufnr)
   local picker = action_state.get_current_picker(prompt_bufnr)
   local selection = picker:get_multi_selection()
 
-  if type(next(selection)) == "nil" then
+  if #selection == 1 then
     selection[1] = action_state.get_selected_entry()
   end
 
@@ -20,9 +21,10 @@ local close_buffer = function(prompt_bufnr)
   Module.buffers()
 end
 
-require('telescope').setup{
+telescope.setup {
   defaults = {
-    file_sorter =  require('telescope.sorters').get_fzy_sorter,
+    file_sorter = require('telescope.sorters').get_fzy_sorter,
+    path_display = { "smart" },
 
     selection_caret = " ",
     prompt_prefix = " ",
@@ -32,41 +34,66 @@ require('telescope').setup{
     prompt_position = "top",
 
     extensions = {
-      fzy_native = {
-          override_generic_sorter = false,
-          override_file_sorter = true,
+      fzf = {
+        fuzzy = true, -- false will only do exact matching
+        override_generic_sorter = true, -- override the generic sorter
+        override_file_sorter = true, -- override the file sorter
+        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+        -- the default case_mode is "smart_case"
+      },
+
+      file_browser = {
+        hijack_netrw = true, -- disables netrw and use telescope-file-browser in its place
       }
     },
 
     mappings = {
-      n = {
-        ["<space>"] = actions.toggle_selection,
-        ["<C-s>"] = actions.select_horizontal,
-        ["<C-n>"] = actions.move_selection_next,
-        ["<C-p>"] = actions.move_selection_previous,
-        ["<C-x>"] = false
-      },
       i = {
-        ["<C-s>"] = actions.select_horizontal,
-        ["<C-n>"] = actions.move_selection_next,
-        ["<C-p>"] = actions.move_selection_previous,
-        ["<C-x>"] = false
+        ["<C-q>"] = function(prompt_bufnr)
+          actions.send_to_qflist(prompt_bufnr)
+          builtin.quickfix()
+        end,
+        ["<C-n>"] = actions.cycle_history_next,
+        ["<C-p>"] = actions.cycle_history_prev
       }
     }
   }
 }
 
-require'nvim-web-devicons'.setup {
+-- To get fzf loaded and working with telescope, you need to call
+-- load_extension, somewhere after setup function:
+telescope.load_extension 'fzf'
+
+-- To get telescope-file-browser loaded and working with telescope,
+-- you need to call load_extension, somewhere after setup function:
+telescope.load_extension "file_browser"
+
+-- Loads the devicons
+require 'nvim-web-devicons'.setup {
   default = true;
 }
 
-require('telescope').load_extension('fzy_native')
+require('dressing').setup {
+  input = {
+    -- When true, <Esc> will not close the modal
+    insert_only = false,
+  },
+  select = {
+    -- Set to false to disable the vim.ui.select implementation
+    enabled = true,
 
+    -- Priority list of preferred vim.select implementations
+    backend = { "telescope", "fzf_lua", "fzf", "builtin" },
+
+    -- Trim trailing `:` from prompt
+    trim_prompt = true,
+  }
+}
 
 Module.buffers = function(opts)
   opts = opts or {}
   builtin.buffers(vim.tbl_extend("force", {
-    attach_mappings = function(prompt_bufnr, map)
+    attach_mappings = function(_, map)
       map('n', 'd', close_buffer)
       map('i', '<C-x>', close_buffer)
       map('n', '<C-x>', close_buffer)
@@ -77,7 +104,7 @@ end
 
 
 Module.browse_current_folder = function()
-  builtin.file_browser({
+  require 'telescope'.extensions.file_browser.file_browser({
     ["cwd"] = vim.fn.expand("%:h")
   })
 end

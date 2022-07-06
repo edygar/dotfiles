@@ -2,6 +2,8 @@
 # See the README for examples.
 [color]
   ui = true
+[init]
+	defaultBranch = main
 [color "branch"]
   current = yellow reverse
   local = yellow
@@ -121,6 +123,7 @@
   # the usual default is to push all branches
   default = upstream
 [core]
+  pager = delta
   autocrlf = false
   editor = nvim
   excludesfile = ~/.dotfiles/gitignore
@@ -139,10 +142,13 @@
   # Remember my merges
   # http://gitfu.wordpress.com/2008/04/20/git-rerere-rereremember-what-you-did-last-time/
   enabled = true
-[pager]
-  diff = "diff-so-fancy | less --tabs=2 -RFX"
-  show = "diff-so-fancy | less --tabs=2 -RFX"
+
+[delta]
+    side-by-side = true
+    syntax-theme = OneHalfDark
+
 [include]
   path = ~/.gitconfig.user
+
 [pull]
 	rebase = true
