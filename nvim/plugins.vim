@@ -16,6 +16,7 @@ call plug#begin('~/.local/share/nvim/site/plugged')
 Plug 'nvim-lua/popup.nvim' " Required by telescope
 Plug 'nvim-lua/plenary.nvim' " Required by popup.nvim
 Plug 'RishabhRD/popfix' " Required by lsputils
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 "======================================="
 "     Movement & editation plugins      "
