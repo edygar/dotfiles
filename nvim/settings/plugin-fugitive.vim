@@ -16,7 +16,7 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " Mappings
 " ============================
 nnoremap <leader>gd :Git diff<cr>
-nnoremap <leader>gs :Git status<cr>
+nnoremap <leader>gs :G<cr>
 nnoremap <leader>gw :Git write<cr>
 nnoremap <leader>ga :Git add<cr>
 nnoremap <leader>gb :Git blame<cr>
