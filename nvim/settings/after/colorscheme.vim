@@ -9,7 +9,7 @@ if has("termguicolors")
   set termguicolors
 endif
 
-lua require('colorbuddy').colorscheme('gruvbuddy')
+colorscheme vscode
 
 hi! Normal     ctermbg=NONE guibg=NONE
 hi! LineNr     ctermbg=NONE guibg=NONE
