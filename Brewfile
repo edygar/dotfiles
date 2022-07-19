@@ -32,6 +32,8 @@ brew 'jp2a'
 brew 'imagemagick'
 brew 'ctags'
 brew 'lazygit'
+brew 'shfmt'
+brew 'shellcheck'
 
 brew 'nvm'
 brew 'ruby'
