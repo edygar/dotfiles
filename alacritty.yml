@@ -849,10 +849,10 @@ key_bindings:
   - { key: W,        mods: Command,       chars: "\x02\x78" }
 
   # Split vertically
-  - { key: S,        mods: Command,       chars: "\x02\x76" }
+  - { key: D,        mods: Command|Shift, chars: "\x02\x53" }
 
   # Split horizontally
-  - { key: S,        mods: Command|Shift,       chars: "\x02\x10" }
+  - { key: D,        mods: Command,       chars: "\x02\x56" }
 
   # Move one tab right.
   - { key: Tab, mods: Control, chars: "\x02\x6e" }
