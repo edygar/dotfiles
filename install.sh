@@ -33,7 +33,7 @@ mkdir -p $HOME/.config
 ln -nfs $HOME/.dotfiles/nvim $HOME/.config/nvim
 
 echo "=== Link config files ==="
-for file in vimrc zshrc gitconfig ctags tmux.conf; do
+for file in vimrc zshrc zshenv gitconfig ctags tmux.conf alacritty.yml; do
 	if [[ -f "$HOME/.$file" ]]; then
 		mv "$HOME/.$file" "$HOME/.$file.bkp"
 	fi
@@ -63,5 +63,7 @@ npm install -g neovim prettier typescript typescript-language-server eslint esli
 
 echo "=== Fetching Oh-My-Zsh custom plugins ==="
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+echo "=== Tmux ==="
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-git clone https://github.com/schasse/tmux-jump ~/.tmux/plugins/tpm
+~/.tmux/plugins/tpm/scripts/install_plugins.sh
