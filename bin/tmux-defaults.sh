@@ -8,3 +8,4 @@ export FZF_LAYOUT="
 --prompt=' '
 --pointer=' '
 "
+export FZF_DEFAULT_OPTS="$FZF_LAYOUT"
