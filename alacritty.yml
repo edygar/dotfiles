@@ -856,11 +856,11 @@ key_bindings:
 
   # Move one tab right.
   - { key: Tab, mods: Control, chars: "\x02\x6e" }
-  - { key: LBracket, mods: Command|Shift, chars: "\x02\x6e" }
+  - { key: RBracket, mods: Command|Shift, chars: "\x02\x6e" }
 
   # Move one tab left.
   - { key: Tab, mods: Control|Shift, chars: "\x02\x70" }
-  - { key: RBracket, mods: Command|Shift, chars: "\x02\x70" }
+  - { key: LBracket, mods: Command|Shift, chars: "\x02\x70" }
 
   # Move to tab x.
   - { key: Key1,     mods: Command,       chars: "\x02\x31" }
