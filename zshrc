@@ -17,7 +17,7 @@ FZF_BASE=$(brew --prefix)/opt/fzf/install
 plugins=(git fasd vi-mode zsh-autosuggestions fzf)
 
 
-export MANPAGER="nvim -u \"$HOME/.config/nvim/minimal-init.lua\" -c 'Man!' o -"
+export MANPAGER="MINIMAL=1 nvim -c 'Man!' o -"
 
 source $HOME/.dotfiles/bin/tmux-defaults.sh
 source $ZSH/oh-my-zsh.sh
