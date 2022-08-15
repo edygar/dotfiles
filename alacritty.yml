@@ -69,7 +69,7 @@ window:
   #
   # Window opacity as a floating point number from `0.0` to `1.0`.
   # The value `0.0` is completely transparent and `1.0` is opaque.
-  opacity: 0.96
+  opacity: 0.98
 
   # Startup Mode (changes require restart)
   #
@@ -194,8 +194,8 @@ font:
 colors:
   # Default colors
   #
-  #primary:
-  #  background: '#1d1f21'
+  primary:
+    background: '#1e222a'
   #  foreground: '#c5c8c6'
 
     # Bright and dim foreground colors
@@ -440,7 +440,7 @@ shell:
   program: /bin/zsh
   args:
     - -c
-    - "source ~/.zshrc && (tmux attach -t Home || tmux new -s Home -c ~)"
+    - "source ~/.zshrc && (tmux attach || tmux new -s Home -c ~)"
 
 # Startup directory
 #
@@ -836,6 +836,18 @@ key_bindings:
   #- { key: PageDown,  mods: Shift,   mode: ~Alt,        action: ScrollPageDown }
   #- { key: Home,      mods: Shift,   mode: ~Alt,        action: ScrollToTop,   }
   #- { key: End,       mods: Shift,   mode: ~Alt,        action: ScrollToBottom }
+
+  # Clean up
+  # - { key: h, mods: Command|Shift, chars: "\x02\x68" }
+  # - { key: j, mods: Command|Shift, chars: "\x02\x6a" }
+  # - { key: k, mods: Command|Shift, chars: "\x02\x6b" }
+  # - { key: l, mods: Command|Shift, chars: "\x02\x6c" }
+
+  # Project Switcher
+  - { key: Semicolon,        mods: Command,       chars: "\x02\x3a" }
+
+  # Manual 
+  - { key: I,        mods: Command,       chars: "\x02\x09" }
 
   # Project Switcher
   - { key: P,        mods: Command,       chars: "\x02\x06" }
