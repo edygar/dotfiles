@@ -1,10 +1,11 @@
+#!/bin/zsh
 if [[ ! -v ZSH ]]; then
   export ZSH="$HOME/.dotfiles/oh-my-zsh"
 fi
 
 source $HOME/.dotfiles/nvm.zsh
 
-SHELL_SESSIONS_DISABLE=1
+# SHELL_SESSIONS_DISABLE=1
 ZSH_DISABLE_COMPFIX=true
 ZSH_THEME="agnoster"
 SOLARIZED_THEME="dark"
@@ -19,11 +20,11 @@ plugins=(git fasd vi-mode zsh-autosuggestions fzf)
 
 export MANPAGER="MINIMAL=1 nvim -c 'Man!' o -"
 
-source $HOME/.dotfiles/bin/tmux-defaults.sh
-source $ZSH/oh-my-zsh.sh
-source $HOME/.dotfiles/aliases.zsh
-source $HOME/.dotfiles/key-bindings.zsh
+. "$HOME/.dotfiles/bin/fzf-defaults.sh"
+. "$ZSH/oh-my-zsh.sh"
+. "$HOME/.dotfiles/aliases.zsh"
+. "$HOME/.dotfiles/key-bindings.zsh"
+# . "$HOME/.dotfiles/bin/fns.sh"  
 
 [[ -f $HOME/.env.zsh ]] && . $HOME/.env.zsh
-
 

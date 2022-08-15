@@ -5,15 +5,15 @@ if [ ! -d "$HOME/.dotfiles" ]; then
 
 	echo "=== Installing .dotfiles for the first time ==="
 	git clone --depth=1 https://github.com/edygar/dotfiles.git "$HOME/.dotfiles"
-	cd "$HOME/.dotfiles"
+	cd "$HOME/.dotfiles" || exit 1
 else
-	cd "$HOME/.dotfiles"
+	cd "$HOME/.dotfiles" || exit 1
 fi
 
 echo "=== Installing Brew ==="
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-cd $HOME/.dotfiles
+cd "$HOME/.dotfiles" || exit 1
 echo "=== Installing bundled applications ==="
 brew update
 brew bundle
@@ -29,26 +29,24 @@ defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 killall cfprefsd
 
 echo "=== Installing ==="
-mkdir -p $HOME/.config
-ln -nfs $HOME/.dotfiles/nvim $HOME/.config/nvim
+mkdir -p "$HOME/.config"
+ln -nfs "$HOME/.dotfiles/nvim" "$HOME/.config/nvim"
 
 echo "=== Link config files ==="
 for file in vimrc zshrc zshenv gitconfig ctags tmux.conf alacritty.yml; do
-	if [[ -f "$HOME/.$file" ]]; then
+	if [ -f "$HOME/.$file" ]; then
 		mv "$HOME/.$file" "$HOME/.$file.bkp"
 	fi
 
-	ln -nfs $HOME/.dotfiles/$file $HOME/.$file
+	ln -nfs "$HOME/.dotfiles/$file" "$HOME/.$file"
 done
 
-source $HOME/.dotfiles/nvm.zsh
-
 echo "=== Installing Node ==="
-if [[ ! -f "$HOME/.nvm" ]]; then
-	mkdir $HOME/.nvm
+if [ ! -f "$HOME/.nvm" ]; then
+	mkdir "$HOME/.nvm"
 fi
 
-source $HOME/.dotfiles/nvm.zsh
+. "$HOME/.dotfiles/nvm.zsh"
 
 # Installing Node
 nvm install node
@@ -62,8 +60,11 @@ pip install --user pynvim
 npm install -g neovim prettier typescript typescript-language-server eslint eslint_d markdownlint prettier-eslint
 
 echo "=== Fetching Oh-My-Zsh custom plugins ==="
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
 
 echo "=== Tmux ==="
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+
+echo "=== Rust ==="
+curl https://sh.rustup.rs -sSf | sh

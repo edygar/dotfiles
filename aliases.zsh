@@ -9,17 +9,19 @@ fi
 
 [[ -f $HOME/.aliases.zsh ]] && . $HOME/.aliases.zsh
 
+# nvim using
+alias nvim="nvim.sh"
+alias vim="nvim.sh"
+alias v="nvim.sh"
+alias .dotfiles="cd ~/.dotfiles && nvim"
 
-alias .dotfiles="cd ~/.dotfiles && nvim ~/.dotfiles"
+# enhancing
+alias cat="bat --color=always"
+
 
 # Finder
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
-
-# nvim using
-alias vim="nvim"
-alias v="nvim"
-alias vf='nvim $(fzf)'
 
 # Homebrew
 alias brewu='brew update && brew upgrade --all && brew cleanup && brew doctor'
@@ -125,4 +127,3 @@ alias cl='clear'
 # usage: fn foo
 # to find all files containing 'foo' in the name
 function fn() { ls **/*$1* }
-
