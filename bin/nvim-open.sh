@@ -16,4 +16,4 @@ last_session_id="\$$(echo "$last_nvim_server" | sed 's#/tmp/nvim.@##;s/_.*$//')"
 last_session_name="$(/usr/local/bin/tmux ls -F "#{session_id}=#{session_name}" | grep "$last_session_id" | sed "s/.*=//")"
 
 /usr/local/bin/tmux switch -t "$last_session_name"
-/usr/local/bin/nvim --server "${last_nvim_server//@/$}" --remote-send ":e '$file'<CR>"
+/usr/local/bin/nvim --server "${last_nvim_server//@/$}" --remote-send ":e $file<CR>"
