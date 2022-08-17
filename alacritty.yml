@@ -844,27 +844,29 @@ key_bindings:
   # - { key: l, mods: Command|Shift, chars: "\x02\x6c" }
 
   # Project Switcher
-  - { key: Semicolon,        mods: Command,       chars: "\x02\x3a" }
+  - { key: Semicolon, mods: Command,       chars: "\x02\x3a" }
 
   # Manual 
-  - { key: I,        mods: Command,       chars: "\x02\x09" }
+  - { key: I,         mods: Command,       chars: "\x02\x09" }
 
   # Project Switcher
-  - { key: P,        mods: Command,       chars: "\x02\x06" }
+  - { key: P,         mods: Command|Shift, chars: "\x02\x06" }
+  - { key: P,         mods: Command,       chars: "\x10" }
+
   # Lazygit
-  - { key: G,        mods: Command,       chars: "\x02\x07" }
+  - { key: G,         mods: Command,       chars: "\x02\x07" }
 
   # New tab.
-  - { key: T,        mods: Command,       chars: "\x02\x63" }
+  - { key: T,         mods: Command,       chars: "\x02\x63" }
 
   # Close tab.
-  - { key: W,        mods: Command,       chars: "\x02\x78" }
+  - { key: W,         mods: Command,       chars: "\x02\x78" }
 
   # Split vertically
-  - { key: D,        mods: Command|Shift, chars: "\x02\x53" }
+  - { key: D,         mods: Command|Shift, chars: "\x02\x53" }
 
   # Split horizontally
-  - { key: D,        mods: Command,       chars: "\x02\x56" }
+  - { key: D,         mods: Command,       chars: "\x02\x56" }
 
   # Move one tab right.
   - { key: Tab, mods: Control, chars: "\x02\x6e" }
