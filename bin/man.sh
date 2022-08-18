@@ -2,6 +2,8 @@
 COMMAND=$1
 source "$(cd "$(dirname "$0")" && pwd)/fzf-defaults.sh"
 
+tmux rename-window "Man: ?"
+
 if [ -z "$COMMAND" ]; then
 	# shellcheck disable=SC2016 disable=SC2046
 	IFS=':' read -r -a paths <<<"$PATH"
@@ -14,6 +16,9 @@ if [ -z "$COMMAND" ]; then
         {} --help                                       \
     ) || echo "No preview"')
 fi
+
+tmux rename-window "Man: ${COMMAND// */}"
+
 
 if [ -z "$COMMAND" ]; then
 	exit 0

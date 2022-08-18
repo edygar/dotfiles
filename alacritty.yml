@@ -753,6 +753,7 @@ mouse_bindings:
 # If the same trigger is assigned to multiple actions, all of them are executed
 # in the order they were defined in.
 key_bindings:
+  - { key: Key6,      mods: Control,   chars: "\x1b[94;5u"                  }
   - { key: A,         mods: Alt,       chars: "\x1ba"                       }
   - { key: B,         mods: Alt,       chars: "\x1bb"                       }
   - { key: C,         mods: Alt,       chars: "\x1bc"                       }
@@ -860,7 +861,8 @@ key_bindings:
   - { key: T,         mods: Command,       chars: "\x02\x63" }
 
   # Close tab.
-  - { key: W,         mods: Command,       chars: "\x02\x78" }
+  - { key: W,         mods: Command,       chars: "\x1bq" }
+  - { key: S,         mods: Command,       chars: "\x1bw" }
 
   # Split vertically
   - { key: D,         mods: Command|Shift, chars: "\x02\x53" }
