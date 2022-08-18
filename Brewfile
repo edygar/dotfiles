@@ -17,6 +17,7 @@ cask '1password'
 cask 'spotify'
 cask 'alacritty', args: {"no-quarantine": true}
 
+brew 'gnu-getopt'
 brew 'bat'
 brew 'lsd'
 brew 'bpytop'
