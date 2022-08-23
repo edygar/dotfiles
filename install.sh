@@ -29,8 +29,9 @@ defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 killall cfprefsd
 
 echo "=== Installing ==="
-mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.config/kitty"
 ln -nfs "$HOME/.dotfiles/nvim" "$HOME/.config/nvim"
+ln -nfs "$HOME/.dotfiles/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 
 echo "=== Link config files ==="
 for file in vimrc zshrc zshenv gitconfig ctags tmux.conf alacritty.yml; do

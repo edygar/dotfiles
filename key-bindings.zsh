@@ -1,5 +1,15 @@
 # Accept Autosuggestions
 bindkey '^N' autosuggest-accept
 
-bindkey -s ^f "$HOME/.dotfiles/bin/tmux-sessionizer.sh\n"
+
+function nvim_find_files() {  nvim.sh -c ':Alpha' -c ':UserTelescope find_files'; }
+function tmux_sessionizer() {
+ $HOME/.dotfiles/bin/tmux-sessionizer.sh;
+}
+
+zle -N nvim_find_files
+zle -N tmux_sessionizer  
+
+bindkey '^p' nvim_find_files 
+bindkey '^f' tmux_sessionizer 
 bindkey "\C-[" vi-cmd-mode
