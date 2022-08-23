@@ -16,6 +16,7 @@ sessions_names=$(echo "$sessions" | awk -F "\t" '{print $1}')
 sessions_names=$(grep -v -x -F <(echo "$sessions_names") <"$HISTORY_FILE" | cat - <(echo "$sessions_names") | awk '!a[$0]++' | grep -v -x -F "$current_session")
 tmux set pane-border-status top
 tmux select-pane -T "Select a session"
+
 pretty=$(echo -e "$sessions_names" | sed 's/^/\\033[37m/g;s/ /\\033[0m /g')
 session_name=$(
 	[ -n "$*" ] && echo "$*" ||
