@@ -10,22 +10,27 @@ if [ ! -e HISTORY_FILE ]; then
 fi
 
 current_session=$(tmux display-message -p "#{session_name}")
-sessions=$("$BIN/tmux-sessionizer-ls.sh" -s -o)
-
-sessions_names=$(echo "$sessions" | awk -F "\t" '{print $1}')
-sessions_names=$(grep -v -x -F <(echo "$sessions_names") <"$HISTORY_FILE" | cat - <(echo "$sessions_names") | awk '!a[$0]++' | grep -v -x -F "$current_session")
-tmux set pane-border-status top
-tmux select-pane -T "Select a session"
+sessions_names=$(grep -v -x -F "$current_session" <"$HISTORY_FILE" || "$BIN/tmux-sessionizer-ls.sh" -- "#{name}")
 
 pretty=$(echo -e "$sessions_names" | sed 's/^/\\033[37m/g;s/ /\\033[0m /g')
-session_name=$(
-	[ -n "$*" ] && echo "$*" ||
-		echo -e "$pretty" |
-		FZF_DEFAULT_OPTS="${FZF_LAYOUT//--keep-right/}" fzf --tiebreak=index --ansi \
-			--preview='tmux capture-pane -ep -t '{}' 2>/dev/null || echo "Session not started yet"'
-)
 
-tmux set pane-border-status off
+title=" Select a session "
+half=$(((($(tmux display-message -p '#{client_width}') - ${#title})) / 2))
+head -c "$half" </dev/zero | tr '\0' '─'
+printf "%b" "\\033[38;2;192;138;86m$title\\033[0m"
+head -c "$half" </dev/zero | tr '\0' '─'
+
+if [ -n "$*" ]; then
+	session_name="$*"
+else
+	session_name=$(
+		echo -e "$pretty" |
+			FZF_DEFAULT_OPTS="${FZF_LAYOUT//--keep-right/}" fzf --tiebreak=index --height "$(($(tmux display-message -p '#{client_height}') / 2 - 1 + SHIFT))" --ansi \
+				--preview='tmux capture-pane -ep -t '{}' 2>/dev/null || echo "Session not started yet"'
+	)
+fi
+sessions=$("$BIN/tmux-sessionizer-ls.sh" -s -o)
+
 if [ -z "$session_name" ]; then
 	exit 0
 fi

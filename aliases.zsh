@@ -16,8 +16,7 @@ alias v="nvim.sh"
 alias .dotfiles="cd ~/.dotfiles && nvim"
 
 # enhancing
-alias cat="bat --color=always"
-
+alias bat="/usr/local/bin/bat --color=always"
 
 # Finder
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
