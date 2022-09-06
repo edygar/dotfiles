@@ -8,7 +8,7 @@ params=()
 sort=false
 omit=false
 
-TEMP=$(getopt -o a::,f::,s:,o: --long colors::,format::,sort:,omit-current: -- "$@")
+TEMP=$(getopt -o c::,f::,s:,o: --long colors::,format::,sort:,omit-current: -- "$@")
 eval set -- "$TEMP"
 
 # extract options and their arguments into variables.
