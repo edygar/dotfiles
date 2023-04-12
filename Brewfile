@@ -1,0 +1,16 @@
+tap "homebrew/cask-fonts"
+cask  "font-source-code-pro"
+
+# Install packages
+brew "nvm"
+brew "tree"
+brew "neovim"
+brew "jq"
+brew "fd"
+brew "fzf"
+brew "lazygit"
+brew "git-delta"
+brew "imagemagick"
+brew "ripgrep"
+brew "zoxide"
+cask "kitty"
