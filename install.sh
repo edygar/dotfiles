@@ -22,11 +22,15 @@ fi
 # Install packages from the Brewfile
 echo "Installing packages..."
 brew bundle --file="$brewfile"
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+git clone https://github.com/jeffreytse/zsh-vi-mode ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-vi-mode
 
 # Link configuration files from the dotfiles directory
 echo "Linking configurations..."
-mkdir -p "$HOME/.config"
-ln -sf "$HOME/.dotfiles/kitty.conf" "$HOME/.config/kitty/kitty.conf"
+mkdir -p "$HOME/.config/kitty"
+ln -sf "$HOME/.dotfiles/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
+ln -sf "$HOME/.dotfiles/kitty/macos-launch-services-cmdline" "$HOME/.config/kitty/"
 ln -sf "$HOME/.dotfiles/nvim" "$HOME/.config/"
 curl https://raw.githubusercontent.com/knubie/vim-kitty-navigator/master/pass_keys.py > "$HOME/.config/kitty/pass_keys.py"
 curl https://raw.githubusercontent.com/knubie/vim-kitty-navigator/master/neighboring_window.py > "$HOME/.config/kitty/neighboring_window.py"

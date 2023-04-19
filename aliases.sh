@@ -16,7 +16,7 @@ alias .dotfiles="cd ~/.dotfiles && nvim"
 alias dotfiles="cd ~/.dotfiles && nvim"
 
 # enhancing
-alias bat="/usr/local/bin/bat --color=always"
+# alias bat="/usr/local/bin/bat --color=always"
 
 if [[ $platform == 'linux' ]]; then
   alias ll='ls -alh --color=auto'
