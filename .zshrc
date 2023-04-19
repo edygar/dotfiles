@@ -26,11 +26,16 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 
-plugins=(git fasd vi-mode zsh-autosuggestions fzf)
+plugins=(git fasd zsh-vi-mode zsh-autosuggestions fzf)
 
 source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
-source "$HOME/.dotfiles/key-bindings.sh"
 source "$HOME/.dotfiles/aliases.sh"
+function zvm_after_init() {
+  source "$HOME/.dotfiles/key-bindings.sh"
+  eval "$(zoxide init zsh)"
+  source "$FZF_BASE/shell/key-bindings.zsh"
+}
+
 
 [[ -f $HOME/.env.zsh ]] && . $HOME/.env.sh
 
@@ -44,10 +49,10 @@ export NVM_DIR="$HOME/.nvm"
 
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(zoxide init zsh)"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/edygar.oliveira/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/edygar.oliveira/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/edygar.oliveira/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/edygar.oliveira/google-cloud-sdk/completion.zsh.inc'; fi
+
