@@ -9,7 +9,6 @@ bindkey '^P' zi
 
 # Define a function to close the Kitty window
 close_kitty_window() {
-  echo "I did run"
 	kitty @ close-window
 }
 
