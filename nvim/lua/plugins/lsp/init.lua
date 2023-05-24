@@ -8,6 +8,7 @@ return {
       { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      "jose-elias-alvarez/typescript.nvim",
       {
         "hrsh7th/cmp-nvim-lsp",
         cond = function()
@@ -69,10 +70,10 @@ return {
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         -- example to setup with typescript.nvim
-        -- tsserver = function(_, opts)
-        --   require("typescript").setup({ server = opts })
-        --   return true
-        -- end,
+        tsserver = function(_, opts)
+          require("typescript").setup({ server = opts })
+          return true
+        end,
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
       },
@@ -257,12 +258,9 @@ return {
 
           -- code actions
           require("typescript.extensions.null-ls.code-actions"),
-
-          -- hover
-          builtins.code_actions.eslint_d,
-
-          builtins.hover.dictionary,
           builtins.code_actions.gitsigns,
+          builtins.code_actions.eslint_d,
+          builtins.hover.dictionary,
         },
       }
     end,

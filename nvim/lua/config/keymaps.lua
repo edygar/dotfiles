@@ -1,12 +1,12 @@
 local Util = require("lazyvim.util")
 local opts = { noremap = true, silent = true }
 
-local function map(mode, lhs, rhs, opts)
+local function map(mode, lhs, rhs, customOpts)
   local keys = require("lazy.core.handler").handlers.keys
   -- do not create the keymap if a lazy keys handler exists
   if not keys.active[keys.parse({ lhs, mode = mode }).id] then
-    opts = opts or {}
-    vim.keymap.set(mode, lhs, rhs, opts)
+    customOpts = vim.tbl_extend("keep", customOpts or {}, opts)
+    vim.keymap.set(mode, lhs, rhs, customOpts)
   end
 end
 
@@ -14,7 +14,8 @@ end
 map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Open Lazy Dialog" })
 map("n", "<leader>Q", "<cmd>qa<cr>", { desc = "Quit all" })
 map("n", "<leader>wq", "<cmd>wq<cr>", { desc = "Save current buffer and quit" })
-map("n", "<leader>w", "<cmd>w<cr>", { silent = true, desc = "Save current buffer" })
+map("n", "<leader>ww", "<cmd>w<cr>", { silent = true, desc = "Save current buffer" })
+map("n", "<leader>wa", "<cmd>wa<cr>", { silent = true, desc = "Save all open buffers" })
 map("n", "<M-q>", "<cmd>bd<CR>", { silent = true, desc = "Close current window" })
 map("n", "<leader>h", "<cmd>nohlsearch<cr>", { desc = "Toggles search highlight" })
 map("n", "<esc><esc>", "<cmd>nohlsearch<cr>", { desc = "Toggles search highlight" })
@@ -26,15 +27,15 @@ vim.cmd([[
 -- copy current filename into system clipboard
 -- this is helpful to paste someone the path you're looking at
 -- Mnemonic: (c)urrent (f)ull filename (Eg.: ~/.yadr/nvim/settings/vim-keymaps.vim)
-map("n", "ycf", "<cmd>let @* = expand('%:~')<CR>", opts)
+map("n", "ycf", "<cmd>let @* = expand('%:~')<CR>", { desc = "Copy current file's absolute path" })
 -- Mnemonic: (c)urrent (r)elative filename (Eg.: nvim/settings/vim-maps.vim)
-map("n", "ycr", "<cmd>let @* = expand('%')<CR>", opts)
+map("n", "ycr", "<cmd>let @* = expand('%')<CR>", { desc = "Copy current file's relative path" })
 -- Mnemonic: (c)urrent (n)ame of the file (Eg.: vim-maps.vim)
-map("n", "ycn", "<cmd>let @* = expand('%:t')<CR>", opts)
+map("n", "ycn", "<cmd>let @* = expand('%:t')<CR>", { desc = "Copy current file's name" })
 
 -- better up/down
-map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, desc = "Up" })
+map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, desc = "Down" })
 
 -- Window navigation
 map("n", "<C-j>", "<cmd>KittyNavigateDown<cr>", { desc = "Go to lower window" })
@@ -48,14 +49,16 @@ map("n", "<C-S-j>", [[<cmd>horizontal resize +2<cr>]], { desc = "Make the window
 map("n", "<C-S-k>", [[<cmd>horizontal resize -2<cr>]], { desc = "Make the window smaller horizontally" })
 
 -- Window organization
-map("n", "<leader>vv", "<cmd>vsplit<cr>", opts)
-map("n", "<leader>ss", "<cmd>split<cr>", opts)
+map("n", "<leader>vv", "<cmd>vsplit<cr>", { desc = "Vertical split" })
+map("n", "<leader>ss", "<cmd>split<cr>", { desc = "Horizontal split" })
 
 -- Tabs --
-map("n", "tt", ":tabnew<cr>", opts)
-map("n", "tj", ":tabprevious<cr>", opts)
-map("n", "tk", ":tabnext<cr>", opts)
-map("n", "tc", ":tabclose<cr>", opts)
+map("n", "te", ":tabedit %<cr>", { desc = "New tab" })
+map("n", "tt", ":tabnew<cr>", { desc = "New tab" })
+map("n", "tj", ":tabprevious<cr>", { desc = "Previous tab" })
+map("n", "tk", ":tabnext<cr>", { desc = "Next tab" })
+map("n", "tc", ":tabclose<cr>", { desc = "Close tab" })
+map("n", "to", ":tabonly<cr>", { desc = "Close all other tab" })
 
 -- Better visual put
 map({ "v", "x" }, "p", '"_dP', opts)

@@ -2,8 +2,13 @@ return {
   { "knubie/vim-kitty-navigator" },
   {
     "kyazdani42/nvim-tree.lua",
+    cmd = {
+      "NvimTreeToggle",
+      "NvimTreeOpen",
+      "NvimTreeClose",
+    },
     keys = {
-      { "<leader>e", "<cmd>NvimTreeToggle<cr>", mode = "n", desc = "Toggles files tree" },
+      { "<leader>e", "<cmd>NvimTreeOpen<cr>", mode = "n", desc = "Toggles files tree" },
     },
     opts = function()
       -- file explorer
@@ -20,15 +25,14 @@ return {
       local icons = require("config.icons")
 
       return {
-        hijack_directories = {
-          enable = true,
-        },
         on_attach = function(bufnr)
           local api = require("nvim-tree.api")
 
           local function opts(desc)
             return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
           end
+
+          vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeClose<cr>", opts("Close nvim tree"))
 
           --
           --[[ Window navigation ]]
@@ -129,6 +133,9 @@ return {
           vim.keymap.set("n", "[d", api.node.navigate.diagnostics.prev, opts("Prev Diagnostic"))
           vim.keymap.set("n", "]d", api.node.navigate.diagnostics.next, opts("Next Diagnostic"))
         end,
+        hijack_directories = {
+          enable = true,
+        },
         disable_netrw = true,
         hijack_netrw = true,
         filters = {
@@ -200,7 +207,7 @@ return {
         },
         update_focused_file = {
           enable = true,
-          update_cwd = true,
+          update_cwd = false,
           ignore_list = {},
         },
         -- system_open = {
@@ -360,8 +367,8 @@ return {
         mode = "n",
         desc = "Search through all LSP Symbols for the current workspace",
       },
-      { "<leader>gc", "<cmd>Telescope git_commits<CR>", desc = "commits" },
-      { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "status" },
+      { "<leader>fgs", "<cmd>Telescope git_status<CR>", desc = "Git status" },
+      { "<leader>fgc", "<cmd>Telescope git_commits<CR>", desc = "Git commits" },
     },
     opts = function()
       local actions = require("telescope.actions")
@@ -470,25 +477,6 @@ return {
         pickers = {
           buffers = {
             sort_mru = true,
-            mappings = {
-              i = { ["<CR>"] = actions.select_drop },
-            },
-          },
-          find_files = {
-            mappings = {
-              i = { ["<CR>"] = actions.select_drop },
-            },
-          },
-          git_files = {
-            mappings = {
-              i = { ["<CR>"] = actions.select_drop },
-            },
-          },
-          oldfiles = {
-            cwd_only = true,
-            mappings = {
-              i = { ["<CR>"] = actions.select_drop },
-            },
           },
         },
         extensions = {

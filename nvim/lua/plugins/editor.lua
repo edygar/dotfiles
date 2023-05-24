@@ -4,10 +4,8 @@ return {
   { "andymass/vim-visput" },
   {
     "numToStr/Comment.nvim",
-    keys = {
-      { "gcc", nil, mode = { "n", "v" }, desc = "Line-comment toggle keymap" },
-      { "gbc", nil, mode = { "n", "v" }, desc = "Block-comment toggle keymap" },
-    },
+    main = "Comment",
+    config = true,
     opts = {
       ---Add a space b/w comment and the line
       padding = true,
@@ -177,7 +175,7 @@ return {
             { "i" }
           ),
           ["<C-Space>"] = cmp.mapping.complete(),
-          ["<tab>"] = cmp.config.disable,
+          ["<Tab>"] = cmp.config.disable,
           ["<c-q>"] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
@@ -298,12 +296,71 @@ return {
   },
 
   {
-    "github/copilot.vim",
+    "zbirenbaum/copilot.lua",
     event = "InsertEnter",
-    setup = function()
+    cmd = "Copilot",
+    keys = {
+      {
+        "<Tab>",
+        function()
+          if require("copilot.suggestion").is_visible() then
+            require("copilot.suggestion").accept()
+          else
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
+          end
+        end,
+        mode = "i",
+        { desc = "Super Tab" },
+      },
+    },
+    opts = {
+      panel = {
+        enabled = true,
+        auto_refresh = false,
+        keymap = {
+          jump_prev = "[[",
+          jump_next = "]]",
+          accept = "<CR>",
+          refresh = "gr",
+          open = "<M-CR>",
+        },
+        layout = {
+          position = "bottom", -- | top | left | right
+          ratio = 0.4,
+        },
+      },
+      suggestion = {
+        enabled = true,
+        auto_trigger = false,
+        debounce = 75,
+        keymap = {
+          accept = false,
+          accept_word = false,
+          accept_line = false,
+          next = "<Up>",
+          prev = "<Bottom>",
+          dismiss = "<Left>",
+        },
+      },
+      filetypes = {
+        yaml = false,
+        markdown = false,
+        help = false,
+        gitcommit = false,
+        gitrebase = false,
+        hgcommit = false,
+        svn = false,
+        cvs = false,
+        ["."] = false,
+      },
+      copilot_node_command = "node", -- Node.js version must be > 16.x
+      server_opts_overrides = {},
+    },
+    config = function(_, opts)
+      require("copilot").setup(opts)
       vim.api.nvim_create_autocmd({ "InsertEnter" }, {
         callback = function()
-          vim.cmd("Copilot enable")
+          require("copilot.suggestion").toggle_auto_trigger()
         end,
       })
     end,
