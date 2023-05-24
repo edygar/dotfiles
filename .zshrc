@@ -3,6 +3,9 @@
 [[ -f $HOME/.zprofile ]] && . $HOME/.zprofile
 [[ -f $HOME/.env.zsh ]] && . $HOME/.env.sh
 
+PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+eval "$(pyenv init -)"
+
 ZSH_DISABLE_COMPFIX=true
 ZSH_THEME="powerlevel10k/powerlevel10k"
 SOLARIZED_THEME="dark"
