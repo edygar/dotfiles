@@ -9,13 +9,14 @@ return {
       vim.cmd("colorscheme onedarker")
 
       vim.cmd("hi TreesitterContextBottom gui=underline guisp=" .. palette.gray)
+
+      vim.api.nvim_set_hl(0, "WhichKeyFloat", { fg = "NONE", bg = "NONE" })
       vim.api.nvim_set_hl(0, "TelescopeNormal", { fg = palette.fg, bg = palette.bg })
       vim.api.nvim_set_hl(0, "Whitespace", { fg = palette.gray, bg = palette.bg })
       vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { fg = palette.gray })
-
       vim.api.nvim_set_hl(0, "DiffviewDiffAddAsDelete", { bg = "#431313" })
-      vim.api.nvim_set_hl(0, "DiffDelete", { bg = "none", fg = palette.alt_bg })
-      vim.api.nvim_set_hl(0, "DiffviewDiffDelete", { bg = "none", fg = palette.alt_bg })
+      vim.api.nvim_set_hl(0, "DiffDelete", { bg = "#431313" })
+      vim.api.nvim_set_hl(0, "DiffviewDiffDelete", { bg = "NONE", fg = palette.alt_bg })
       vim.api.nvim_set_hl(0, "DiffAdd", { bg = "#142a03" })
       vim.api.nvim_set_hl(0, "DiffChange", { bg = "#3B3307" })
       vim.api.nvim_set_hl(0, "DiffText", { bg = "#4D520D" })
@@ -135,24 +136,39 @@ return {
 
   {
     "folke/which-key.nvim",
-    config = function(_, opts)
+    init = function()
       vim.o.timeout = true
       vim.o.timeoutlen = 300
+    end,
+    config = function(_, opts)
       local wk = require("which-key")
-      wk.setup(opts)
+      wk.setup({
+        window = {
+          border = "single", -- none, single, double, shadow
+          position = "bottom", -- bottom, top
+          margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
+          padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
+          winblend = 10,
+        },
+        layout = {
+          height = { min = 4, max = 25 }, -- min and max height of the columns
+          width = { min = 20, max = 50 }, -- min and max width of the columns
+          spacing = 3, -- spacing between columns
+          align = "left", -- align columns left, center or right
+        },
+      })
       wk.register({
         ["b"] = { name = "Buffers" },
+        ["s"] = { name = "Sessions", s = "which_key_ignore" },
         ["d"] = { name = "Diagnostics" },
         ["f"] = { name = "Find" },
         ["g"] = { name = "Git" },
         ["m"] = { name = "Marks" },
         ["o"] = { name = "Toggle options" },
         ["r"] = "which_key_ignore",
-        ["s"] = "which_key_ignore",
         ["="] = "which_key_ignore",
       }, { prefix = "<leader>" })
     end,
-    opts = {},
   },
 
   {
@@ -532,7 +548,13 @@ return {
             },
             { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
           },
-          lualine_x = {},
+          lualine_x = {
+            {
+              require("lazy.status").updates,
+              cond = require("lazy.status").has_updates,
+              color = { fg = "#ff9e64" },
+            },
+          },
           lualine_y = {
             -- stylua: ignore
             {

@@ -26,7 +26,7 @@ opt.ignorecase = true -- ignore case in search patterns
 opt.inccommand = "nosplit" -- preview incremental substitute
 opt.laststatus = 3
 opt.list = true -- Show some invisible characters (tabs...
-opt.listchars = { tab = "> ", trail = "·" , nbsp = "·" } -- Show some invisible characters (tabs...
+opt.listchars = { tab = "> ", trail = "·", nbsp = "·" } -- Show some invisible characters (tabs...
 opt.mouse = "a" -- Enable mouse mode
 opt.number = true -- set numbered lines
 opt.numberwidth = 4 -- set number column width to 2 {default 4}
@@ -70,22 +70,23 @@ end
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
 
-
 -- Enhancing :find
-vim.opt.path:append "**" -- Search down into subfolders
+vim.opt.path:append("**") -- Search down into subfolders
 
 -- Enhancing netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 vim.g.netrw_banner = 0 -- Hide banner
 vim.g.netrw_browse_split = 4 -- Open in previous window
 vim.g.netrw_altv = 1 -- Open with right splitting
 vim.g.netrw_liststyle = 3 -- Tree-style view
 vim.g.netrw_list_hide = (vim.fn["netrw_gitignore#Hide"]()) .. [[,\(^\|\s\s\)\zs\.\S\+]] -- use .gitignore
 
-vim.cmd [[
+vim.cmd([[
   " Ensure that helptags are generated for the vim help directory
   let g:DocPath = expand("$VIMRUNTIME/doc")
   let g:DocTags = join([g:DocPath, "tags"], "/")
   if !filereadable(g:DocTags)
       execute join(["helptags", g:DocPath])
   endif
-]]
+]])

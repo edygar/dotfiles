@@ -6,6 +6,8 @@ return {
     event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       { "JoosepAlviste/nvim-ts-context-commentstring" },
+      { "nvim-treesitter/playground" },
+      { "windwp/nvim-ts-autotag" },
     },
     keys = {
       { "<c-space>", desc = "Increment selection" },
@@ -16,6 +18,23 @@ return {
     ---@type TSConfig
     opts = {
       highlight = { enable = true },
+      playground = {
+        enable = true,
+        persist_queries = false, -- Whether the query persists across vim sessions
+        keybindings = {
+          toggle_query_editor = "o",
+          toggle_hl_groups = "i",
+          toggle_injected_languages = "t",
+          toggle_anonymous_nodes = "a",
+          toggle_language_display = "I",
+          focus_language = "f",
+          unfocus_language = "F",
+          update = "R",
+          goto_node = "<cr>",
+          show_help = "?",
+        },
+      },
+      autotag = { enable = true },
       indent = { enable = true },
       context_commentstring = { enable = true, enable_autocmd = true },
       ensure_installed = {
@@ -29,6 +48,7 @@ return {
         "luap",
         "markdown",
         "markdown_inline",
+        "prisma",
         "python",
         "query",
         "regex",
@@ -73,6 +93,15 @@ return {
         end, opts.ensure_installed)
       end
       require("nvim-treesitter.configs").setup(opts)
+
+      vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+        underline = true,
+        virtual_text = {
+          spacing = 5,
+          severity_limit = "Warning",
+        },
+        update_in_insert = true,
+      })
     end,
   },
 
