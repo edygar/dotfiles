@@ -242,7 +242,7 @@ return {
   {
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "davidmh/cspell.nvim", "williamboman/mason.nvim" },
+    dependencies = { "williamboman/mason.nvim" },
     opts = function()
       local nls = require("null-ls")
       local builtins = nls.builtins
@@ -259,15 +259,8 @@ return {
           -- diagnostics
           builtins.diagnostics.eslint_d,
           builtins.diagnostics.markdownlint,
-          require("cspell").diagnostics.with({
-            -- Force the severity to be HINT
-            diagnostics_postprocess = function(diagnostic)
-              diagnostic.severity = vim.diagnostic.severity.HINT
-            end,
-          }),
 
           -- code actions
-          require("cspell").code_actions,
           builtins.code_actions.refactoring,
           builtins.code_actions.gitsigns,
           builtins.code_actions.eslint_d,
@@ -309,7 +302,7 @@ return {
       end
     end,
   },
-  --[[ { import = "lazyvim.plugins.extras.lang.typescript" }, ]]
+  { import = "lazyvim.plugins.extras.lang.typescript" },
   { import = "lazyvim.plugins.extras.lang.json" },
   {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",

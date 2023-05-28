@@ -266,28 +266,6 @@ return {
     },
   },
 
-  -- Extends textobject
-  {
-    "echasnovski/mini.ai",
-    main = "mini.ai",
-    event = "VeryLazy",
-    dependencies = { "nvim-treesitter-textobjects" },
-    config = function()
-      local ai = require("mini.ai")
-      ai.setup({
-        n_lines = 500,
-        custom_textobjects = {
-          o = ai.gen_spec.treesitter({
-            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
-          }, {}),
-          f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
-          c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
-        },
-      })
-    end,
-  },
-
   -- Mappings for e[ e] q[ q] l[ l], etc
   {
     "tummetott/unimpaired.nvim",
@@ -305,6 +283,7 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     keys = {
+      { "g=", "<cmd>Telescope spell_suggest<cr>", mode = "n", desc = "Spell suggest" },
       { "<leader>fb", "<cmd>Telescope buffers<CR>", mode = "n", desc = "Find by file name and path" },
       { "<leader>fc", "<cmd>Telescope colorscheme<CR>", mode = "n", desc = "Find Colorscheme" },
       {

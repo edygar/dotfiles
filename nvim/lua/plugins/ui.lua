@@ -10,6 +10,7 @@ return {
 
       vim.cmd("hi TreesitterContextBottom gui=underline guisp=" .. palette.gray)
 
+      vim.api.nvim_set_hl(0, "SpellBad", { fg = "NONE", bg = "NONE", sp = palette.green, undercurl = true })
       vim.api.nvim_set_hl(0, "WhichKeyFloat", { fg = "NONE", bg = "NONE" })
       vim.api.nvim_set_hl(0, "TelescopeNormal", { fg = palette.fg, bg = palette.bg })
       vim.api.nvim_set_hl(0, "Whitespace", { fg = palette.gray, bg = palette.bg })
@@ -136,7 +137,6 @@ return {
 
   {
     "folke/which-key.nvim",
-    enabled = false,
     init = function()
       vim.o.timeout = true
       vim.o.timeoutlen = 300
@@ -430,6 +430,7 @@ return {
             "toggleterm",
             "DressingSelect",
             "bash",
+            "harpoon",
             "",
           }
 
