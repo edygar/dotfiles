@@ -312,4 +312,12 @@ return {
       { "<leader>otc", "<cmd>TSContextToggle<cr>", mode = "n", desc = "Toggle Treesitter Context" },
     },
   },
+
+  {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = {
+      { "nvim-lua/plenary.nvim" },
+      { "nvim-treesitter/nvim-treesitter" },
+    },
+  },
 }

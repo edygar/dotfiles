@@ -5,7 +5,7 @@ id=$(kitty @ ls | jq ".[] | select(.is_active == true)| .tabs[] | select(.title 
 
 if [[ -z "$id" ]];
 then
-  kitty @ launch --type tab --tab-title $tab_title --cwd $(pwd) zsh -c ". ~/.zprofile; lazygit"
+  kitty @ launch --type tab --tab-title $tab_title --cwd current zsh -c ". ~/.zprofile; lazygit"
 else
   kitty @ focus-tab --match id:"$id"
   exit 0;

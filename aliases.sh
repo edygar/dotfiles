@@ -15,6 +15,9 @@ alias v="nvim"
 alias .dotfiles="cd ~/.dotfiles && nvim"
 alias dotfiles="cd ~/.dotfiles && nvim"
 
+
+alias cat='bat'
+
 # enhancing
 # alias bat="/usr/local/bin/bat --color=always"
 

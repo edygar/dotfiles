@@ -3,6 +3,10 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
+    cmd = { "LspInfo", "LspInstall", "LspUninstall", "LspStart", "LspStop", "LspStatus", "LspRestart" },
+    keys = {
+      { "<leader>cI", "<CMD>LspInfo<CR>", mode = "n" },
+    },
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
       { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
@@ -70,10 +74,10 @@ return {
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         -- example to setup with typescript.nvim
-        tsserver = function(_, opts)
-          require("typescript").setup({ server = opts })
-          return true
-        end,
+        -- tsserver = function(_, opts)
+        --   require("typescript").setup({ server = opts })
+        --   return true
+        -- end,
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
       },
@@ -82,10 +86,9 @@ return {
     config = function(_, opts)
       local Util = require("lazyvim.util")
       -- setup autoformat
-      require("lazyvim.plugins.lsp.format").autoformat = opts.autoformat
+      require("lazyvim.plugins.lsp.format").setup(opts)
       -- setup formatting and keymaps
       Util.on_attach(function(client, buffer)
-        require("lazyvim.plugins.lsp.format").on_attach(client, buffer)
         local keysOpts = function(desc, override)
           return vim.tbl_extend("force", { silent = true, buffer = buffer }, { desc = desc }, override or {})
         end
@@ -110,6 +113,7 @@ return {
         map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", keysOpts("Go to references"))
         map("n", "H", "<cmd>lua vim.lsp.buf.signature_help()<CR>", keysOpts("Signature help"))
         map("n", "<leader>cr", "<cmd>lua vim.lsp.buf.rename()<CR>", keysOpts("Rename symbol"))
+        map("v", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", keysOpts("Code actions"))
         map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", keysOpts("Code actions"))
         map("n", "<leader>cA", function()
           vim.lsp.buf.code_action({
@@ -172,8 +176,8 @@ return {
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
       local servers = opts.servers
-      local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 
+      local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
       local capabilities = vim.tbl_deep_extend(
         "force",
         {},
@@ -238,26 +242,33 @@ return {
   {
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "mason.nvim" },
+    dependencies = { "davidmh/cspell.nvim", "williamboman/mason.nvim" },
     opts = function()
       local nls = require("null-ls")
       local builtins = nls.builtins
       return {
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
-          builtins.formatting.prettier_d_slim.with({
+          builtins.formatting.eslint_d,
+          builtins.formatting.prettierd.with({
             extra_filetypes = { "toml", "solidity", "prisma" },
           }),
-          builtins.formatting.eslint_d,
           builtins.formatting.stylua,
           builtins.formatting.shfmt,
 
           -- diagnostics
-          builtins.diagnostics.eslint_d.u,
+          builtins.diagnostics.eslint_d,
           builtins.diagnostics.markdownlint,
+          require("cspell").diagnostics.with({
+            -- Force the severity to be HINT
+            diagnostics_postprocess = function(diagnostic)
+              diagnostic.severity = vim.diagnostic.severity.HINT
+            end,
+          }),
 
           -- code actions
-          require("typescript.extensions.null-ls.code-actions"),
+          require("cspell").code_actions,
+          builtins.code_actions.refactoring,
           builtins.code_actions.gitsigns,
           builtins.code_actions.eslint_d,
           builtins.hover.dictionary,
@@ -298,7 +309,7 @@ return {
       end
     end,
   },
-  { import = "lazyvim.plugins.extras.lang.typescript" },
+  --[[ { import = "lazyvim.plugins.extras.lang.typescript" }, ]]
   { import = "lazyvim.plugins.extras.lang.json" },
   {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
