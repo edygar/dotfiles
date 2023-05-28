@@ -42,4 +42,10 @@ for file in "$HOME"/.dotfiles/.*; do
   fi
 done
 
+
+echo "Installing dependencies..."
+volta install node
+cargo install sccache exa bat ripgrep fd-find
+npm install -g typescript prettier prettier_d_slim eslint_d eslint neovim typescript-language-server emmet-ls
+
 echo "Installation complete."

@@ -136,6 +136,7 @@ return {
 
   {
     "folke/which-key.nvim",
+    enabled = false,
     init = function()
       vim.o.timeout = true
       vim.o.timeoutlen = 300
@@ -554,6 +555,8 @@ return {
               cond = require("lazy.status").has_updates,
               color = { fg = "#ff9e64" },
             },
+
+            language_server,
           },
           lualine_y = {
             -- stylua: ignore
@@ -586,7 +589,6 @@ return {
               },
             },
             "lsp_progress",
-            language_server,
             "progress",
             "location",
           },

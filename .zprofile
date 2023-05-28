@@ -1,23 +1,10 @@
-PATH="$PATH:$HOME/.local/bin"
-PATH="$PATH:$HOME/Library/Python/$PYTHON_VERSION/bin"
-PATH="$PATH:/Applications/kitty.app/Contents/MacOS"
-PATH="$HOME/.pyenv/bin:$PATH"
-
-lazy_load_nvm() {
-  unset -f node nvm
-  export NVM_DIR=~/.nvm
-  [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-}
-
-node() {
-  lazy_load_nvm
-  node $@
-}
-
-nvm() {
-  lazy_load_nvm
-  node $@
-}
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$PATH:$HOME/.cargo/bin"
+export PATH="$VOLTA_HOME/bin:$PATH"
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/Library/Python/$PYTHON_VERSION/bin"
+export PATH="$PATH:/Applications/kitty.app/Contents/MacOS"
+export PATH="$HOME/.pyenv/bin:$PATH"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 

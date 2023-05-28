@@ -6,6 +6,7 @@
 PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
 eval "$(pyenv init -)"
 
+RUSTC_WRAPPER=sccache
 ZSH_DISABLE_COMPFIX=true
 ZSH_THEME="powerlevel10k/powerlevel10k"
 SOLARIZED_THEME="dark"
@@ -15,7 +16,6 @@ COMPLETION_WAITING_DOTS="true"
 EDITOR="nvim"
 HIST_STAMPS="yyyy-mm-dd"
 FZF_BASE="$HOME/.fzf"
-
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]

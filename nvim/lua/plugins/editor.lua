@@ -338,7 +338,7 @@ return {
           accept_word = false,
           accept_line = false,
           next = "<Up>",
-          prev = "<Bottom>",
+          prev = "<Down>",
           dismiss = "<Left>",
         },
       },
