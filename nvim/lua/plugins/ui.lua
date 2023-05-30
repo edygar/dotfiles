@@ -4,24 +4,27 @@ return {
     "lunarvim/onedarker.nvim",
     config = function()
       local palette = require("onedarker.palette")
+      local hl = vim.api.nvim_set_hl
+
       palette.bg = "#272727"
       palette.alt_bg = "#242424"
+      palette.hint = palette.green
       vim.cmd("colorscheme onedarker")
-
       vim.cmd("hi TreesitterContextBottom gui=underline guisp=" .. palette.gray)
 
-      vim.api.nvim_set_hl(0, "SpellBad", { fg = "NONE", bg = "NONE", sp = palette.green, undercurl = true })
-      vim.api.nvim_set_hl(0, "WhichKeyFloat", { fg = "NONE", bg = "NONE" })
-      vim.api.nvim_set_hl(0, "TelescopeNormal", { fg = palette.fg, bg = palette.bg })
-      vim.api.nvim_set_hl(0, "Whitespace", { fg = palette.gray, bg = palette.bg })
-      vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { fg = palette.gray })
-      vim.api.nvim_set_hl(0, "DiffviewDiffAddAsDelete", { bg = "#431313" })
-      vim.api.nvim_set_hl(0, "DiffDelete", { bg = "#431313" })
-      vim.api.nvim_set_hl(0, "DiffviewDiffDelete", { bg = "NONE", fg = palette.alt_bg })
-      vim.api.nvim_set_hl(0, "DiffAdd", { bg = "#142a03" })
-      vim.api.nvim_set_hl(0, "DiffChange", { bg = "#3B3307" })
-      vim.api.nvim_set_hl(0, "DiffText", { bg = "#4D520D" })
-      vim.api.nvim_set_hl(0, "AlphaHeader", { fg = palette.green })
+      hl(0, "FoldColumn", { fg = palette.gray, bg = palette.alt_bg })
+      hl(0, "SpellBad", { fg = "NONE", bg = "NONE", sp = palette.hint, undercurl = true })
+      hl(0, "WhichKeyFloat", { fg = "NONE", bg = "NONE" })
+      hl(0, "TelescopeNormal", { fg = palette.fg, bg = palette.bg })
+      hl(0, "Whitespace", { fg = palette.gray, bg = palette.bg })
+      hl(0, "GitSignsCurrentLineBlame", { fg = palette.gray })
+      hl(0, "DiffviewDiffAddAsDelete", { fg = "#5c1a1a", bg = "#431313" })
+      hl(0, "DiffDelete", { fg = "#5c1a1a", bg = "#431313" })
+      hl(0, "DiffviewDiffDelete", { bg = "NONE", fg = palette.alt_bg })
+      hl(0, "DiffAdd", { bg = "#142a03" })
+      hl(0, "DiffChange", { bg = "#3B3307" })
+      hl(0, "DiffText", { bg = "#4D520D" })
+      hl(0, "AlphaHeader", { fg = palette.green })
     end,
   },
   -- Better `vim.notify()`
@@ -494,11 +497,12 @@ return {
             language_servers = client_names_str
           end
 
-          if client_names_str_len == 0 and not copilot_active then
-            return ""
-          else
-            return language_servers
-          end
+          -- if client_names_str_len == 0 and not copilot_active then
+          --   return ""
+          -- else
+          --   return language_servers
+          -- end
+          return language_servers
         end,
         padding = 1,
         cond = function()
@@ -551,13 +555,12 @@ return {
             { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
           },
           lualine_x = {
+            language_server,
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
               color = { fg = "#ff9e64" },
             },
-
-            language_server,
           },
           lualine_y = {
             -- stylua: ignore
