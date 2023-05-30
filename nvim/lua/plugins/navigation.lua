@@ -360,7 +360,7 @@ return {
           file_sorter = require("telescope.sorters").get_fzf_sorter,
           path_display = { "truncate" },
           selection_caret = "\u{e0b1} ",
-          prompt_prefix = "\u{e0b1} ",
+          prompt_prefix = "",
           color_devicons = true,
           sorting_strategy = "ascending",
           mappings = {
@@ -373,6 +373,7 @@ return {
                 actions.select_default(prompt_bufnr)
               end,
               ["<C-j>"] = actions.move_selection_next,
+              ["<Right>"] = actions.smart_send_to_qflist,
               ["<C-k>"] = actions.move_selection_previous,
               ["<C-c>"] = actions.close,
               ["<Down>"] = actions.move_selection_next,
@@ -473,7 +474,6 @@ return {
       "nvim-lua/plenary.nvim",
     },
   },
-
   { "tom-anders/telescope-vim-bookmarks.nvim" },
   {
     "nvim-telescope/telescope-fzf-native.nvim",

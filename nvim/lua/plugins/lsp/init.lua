@@ -12,7 +12,6 @@ return {
       { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "jose-elias-alvarez/typescript.nvim",
       {
         "hrsh7th/cmp-nvim-lsp",
         cond = function()
@@ -242,7 +241,7 @@ return {
   {
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "williamboman/mason.nvim" },
+    dependencies = { "davidmh/cspell.nvim", "williamboman/mason.nvim" },
     opts = function()
       local nls = require("null-ls")
       local builtins = nls.builtins
@@ -259,8 +258,16 @@ return {
           -- diagnostics
           builtins.diagnostics.eslint_d,
           builtins.diagnostics.markdownlint,
+          require("cspell").diagnostics.with({
+            disabled_filetypes = { "harpoon" },
+            -- Force the severity to be HINT
+            diagnostics_postprocess = function(diagnostic)
+              diagnostic.severity = vim.diagnostic.severity.HINT
+            end,
+          }),
 
           -- code actions
+          require("cspell").code_actions,
           builtins.code_actions.refactoring,
           builtins.code_actions.gitsigns,
           builtins.code_actions.eslint_d,
@@ -268,11 +275,40 @@ return {
         },
       }
     end,
+    config = function(_, opts)
+      local null_ls = require("null-ls")
+
+      null_ls.setup(opts)
+
+      local setTimeout = function(callback, timeout)
+        local timer = vim.loop.new_timer()
+        timer:start(timeout, 0, function()
+          timer:stop()
+          timer:close()
+          callback()
+        end)
+        return timer
+      end
+
+      vim.api.nvim_create_autocmd({
+        "OptionSet",
+      }, {
+        pattern = "spell",
+        callback = function()
+          if vim.opt.spell:get() then
+            setTimeout(function()
+              null_ls.enable("cspell")
+            end, 50)
+          else
+            null_ls.disable("cspell")
+          end
+        end,
+      })
+    end,
   },
 
   -- cmdline tools and lsp servers
   {
-
     "williamboman/mason.nvim",
     cmd = "Mason",
     keys = { { "<leader>M", "<cmd>Mason<cr>", desc = "Mason" } },
