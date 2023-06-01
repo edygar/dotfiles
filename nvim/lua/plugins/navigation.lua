@@ -8,7 +8,8 @@ return {
       "NvimTreeClose",
     },
     keys = {
-      { "<leader>e", "<cmd>NvimTreeOpen<cr>", mode = "n", desc = "Toggles files tree" },
+      { "<leader>e", "<cmd>NvimTreeOpen<cr>", mode = "n", desc = "Open files tree" },
+      { "<leader>E", "<cmd>NvimTreeClose<cr>", mode = "n", desc = "Closes files tree" },
     },
     opts = function()
       -- file explorer
@@ -365,6 +366,9 @@ return {
           sorting_strategy = "ascending",
           mappings = {
             i = {
+              ["<C-f>"] = function()
+                vim.cmd("stopinsert")
+              end,
               ["<C-n>"] = actions.cycle_history_next,
               ["<C-p>"] = actions.cycle_history_prev,
               ["<C-e>"] = function(prompt_bufnr)

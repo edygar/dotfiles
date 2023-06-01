@@ -23,6 +23,8 @@
   newNormal = green bold
   newHighlight = green bold 22
 
+[commit]
+  verbose=true
 [alias]
   # add
   a = add                           # add

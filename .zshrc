@@ -25,15 +25,13 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 
-plugins=(git fasd zsh-vi-mode zsh-autosuggestions fzf)
+plugins=(git fasd vi-mode zsh-autosuggestions fzf)
 
 source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
 source "$HOME/.dotfiles/aliases.sh"
-function zvm_after_init() {
-  source "$HOME/.dotfiles/key-bindings.sh"
-  eval "$(zoxide init zsh)"
-  source "$FZF_BASE/shell/key-bindings.zsh"
-}
+source "$HOME/.dotfiles/key-bindings.sh"
+eval "$(zoxide init zsh)"
+source "$FZF_BASE/shell/key-bindings.zsh"
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

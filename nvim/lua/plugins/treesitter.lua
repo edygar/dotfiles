@@ -63,10 +63,14 @@ return {
           enable = true,
           lookahead = true,
           keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
+            -- Item capture group
+            ["a,"] = { query = "@list_item", desc = "Select list item" },
+            ["i,"] = { query = "@list_item", desc = "Select list item" },
+
             ["af"] = "@function.outer",
             ["if"] = "@function.inner",
             ["ac"] = "@class.outer",
+
             -- You can optionally set descriptions to the mappings (used in the desc parameter of
             -- nvim_buf_set_keymap) which plugins like which-key display
             ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
@@ -83,10 +87,10 @@ return {
         swap = {
           enable = true,
           swap_previous = {
-            ["[r"] = "@parameter.inner",
+            ["[r"] = { query = "@list_item", desc = "Swap amongst list items" },
           },
           swap_next = {
-            ["]r"] = "@parameter.inner",
+            ["]r"] = { query = "@list_item", desc = "Swap amongst list items" },
           },
         },
       },
