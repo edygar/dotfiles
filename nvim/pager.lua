@@ -2,6 +2,7 @@ require("init")
 require("lualine").hide()
 vim.cmd([[
   set shell=bash
+  set nospell
   set nocursorline
   set signcolumn=no
   set laststatus=0

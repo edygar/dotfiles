@@ -94,6 +94,7 @@ return {
     },
     keys = {
       { "<leader>gd", "<cmd>DiffviewOpen<cr>", mode = "n", desc = "Open diff view" },
+      { "<leader>gD", "<cmd>DiffviewOpen master..HEAD<cr>", mode = "n", desc = "History since master" },
       { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", mode = "n", desc = "Open file git history" },
       { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", mode = "n", desc = "Open Git history" },
       { "<leader>gh", "<cmd>'<,'>DiffviewFileHistory<cr>", mode = "v", desc = "Open file history" },

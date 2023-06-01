@@ -12,6 +12,7 @@ return {
       { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      "jose-elias-alvarez/typescript.nvim",
       {
         "hrsh7th/cmp-nvim-lsp",
         cond = function()
@@ -73,10 +74,10 @@ return {
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         -- example to setup with typescript.nvim
-        -- tsserver = function(_, opts)
-        --   require("typescript").setup({ server = opts })
-        --   return true
-        -- end,
+        tsserver = function(_, opts)
+          require("typescript").setup({ server = opts })
+          return true
+        end,
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
       },
@@ -245,10 +246,30 @@ return {
     opts = function()
       local nls = require("null-ls")
       local builtins = nls.builtins
+      local h = require("null-ls.helpers")
+      local u = require("null-ls.utils")
+      local eslintCwd = h.cache.by_bufnr(function(params)
+        return u.root_pattern(
+          -- https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new
+          "eslint.config.js",
+          -- https://eslint.org/docs/user-guide/configuring/configuration-files#configuration-file-formats
+          ".eslintrc",
+          ".eslintrc.js",
+          ".eslintrc.cjs",
+          ".eslintrc.yaml",
+          ".eslintrc.yml",
+          ".eslintrc.json",
+          "package.json"
+        )(params.bufname)
+      end)
+
       return {
+        debug = true,
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
-          builtins.formatting.eslint_d,
+          builtins.formatting.eslint_d.with({
+            cwd = eslintCwd,
+          }),
           builtins.formatting.prettierd.with({
             extra_filetypes = { "toml", "solidity", "prisma" },
           }),
@@ -256,7 +277,9 @@ return {
           builtins.formatting.shfmt,
 
           -- diagnostics
-          builtins.diagnostics.eslint_d,
+          builtins.diagnostics.eslint_d.with({
+            cwd = eslintCwd,
+          }),
           builtins.diagnostics.markdownlint,
           require("cspell").diagnostics.with({
             disabled_filetypes = { "harpoon" },
@@ -270,7 +293,9 @@ return {
           require("cspell").code_actions,
           builtins.code_actions.refactoring,
           builtins.code_actions.gitsigns,
-          builtins.code_actions.eslint_d,
+          builtins.code_actions.eslint_d.with({
+            cwd = eslintCwd,
+          }),
           builtins.hover.dictionary,
         },
       }
@@ -338,7 +363,6 @@ return {
       end
     end,
   },
-  { import = "lazyvim.plugins.extras.lang.typescript" },
   { import = "lazyvim.plugins.extras.lang.json" },
   {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
