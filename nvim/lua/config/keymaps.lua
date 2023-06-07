@@ -11,11 +11,17 @@ local function map(mode, lhs, rhs, customOpts)
 end
 
 -- Utils
+map("t", "<C-Esc>", "<C-\\><C-n>", { desc = "Open Lazy Dialog" })
 map("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Open Lazy Dialog" })
 map("n", "<leader>Q", "<cmd>qa<cr>", { desc = "Quit all" })
 map("n", "<leader>wq", "<cmd>wq<cr>", { desc = "Save current buffer and quit" })
 map("n", "<leader>ww", "<cmd>w<cr>", { silent = true, desc = "Save current buffer" })
 map("n", "<leader>wa", "<cmd>wa<cr>", { silent = true, desc = "Save all open buffers" })
+map("n", "<leader>wF", function()
+  require("lazyvim.plugins.lsp.format").toggle()
+  vim.cmd("w")
+  require("lazyvim.plugins.lsp.format").toggle()
+end, { desc = "Save current buffer unformatted" })
 map("n", "<M-q>", "<cmd>bd<CR>", { silent = true, desc = "Close current window" })
 map("n", "<leader>h", "<cmd>nohlsearch<cr>", { desc = "Toggles search highlight" })
 map("n", "<esc><esc>", "<cmd>nohlsearch<cr>", { desc = "Toggles search highlight" })

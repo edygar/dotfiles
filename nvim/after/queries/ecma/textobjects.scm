@@ -8,3 +8,4 @@
 (variable_declarator (array_pattern (_) @list_item))
 (property_signature) @list_item
 (call_expression (arguments (_) @list_item))
+(object (pair) @list_item)

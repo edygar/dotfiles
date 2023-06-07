@@ -1,27 +1,5 @@
 return {
   {
-    "MaximilianLloyd/lazy-reload.nvim",
-    cmd = "ReloadPlugin",
-    opts = {
-      command_name = "ReloadPlugin",
-    },
-    keys = {
-      {
-        "<leader>rl",
-        function()
-          vim.ui.select(vim.tbl_values(require("lazy").plugins()), {
-            prompt = "Reload Plugin",
-            format_item = function(item)
-              return item[1]
-            end,
-          }, function(item)
-            vim.cmd("ReloadPlugin " .. item.name)
-          end)
-        end,
-      },
-    },
-  },
-  {
     "folke/persistence.nvim",
     main = "persistence",
     event = "BufReadPre", -- this will only start session saving when an actual file was opened
