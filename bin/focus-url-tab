@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+#
+url="$1"
+tab=$(list-tabs.js "Google Chrome" | jq -r '.items[] | select(.url | startswith("'$url'")) | .arg')
+
+if [ -z "$tab" ]; then
+  open $url
+  echo $tab
+else
+  browser="Google Chrome" focus-tab.js "$tab"
+fi
+

@@ -367,4 +367,114 @@ return {
   },
   { "nacro90/numb.nvim", config = true, event = "CmdlineEnter" },
   { "echasnovski/mini.pairs", main = "mini.pairs", event = "InsertEnter", config = true },
+  { "folke/neodev.nvim" },
+  {
+    "nvim-neotest/neotest",
+    keys = {
+      {
+        "<leader>tr",
+        function()
+          require("neotest").run.run()
+        end,
+        mode = "n",
+        desc = "Run nearest test",
+      },
+      {
+        "<leader>tf",
+        function()
+          require("neotest").run.run(vim.fn.expand("%"))
+        end,
+        mode = "n",
+        desc = "Runs current file",
+      },
+      {
+        "<leader>tt",
+        function()
+          require("neotest").summary.toggle()
+        end,
+        mode = "n",
+        desc = "Toggles NeoTest Summary",
+      },
+      {
+        "<leader>tw",
+        function()
+          require("neotest").run.run({ jestCommand = "pnpm test -- --watch " })
+        end,
+        mode = "n",
+        desc = "Runs in nearst test watch mode",
+      },
+
+      { "<leader>ta", '<cmd>lua require("neotest").run.attach()<CR>', mode = "n", desc = "Attaches the current run" },
+      {
+        "<leader>to",
+        '<cmd>lua require("neotest").output.open()<CR>',
+        mode = "n",
+        desc = "Shows the output",
+      },
+      {
+        "<leader>tO",
+        '<cmd>lua require("neotest").output_panel.toggle()<CR>',
+        mode = "n",
+        desc = "Shows the output panel",
+      },
+      {
+        "[N",
+        '<cmd>lua require("neotest").jump.prev({ status = "failed" })<CR>',
+        mode = "n",
+        desc = "Go to the previous failed test",
+      },
+      {
+        "[n",
+        '<cmd>lua require("neotest").jump.prev()<CR>',
+        mode = "n",
+        desc = "Go to the previous test",
+      },
+      {
+        "]N",
+        '<cmd>lua require("neotest").jump.next({ status = "failed" })<CR>',
+        mode = "n",
+        desc = "Go to the next failed test",
+      },
+      { "]n", '<cmd>lua require("neotest").jump.next()<CR>', mode = "n", desc = "Go to the next test" },
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
+      { "haydenmeade/neotest-jest", lazy = true },
+    },
+    opts = function()
+      return {
+        adapters = {
+          require("neotest-jest")({
+            jestCommand = "pnpm test -- ",
+          }),
+        },
+        output = {
+          enabled = true,
+          open_on_run = true,
+        },
+        output_panel = {
+          enabled = true,
+          open = "vsplit | vertical resize 50",
+        },
+        summary = {
+          open = "botright vsplit | vertical resize 40",
+          mappings = {
+            expand_all = "<space>",
+          },
+        },
+      }
+    end,
+  },
+  {
+    "smjonas/live-command.nvim",
+    -- live-command supports semantic versioning via tags
+    -- tag = "1.*",
+    opts = {
+      commands = {
+        Norm = { cmd = "norm" },
+      },
+    },
+  },
 }

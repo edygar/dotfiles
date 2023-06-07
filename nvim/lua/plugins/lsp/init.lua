@@ -68,6 +68,27 @@ return {
             },
           },
         },
+        tsserver = {
+          settings = {
+            typescript = {
+              format = {
+                indentSize = vim.o.shiftwidth,
+                convertTabsToSpaces = vim.o.expandtab,
+                tabSize = vim.o.tabstop,
+              },
+            },
+            javascript = {
+              format = {
+                indentSize = vim.o.shiftwidth,
+                convertTabsToSpaces = vim.o.expandtab,
+                tabSize = vim.o.tabstop,
+              },
+            },
+            completions = {
+              completeFunctionCalls = true,
+            },
+          },
+        },
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
@@ -75,6 +96,14 @@ return {
       setup = {
         -- example to setup with typescript.nvim
         tsserver = function(_, opts)
+          require("lazyvim.util").on_attach(function(client, buffer)
+            if client.name == "tsserver" then
+              -- stylua: ignore
+              vim.keymap.set("n", "<leader>co", "<cmd>TypescriptOrganizeImports<CR>", { buffer = buffer, desc = "Organize Imports" })
+              -- stylua: ignore
+              vim.keymap.set("n", "<leader>cR", "<cmd>TypescriptRenameFile<CR>", { desc = "Rename File", buffer = buffer })
+            end
+          end)
           require("typescript").setup({ server = opts })
           return true
         end,
@@ -291,12 +320,12 @@ return {
 
           -- code actions
           require("cspell").code_actions,
-          builtins.code_actions.refactoring,
-          builtins.code_actions.gitsigns,
           builtins.code_actions.eslint_d.with({
             cwd = eslintCwd,
           }),
+          builtins.code_actions.refactoring,
           builtins.hover.dictionary,
+          builtins.code_actions.gitsigns,
         },
       }
     end,

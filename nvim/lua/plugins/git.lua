@@ -44,6 +44,8 @@ return {
 
         map({ "n", "v" }, "<leader>gs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
         map({ "n", "v" }, "<leader>gr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
+        map("n", "<leader>gR", "<cmd>!git reset %<cr>", "Reset whole file")
+        map("n", "<leader>gt", "<cmd>silent !git restore %<cr>", "Restore file")
 
         map("n", "<leader>gb", function()
           gs.blame_line({ full = true })

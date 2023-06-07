@@ -280,6 +280,7 @@ return {
       char = "│",
       filetype_exclude = {
         "",
+        "neotest-summary",
         "Cybu",
         "DressingSelect",
         "Jaq",
@@ -346,6 +347,7 @@ return {
         "neo-tree",
         "neogitstatus",
         "nofile",
+        "neotest-summary",
         "packer",
         "prompt",
         "qf",
@@ -379,7 +381,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     init = function()
       vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "mason" },
+        pattern = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy", "mason", "nofile", "neotest-summary" },
         callback = function()
           vim.b.miniindentscope_disable = true
         end,

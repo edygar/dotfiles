@@ -6,6 +6,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = {
     "Jaq",
     "qf",
+    "notify",
     "help",
     "man",
     "lspinfo",
