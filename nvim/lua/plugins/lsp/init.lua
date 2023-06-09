@@ -395,8 +395,26 @@ return {
   { import = "lazyvim.plugins.extras.lang.json" },
   {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    opts = { virtual_lines = true },
+    config = function(_, opts)
+      require("lsp_lines").setup(opts)
+      vim.diagnostic.config({
+        virtual_lines = false,
+        virtual_text = true,
+      })
+    end,
     keys = {
-      { "<leader>cl", "<cmd>lua require('lsp_lines').toggle()<cr>", desc = "Toggle LSP lines" },
+      {
+        "<leader>cl",
+        function()
+          local lsp_lines_enabled = not vim.diagnostic.config().virtual_lines
+          vim.diagnostic.config({
+            virtual_lines = lsp_lines_enabled,
+            virtual_text = not lsp_lines_enabled,
+          })
+        end,
+        desc = "Toggle LSP lines",
+      },
     },
   },
 }

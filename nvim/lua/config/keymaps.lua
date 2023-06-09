@@ -66,10 +66,6 @@ map("n", "tk", ":tabnext<cr>", { desc = "Next tab" })
 map("n", "tc", ":tabclose<cr>", { desc = "Close tab" })
 map("n", "to", ":tabonly<cr>", { desc = "Close all other tab" })
 
--- Better visual put
-map({ "v", "x" }, "p", '"_dP', opts)
-map({ "v", "x" }, "P", '"_Dp', opts)
-
 -- toggle options
 map("n", "<leader>of", require("lazyvim.plugins.lsp.format").toggle, { desc = "Toggle format on Save" })
 map("n", "<leader>ob", function()

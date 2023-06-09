@@ -122,7 +122,8 @@ return {
         view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
       },
       views = {
-        popupmenu = {
+
+        cmdline_popupmenu = {
           relative = "cursor",
           position = "auto",
         },
