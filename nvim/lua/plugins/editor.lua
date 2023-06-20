@@ -85,6 +85,7 @@ return {
   },
   --snippet engine
   { "L3MON4D3/LuaSnip" },
+
   -- a bunch of snippets to use
   { "rafamadriz/friendly-snippets" },
 
@@ -216,10 +217,10 @@ return {
           end,
         },
         sources = {
+          { name = "luasnip" },
           { name = "crates" },
           { name = "nvim_lua" },
           { name = "nvim_lsp" },
-          { name = "luasnip" },
           { name = "copilot" },
           { name = "buffer", keyword_length = 3 },
           { name = "path" },
@@ -479,6 +480,7 @@ return {
   },
   {
     "smjonas/live-command.nvim",
+    main = "live-command",
     -- live-command supports semantic versioning via tags
     -- tag = "1.*",
     opts = {

@@ -9,24 +9,35 @@ return {
       palette.bg = "#272727"
       palette.alt_bg = "#242424"
       palette.hint = palette.green
-      vim.cmd("colorscheme onedarker")
-      vim.cmd("hi TreesitterContextBottom gui=underline guisp=" .. palette.gray)
 
-      hl(0, "FoldColumn", { fg = palette.gray, bg = palette.alt_bg })
-      hl(0, "SpellBad", { fg = "NONE", bg = "NONE", sp = palette.hint, undercurl = true })
-      hl(0, "WhichKeyFloat", { fg = "NONE", bg = "NONE" })
-      hl(0, "TelescopeNormal", { fg = palette.fg, bg = palette.bg })
-      hl(0, "Whitespace", { fg = palette.gray, bg = palette.bg })
-      hl(0, "GitSignsCurrentLineBlame", { fg = palette.gray })
-      hl(0, "DiffviewDiffAddAsDelete", { bg = "#431313" })
-      hl(0, "DiffDelete", { bg = "#431313" })
-      hl(0, "DiffviewDiffDelete", { bg = "#431313" })
-      hl(0, "DiffAdd", { bg = "#142a03" })
-      hl(0, "DiffChange", { bg = "#3B3307" })
-      hl(0, "DiffText", { bg = "#4D520D" })
-      hl(0, "AlphaHeader", { fg = palette.green })
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+          if vim.g.colors_name ~= "onedarker" then
+            return
+          end
+
+          hl(0, "TreesitterContextBottom", { underline = true, sp = palette.gray })
+          hl(0, "FoldColumn", { fg = palette.gray, bg = palette.alt_bg })
+          hl(0, "SpellBad", { fg = "NONE", bg = "NONE", sp = palette.hint, undercurl = true })
+          hl(0, "WhichKeyFloat", { fg = "NONE", bg = "NONE" })
+          hl(0, "TelescopeNormal", { fg = palette.fg, bg = palette.bg })
+          hl(0, "Whitespace", { fg = palette.gray, bg = palette.bg })
+          hl(0, "GitSignsCurrentLineBlame", { fg = palette.gray })
+          hl(0, "DiffviewDiffAddAsDelete", { bg = "#431313" })
+          hl(0, "DiffDelete", { bg = "#431313" })
+          hl(0, "DiffviewDiffDelete", { bg = "#431313" })
+          hl(0, "DiffAdd", { bg = "#142a03" })
+          hl(0, "DiffChange", { bg = "#3B3307" })
+          hl(0, "DiffText", { bg = "#4D520D" })
+          hl(0, "AlphaHeader", { fg = palette.green })
+        end,
+      })
+      vim.cmd("colorscheme onedarker")
     end,
   },
+
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+
   -- Better `vim.notify()`
   {
     "rcarriga/nvim-notify",

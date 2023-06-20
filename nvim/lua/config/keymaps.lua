@@ -30,6 +30,13 @@ vim.cmd([[
   nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 ]])
 
+vim.keymap.set(
+  "n",
+  "<leader>rs",
+  "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<CR>",
+  { noremap = true, silent = true, desc = "Reload snippets" }
+)
+
 -- copy current filename into system clipboard
 -- this is helpful to paste someone the path you're looking at
 -- Mnemonic: (c)urrent (f)ull filename (Eg.: ~/.yadr/nvim/settings/vim-keymaps.vim)
