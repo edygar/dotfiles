@@ -1,8 +1,11 @@
+eval "$(pyenv init -)"
+export PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$PATH:$HOME/.dotfiles/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$VOLTA_HOME/bin:$PATH"
 export PATH="$PATH:$HOME/.local/bin"
+
 export PATH="$PATH:$HOME/Library/Python/$PYTHON_VERSION/bin"
 export PATH="$PATH:/Applications/kitty.app/Contents/MacOS"
 export PATH="$HOME/.pyenv/bin:$PATH"

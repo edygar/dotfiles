@@ -22,7 +22,7 @@ require("lazy").setup({
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
   install = { colorscheme = { "onedarker" } },
-  checker = { enabled = true }, -- automatically check for plugin updates
+  checker = { enabled = not IN_PAGER }, -- automatically check for plugin updates
   change_detection = {
     notify = false,
   },
