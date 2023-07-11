@@ -1,3 +1,4 @@
+IN_PAGER = true
 require("init")
 require("lualine").hide()
 vim.cmd([[

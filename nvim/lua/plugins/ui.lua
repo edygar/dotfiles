@@ -71,8 +71,10 @@ return {
         end)
       end
 
-      require("telescope").load_extension("notify")
-      require("telescope").load_extension("noice")
+      pcall(function()
+        require("telescope").load_extension("notify")
+        require("telescope").load_extension("noice")
+      end)
     end,
   },
   {

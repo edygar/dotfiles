@@ -45,6 +45,12 @@ map("n", "ycf", "<cmd>let @* = expand('%:~')<CR>", { desc = "Copy current file's
 map("n", "ycr", "<cmd>let @* = expand('%')<CR>", { desc = "Copy current file's relative path" })
 -- Mnemonic: (c)urrent (n)ame of the file (Eg.: vim-maps.vim)
 map("n", "ycn", "<cmd>let @* = expand('%:t')<CR>", { desc = "Copy current file's name" })
+map("n", "ycb", "<cmd>let @* = expand('%:t')<CR>", { desc = "Copy current file's name" })
+-- Current Branch
+map("i", "<C-b>", function()
+  local branch = vim.fn.systemlist("git branch --show-current")[1]
+  vim.cmd("put ='" .. branch .. "'")
+end, { desc = "Inserts branch name", silent = false })
 
 -- better up/down
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, desc = "Up" })
