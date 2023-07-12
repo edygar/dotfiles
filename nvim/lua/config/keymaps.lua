@@ -47,11 +47,11 @@ map("n", "ycr", "<cmd>let @* = expand('%')<CR>", { desc = "Copy current file's r
 map("n", "ycn", "<cmd>let @* = expand('%:t')<CR>", { desc = "Copy current file's name" })
 map("n", "ycb", "<cmd>let @* = expand('%:t')<CR>", { desc = "Copy current file's name" })
 -- Current Branch
-map("i", "<C-b>", function()
+map("n", "<leader>gi", function()
+  -- Get the branch name by executing a shell command
   local branch = vim.fn.systemlist("git branch --show-current")[1]
-  vim.cmd("put ='" .. branch .. "'")
-end, { desc = "Inserts branch name", silent = false })
-
+  vim.api.nvim_feedkeys("OO" .. branch .. " - ", "n", false)
+end, { expr = true, desc = "Insert current branch name" })
 -- better up/down
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, desc = "Up" })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, desc = "Down" })
