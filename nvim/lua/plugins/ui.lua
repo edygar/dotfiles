@@ -278,11 +278,72 @@ return {
         preference = { "tsserver" },
       },
     },
-    config = function(_, opts)
-      local navic = require("nvim-navic")
-      navic.setup(opts)
-      require("custom.winbar").setup()
-    end,
+    -- config = function(_, opts)
+    --   local navic = require("nvim-navic")
+    --   navic.setup(opts)
+    --   require("custom.winbar").setup()
+    -- end,
+  },
+
+  {
+    "Bekaboo/dropbar.nvim",
+    keys = {
+      { "<leader>j", "<cmd>lua require('dropbar.api').pick()<CR>" },
+    },
+    lazy = false,
+    opts = {
+      bar = {
+        sources = function(buf, _)
+          local sources = require("dropbar.sources")
+          local utils = require("dropbar.utils")
+          if vim.bo[buf].ft == "markdown" then
+            return {
+              require("custom.dropbar.path"),
+              utils.source.fallback({
+                sources.treesitter,
+                sources.markdown,
+                sources.lsp,
+              }),
+            }
+          end
+          return {
+            require("custom.dropbar.path"),
+            utils.source.fallback({
+              sources.treesitter,
+              sources.lsp,
+            }),
+          }
+        end,
+      },
+      menu = {
+        keymaps = {
+          ["<Esc>"] = function()
+            vim.cmd("wincmd c")
+          end,
+          ["q"] = function()
+            local api = require("dropbar.api")
+            local menu = api.get_current_dropbar_menu()
+            while menu do
+              vim.cmd("bd " .. menu.buf)
+              menu = api.get_current_dropbar_menu()
+            end
+          end,
+          ["<Space>"] = function()
+            local menu = require("dropbar.api").get_current_dropbar_menu()
+            if not menu then
+              return
+            end
+            local cursor = vim.api.nvim_win_get_cursor(menu.win)
+            local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
+            if component then
+              menu:jump()
+            end
+          end,
+        },
+      },
+    },
+    config = true,
+    dependencies = { "kyazdani42/nvim-web-devicons" },
   },
 
   -- Indent guides for Neovim
