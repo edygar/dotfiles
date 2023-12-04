@@ -3,6 +3,17 @@ return {
   { "vim-scripts/lastpos.vim" },
   { "andymass/vim-visput" },
   {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    main = "ts_context_commentstring",
+    opts = function()
+      vim.g.skip_ts_context_commentstring_module = true
+      return {
+        enable_autocmd = false,
+      }
+    end,
+  },
+
+  {
     "numToStr/Comment.nvim",
     main = "Comment",
     config = true,
@@ -84,7 +95,7 @@ return {
     end,
   },
   --snippet engine
-  { "L3MON4D3/LuaSnip" },
+  -- { "L3MON4D3/LuaSnip" },
 
   -- a bunch of snippets to use
   { "rafamadriz/friendly-snippets" },
@@ -96,7 +107,7 @@ return {
       "hrsh7th/cmp-buffer", -- buffer completions
       "hrsh7th/cmp-path", -- path completions
       "hrsh7th/cmp-cmdline", -- cmdline completions
-      "saadparwaiz1/cmp_luasnip", -- snippet completions
+      -- "saadparwaiz1/cmp_luasnip", -- snippet completions
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-emoji",
       "zbirenbaum/copilot-cmp",
@@ -105,7 +116,7 @@ return {
     },
     config = function()
       local cmp = require("cmp")
-      local luasnip = require("luasnip")
+      -- local luasnip = require("luasnip")
       local compare = require("cmp.config.compare")
       local icons = require("config.icons")
       local kind_icons = icons.kind
@@ -114,7 +125,7 @@ return {
       vim.api.nvim_set_hl(0, "CmpItemKindEmoji", { fg = "#FDE030" })
       vim.api.nvim_set_hl(0, "CmpItemKindCrate", { fg = "#F64D00" })
 
-      require("luasnip/loaders/from_vscode").lazy_load()
+      -- require("luasnip/loaders/from_vscode").lazy_load()
 
       local check_backspace = function()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -122,21 +133,10 @@ return {
       end
 
       cmp.setup({
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body) -- For `luasnip` users.
-          end,
-        },
         mapping = {
           ["<C-n>"] = cmp.mapping(function()
             if cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.jumpable(1) then
-              luasnip.jump(1)
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            elseif luasnip.expandable() then
-              luasnip.expand()
             elseif check_backspace() then
               cmp.complete()
             else
@@ -208,7 +208,7 @@ return {
             vim_item.menu = ({
               nvim_lsp = "[LSP] ",
               nvim_lua = "[Lua] ",
-              luasnip = "[LuaSnip]",
+              -- luasnip = "[LuaSnip]",
               buffer = "[Buffer]",
               path = "[Path]",
               emoji = "[Emoji]",
@@ -217,7 +217,7 @@ return {
           end,
         },
         sources = {
-          { name = "luasnip" },
+          -- { name = "luasnip" },
           { name = "crates" },
           { name = "nvim_lua" },
           { name = "nvim_lsp" },
@@ -489,4 +489,5 @@ return {
       },
     },
   },
+  { "arthurxavierx/vim-caser" },
 }

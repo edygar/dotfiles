@@ -149,7 +149,7 @@ return {
         map("n", "<leader>cr", "<cmd>lua vim.lsp.buf.rename()<CR>", keysOpts("Rename symbol"))
         map("v", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", keysOpts("Code actions"))
         map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", keysOpts("Code actions"))
-        map("n", "<leader>cA", function()
+        local function allCodeActions()
           vim.lsp.buf.code_action({
             context = {
               only = {
@@ -158,7 +158,9 @@ return {
               diagnostics = {},
             },
           })
-        end, keysOpts("Source Action"))
+        end
+        map("n", "<leader>cA", allCodeActions, keysOpts("Source Action"))
+        map("v", "<leader>cA", allCodeActions, keysOpts("Source Action"))
         map(
           "n",
           "[d",
@@ -298,7 +300,6 @@ return {
       end)
 
       return {
-        debug = true,
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
           builtins.formatting.eslint_d.with({
@@ -316,7 +317,7 @@ return {
           }),
           builtins.diagnostics.markdownlint,
           require("cspell").diagnostics.with({
-            disabled_filetypes = { "harpoon" },
+            disabled_filetypes = { "harpoon", "NvimTree_1", "NvimTree" },
             -- Force the severity to be HINT
             diagnostics_postprocess = function(diagnostic)
               diagnostic.severity = vim.diagnostic.severity.HINT
