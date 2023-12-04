@@ -48,6 +48,9 @@ local function convert(path, buf, win, label)
     icon_hl = icon_hl,
     ---Override the default jump function
     jump = function(_)
+      require("nvim-tree")
+      local api = require("nvim-tree.api")
+      api.tree.find_file({ buf = path, focus = false })
       vim.cmd.edit(path)
     end,
   }, {
@@ -55,28 +58,40 @@ local function convert(path, buf, win, label)
     __index = function(self, k)
       if k == "children" then
         self.children = {}
-        table.insert(self.children, convert(vim.fs.dirname(path), buf, win, ".."))
+        local count = 0
         for name in vim.fs.dir(path) do
           if configs.opts.sources.path.filter(name) then
             table.insert(self.children, convert(path .. "/" .. name, buf, win, name))
+            count = count + 1
           end
         end
+
+        if count > 0 then
+          table.insert(self.children, 1, convert(vim.fs.dirname(path), buf, win, ".."))
+        end
+
         return self.children
       end
       if k == "siblings" or k == "sibling_idx" then
+        local count = 0
         local parent_dir = vim.fs.dirname(path)
         self.siblings = {}
         self.sibling_idx = 1
-        table.insert(self.siblings, convert(vim.fs.dirname(parent_dir), buf, win, ".."))
 
         for idx, name in vim.iter(vim.fs.dir(parent_dir)):enumerate() do
           if configs.opts.sources.path.filter(name) then
             table.insert(self.siblings, convert(parent_dir .. "/" .. name, buf, win, name))
+            count = count + 1
             if name == self.name then
               self.sibling_idx = idx
             end
           end
         end
+
+        if count > 0 then
+          table.insert(self.siblings, 1, convert(vim.fs.dirname(parent_dir), buf, win, ".."))
+        end
+
         return self[k]
       end
     end,

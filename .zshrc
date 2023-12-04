@@ -3,7 +3,7 @@
 eval "$(pyenv init -)"
 
 [[ -f $HOME/.zprofile ]] && . $HOME/.zprofile
-[[ -f $HOME/.env.zsh ]] && . $HOME/.env.sh
+[[ -f $HOME/.env.zsh ]] && . $HOME/.env.zsh
 
 
 RUSTC_WRAPPER=sccache

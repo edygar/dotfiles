@@ -26,7 +26,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
   pattern = { "" },
   callback = function()
     local buf_ft = vim.bo.filetype
-    if buf_ft == "" or buf_ft == nil then
+    if buf_ft == nil then
       vim.cmd([[
       nnoremap <silent> <buffer> q :close<CR>
       set nobuflisted

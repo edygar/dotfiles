@@ -9,7 +9,7 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
-    { "LazyVim/LazyVim" },
+    { "LazyVim/LazyVim", commit = "61f1c308bf6b87c51a2b49c314c7c7379f19a27e" },
     { import = "plugins" },
   },
   defaults = {
@@ -22,7 +22,7 @@ require("lazy").setup({
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
   install = { colorscheme = { "onedarker" } },
-  checker = { enabled = not IN_PAGER }, -- automatically check for plugin updates
+  checker = { enabled = false }, -- automatically check for plugin updates
   change_detection = {
     notify = false,
   },

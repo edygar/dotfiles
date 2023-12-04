@@ -5,7 +5,6 @@ return {
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
     dependencies = {
-      { "JoosepAlviste/nvim-ts-context-commentstring" },
       { "nvim-treesitter/playground" },
       { "windwp/nvim-ts-autotag" },
     },
@@ -36,7 +35,6 @@ return {
       },
       autotag = { enable = true },
       indent = { enable = true },
-      context_commentstring = { enable = true, enable_autocmd = true },
       ensure_installed = {
         "bash",
         "c",

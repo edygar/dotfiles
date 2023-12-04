@@ -30,12 +30,12 @@ vim.cmd([[
   nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 ]])
 
-vim.keymap.set(
-  "n",
-  "<leader>rs",
-  "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<CR>",
-  { noremap = true, silent = true, desc = "Reload snippets" }
-)
+-- vim.keymap.set(
+--   "n",
+--   "<leader>rs",
+--   "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<CR>",
+--   { noremap = true, silent = true, desc = "Reload snippets" }
+-- )
 
 -- copy current filename into system clipboard
 -- this is helpful to paste someone the path you're looking at
@@ -49,8 +49,8 @@ map("n", "ycb", "<cmd>let @* = expand('%:t')<CR>", { desc = "Copy current file's
 -- Current Branch
 map("n", "<leader>gi", function()
   -- Get the branch name by executing a shell command
-  local branch = vim.fn.systemlist("git branch --show-current")[1]
-  vim.api.nvim_feedkeys("OO" .. branch .. " - ", "n", false)
+  local prefix = vim.fn.systemlist([[git branch --show-current | sed -E 's/(FRR-[0-9]+)-.*/\1 - /']])[1]
+  vim.api.nvim_feedkeys("OO" .. prefix, "n", false)
 end, { expr = true, desc = "Insert current branch name" })
 -- better up/down
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, desc = "Up" })

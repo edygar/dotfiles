@@ -79,20 +79,9 @@ return {
   },
   {
     "stevearc/dressing.nvim",
-    init = function()
-      ---@diagnostic disable-next-line: duplicate-set-field
-      vim.ui.select = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
-        return vim.ui.select(...)
-      end
-      ---@diagnostic disable-next-line: duplicate-set-field
-      vim.ui.input = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
-        return vim.ui.input(...)
-      end
-    end,
     opts = {
       input = {
+        enabled = true,
         relative = "cursor",
         insert_only = false,
         mappings = {
@@ -109,6 +98,9 @@ return {
             ["<Down>"] = "HistoryNext",
           },
         },
+      },
+      select = {
+        enabled = true,
       },
     },
   },
@@ -286,7 +278,8 @@ return {
   },
 
   {
-    "Bekaboo/dropbar.nvim",
+    "theofabilous/dropbar.nvim",
+    branch = "feat-fuzzy-finding",
     keys = {
       { "<leader>j", "<cmd>lua require('dropbar.api').pick()<CR>" },
     },
@@ -296,6 +289,7 @@ return {
         sources = function(buf, _)
           local sources = require("dropbar.sources")
           local utils = require("dropbar.utils")
+
           if vim.bo[buf].ft == "markdown" then
             return {
               require("custom.dropbar.path"),
@@ -307,16 +301,25 @@ return {
             }
           end
           return {
+
             require("custom.dropbar.path"),
             utils.source.fallback({
-              sources.treesitter,
               sources.lsp,
+              sources.treesitter,
             }),
           }
         end,
       },
       menu = {
         keymaps = {
+          ["/"] = function()
+            local api = require("dropbar.api")
+            local menu = api.get_current_dropbar_menu()
+            api.fuzzy_find_toggle({ menu = menu })
+          end,
+          ["<Esc><Esc>"] = function()
+            vim.cmd("wincmd c")
+          end,
           ["<Esc>"] = function()
             vim.cmd("wincmd c")
           end,
@@ -336,7 +339,7 @@ return {
             local cursor = vim.api.nvim_win_get_cursor(menu.win)
             local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
             if component then
-              menu:jump()
+              menu:on_click()
             end
           end,
         },
@@ -349,93 +352,105 @@ return {
   -- Indent guides for Neovim
   {
     "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      -- char = "▏",
-      char = "│",
-      filetype_exclude = {
-        "",
-        "neotest-summary",
-        "Cybu",
-        "DressingSelect",
-        "Jaq",
-        "NvimTree",
-        "Outline",
-        "Trouble",
-        "aerial",
-        "alpha",
-        "checkhealth",
-        "dap-repl",
-        "dap-terminal",
-        "dapui_breakpoints",
-        "dapui_console",
-        "dapui_scopes",
-        "dapui_stacks",
-        "dapui_watches",
-        "dashboard",
-        "fugitive",
-        "gitcommit",
-        "harpoon",
-        "help",
-        "lazy",
-        "lspinfo",
-        "man",
-        "minpacprgs",
-        "neo-tree",
-        "neogitstatus",
-        "nofile",
-        "packer",
-        "qf",
-        "spectre_panel",
-        "startify",
-        "toggleterm",
-        "undotree",
-        "whichkey",
-      },
-      buftype_exclude = {
-        "BqfPreview",
-        "Cybu",
-        "DressingSelect",
-        "Jaq",
-        "NvimTree",
-        "Outline",
-        "Trouble",
-        "aerial",
-        "alpha",
-        "checkhealth",
-        "dap-repl",
-        "dap-terminal",
-        "dapui_breakpoints",
-        "dapui_console",
-        "dapui_scopes",
-        "dapui_stacks",
-        "dapui_watches",
-        "dashboard",
-        "fugitive",
-        "gitcommit",
-        "harpoon",
-        "help",
-        "lazy",
-        "lspinfo",
-        "man",
-        "minpacprgs",
-        "neo-tree",
-        "neogitstatus",
-        "nofile",
-        "neotest-summary",
-        "packer",
-        "prompt",
-        "qf",
-        "quickfix",
-        "spectre_panel",
-        "startify",
-        "terminal",
-        "toggleterm",
-        "undotree",
-        "whichkey",
-      },
-      show_trailing_blankline_indent = false,
-    },
+    opts = function()
+      local highlight = {
+        "CursorColumn",
+        "Whitespace",
+      }
+      return {
+        -- char = "▏",
+        indent = { char = "▏" },
+        -- whitespace = {
+        --   highlight = highlight,
+        --   remove_blankline_trail = true,
+        -- },
+        exclude = {
+          filetypes = {
+            "",
+            "neotest-summary",
+            "Cybu",
+            "DressingSelect",
+            "Jaq",
+            "NvimTree",
+            "Outline",
+            "Trouble",
+            "aerial",
+            "alpha",
+            "checkhealth",
+            "dap-repl",
+            "dap-terminal",
+            "dapui_breakpoints",
+            "dapui_console",
+            "dapui_scopes",
+            "dapui_stacks",
+            "dapui_watches",
+            "dashboard",
+            "fugitive",
+            "gitcommit",
+            "harpoon",
+            "help",
+            "lazy",
+            "lspinfo",
+            "man",
+            "minpacprgs",
+            "neo-tree",
+            "neogitstatus",
+            "nofile",
+            "packer",
+            "qf",
+            "spectre_panel",
+            "startify",
+            "toggleterm",
+            "undotree",
+            "whichkey",
+          },
+          buftypes = {
+            "BqfPreview",
+            "Cybu",
+            "DressingSelect",
+            "Jaq",
+            "NvimTree",
+            "Outline",
+            "Trouble",
+            "aerial",
+            "alpha",
+            "checkhealth",
+            "dap-repl",
+            "dap-terminal",
+            "dapui_breakpoints",
+            "dapui_console",
+            "dapui_scopes",
+            "dapui_stacks",
+            "dapui_watches",
+            "dashboard",
+            "fugitive",
+            "gitcommit",
+            "harpoon",
+            "help",
+            "lazy",
+            "lspinfo",
+            "man",
+            "minpacprgs",
+            "neo-tree",
+            "neogitstatus",
+            "nofile",
+            "neotest-summary",
+            "packer",
+            "prompt",
+            "qf",
+            "quickfix",
+            "spectre_panel",
+            "startify",
+            "terminal",
+            "toggleterm",
+            "undotree",
+            "whichkey",
+          },
+        },
+      }
+    end,
   },
 
   -- Active indent guide and indent text objects
@@ -448,8 +463,8 @@ return {
           delay = 0,
           animation = require("mini.indentscope").gen_animation.none(),
         },
-        symbol = "│",
-        -- symbol = "▏",
+        -- symbol = "│",
+        symbol = "▏",
         options = { try_as_border = true },
       }
     end,

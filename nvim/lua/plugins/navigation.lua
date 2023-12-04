@@ -9,17 +9,12 @@ return {
     },
     keys = {
       { "<leader>e", "<cmd>NvimTreeOpen<cr>", mode = "n", desc = "Open files tree" },
-      { "<leader>E", "<cmd>NvimTreeClose<cr>", mode = "n", desc = "Closes files tree" },
     },
     opts = function()
       -- file explorer
       local status_ok, nvim_tree = pcall(require, "nvim-tree")
       if not status_ok then
-        return
-      end
-
-      local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
-      if not config_status_ok then
+        vim.notify("nvim-tree not found", vim.log.levels.ERROR)
         return
       end
 
@@ -148,6 +143,7 @@ return {
         -- hijack_cursor = false,
         update_cwd = false,
         renderer = {
+          root_folder_label = true,
           add_trailing = false,
           group_empty = false,
           highlight_git = false,
@@ -226,13 +222,27 @@ return {
         },
         view = {
           width = 30,
-          hide_root_folder = false,
           side = "right",
           number = false,
           relativenumber = false,
         },
       }
     end,
+  },
+
+  {
+    "stevearc/oil.nvim",
+    keys = {
+      {
+        "<leader>E",
+        function()
+          require("oil").open()
+        end,
+        mode = "n",
+        desc = "Open parent directory",
+      },
+    },
+    opts = {},
   },
 
   -- Jump anywhere in the document using hints
@@ -602,5 +612,8 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
+  },
+  {
+    "yegappan/greplace",
   },
 }
