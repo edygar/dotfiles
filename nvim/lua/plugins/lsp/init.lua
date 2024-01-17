@@ -276,7 +276,7 @@ return {
 
   -- formatters
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "davidmh/cspell.nvim", "williamboman/mason.nvim" },
     opts = function()
@@ -302,6 +302,7 @@ return {
       return {
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
+          builtins.formatting.biome,
           builtins.formatting.eslint_d.with({
             cwd = eslintCwd,
           }),
