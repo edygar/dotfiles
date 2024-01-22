@@ -66,6 +66,36 @@ return {
         autoload_telescope = true, -- Automatically loads the telescope extension at setup
         data_path = vim.fn.stdpath("data"), -- Path that monorepo.json gets saved to
       })
+
+      -- Table to store directories for each tab
+      local tab_dirs = {}
+
+      -- Autocmd for DirChanged
+      vim.api.nvim_create_autocmd("DirChanged", {
+        callback = function()
+          local current_tab = vim.api.nvim_get_current_tabpage()
+          local current_dir = vim.fn.getcwd()
+          tab_dirs[current_tab] = current_dir
+        end,
+      })
+
+      -- Autocmd for TabEnter
+      vim.api.nvim_create_autocmd("TabEnter", {
+        callback = function()
+          local current_tab = vim.api.nvim_get_current_tabpage()
+          local dir_to_set = tab_dirs[current_tab]
+          if dir_to_set then
+            vim.api.nvim_set_current_dir(dir_to_set)
+          end
+        end,
+      })
+
+      -- Optional: Clear stored directory when a tab is closed
+      vim.api.nvim_create_autocmd("TabClosed", {
+        callback = function(args)
+          tab_dirs[tonumber(args.tab)] = nil
+        end,
+      })
     end,
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
   },
