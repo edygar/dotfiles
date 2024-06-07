@@ -12,7 +12,7 @@ return {
       { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "jose-elias-alvarez/typescript.nvim",
+      { "jose-elias-alvarez/typescript.nvim", init },
       {
         "hrsh7th/cmp-nvim-lsp",
         cond = function()
@@ -22,6 +22,9 @@ return {
     },
     ---@class PluginLspOpts
     opts = {
+      inlay_hints = {
+        enabled = true,
+      },
       -- options for vim.diagnostic.config()
       diagnostics = {
         underline = true,
@@ -75,7 +78,18 @@ return {
         },
         tsserver = {
           settings = {
+            inlay_hints = { enabled = true },
             typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
               format = {
                 indentSize = vim.o.shiftwidth,
                 convertTabsToSpaces = vim.o.expandtab,
@@ -83,6 +97,17 @@ return {
               },
             },
             javascript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayVariableTypeHints = true,
+
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
               format = {
                 indentSize = vim.o.shiftwidth,
                 convertTabsToSpaces = vim.o.expandtab,
@@ -91,6 +116,9 @@ return {
             },
             completions = {
               completeFunctionCalls = true,
+            },
+            experimental = {
+              enableProjectDiagnostics = true,
             },
           },
         },
@@ -104,9 +132,24 @@ return {
           require("lazyvim.util").on_attach(function(client, buffer)
             if client.name == "tsserver" then
               -- stylua: ignore
-              vim.keymap.set("n", "<leader>co", "<cmd>TypescriptOrganizeImports<CR>", { buffer = buffer, desc = "Organize Imports" })
+              vim.keymap.set("n", "<leader>cF", "<cmd>TypescriptFixAll<CR>",
+                { buffer = buffer, desc = "Fix All" })
+              vim.keymap.set(
+                "n",
+                "<leader>cM",
+                "<cmd>TypescriptAddMissingImports<CR>",
+                { buffer = buffer, desc = "Add missing imports" }
+              )
+              vim.keymap.set(
+                "n",
+                "<leader>cO",
+                "<cmd>TypescriptOrganizeImports<CR>",
+                { buffer = buffer, desc = "Organize Imports" }
+              )
               -- stylua: ignore
-              vim.keymap.set("n", "<leader>cR", "<cmd>TypescriptRenameFile<CR>", { desc = "Rename File", buffer = buffer })
+              vim.keymap.set("n", "<leader>cR", "<cmd>TypescriptRenameFile<CR>",
+                { desc = "Rename File", buffer = buffer })
+              vim.keymap.set("n", "<leader>cU", "<cmd>TypescriptRemoveUnused<CR>", { desc = "Remove unused" })
             end
           end)
           require("typescript").setup({ server = opts })
@@ -273,12 +316,45 @@ return {
       end
     end,
   },
+  {
+    "lvimuser/lsp-inlayhints.nvim",
+    ft = { "javascript", "javascriptreact", "json", "jsonc", "typescript", "typescriptreact", "svelte" },
+    config = function(_, options)
+      vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = "LspAttach_inlayhints",
+        callback = function(args)
+          if not (args.data and args.data.client_id) then
+            return
+          end
+
+          local bufnr = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          require("lsp-inlayhints").on_attach(client, bufnr)
+        end,
+      })
+      require("lsp-inlayhints").setup(options)
+      local palette = require("onedarker.palette")
+      vim.api.nvim_set_hl(0, "LspInlayHint", { fg = palette.gray })
+
+      vim.api.nvim_set_keymap(
+        "n",
+        "<leader>oi",
+        "<cmd>lua require('lsp-inlayhints').toggle()<CR>",
+        { noremap = true, silent = true }
+      )
+    end,
+  },
 
   -- formatters
   {
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "davidmh/cspell.nvim", "williamboman/mason.nvim" },
+    dependencies = {
+      "davidmh/cspell.nvim",
+      "williamboman/mason.nvim",
+      "nvimtools/none-ls-extras.nvim",
+    },
     opts = function()
       local nls = require("null-ls")
       local builtins = nls.builtins
@@ -299,11 +375,11 @@ return {
         )(params.bufname)
       end)
 
+      local disabled_filetypes = { "harpoon", "NvimTree_1", "NvimTree", "Bot", "gen.nvim" }
       return {
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
-          builtins.formatting.biome,
-          builtins.formatting.eslint_d.with({
+          require("none-ls.formatting.eslint_d").with({
             cwd = eslintCwd,
           }),
           builtins.formatting.prettierd.with({
@@ -313,12 +389,15 @@ return {
           builtins.formatting.shfmt,
 
           -- diagnostics
-          builtins.diagnostics.eslint_d.with({
+          require("none-ls.diagnostics.eslint_d").with({
             cwd = eslintCwd,
+            disabled_filetypes = disabled_filetypes,
           }),
-          builtins.diagnostics.markdownlint,
+          builtins.diagnostics.markdownlint.with({
+            disabled_filetypes = disabled_filetypes,
+          }),
           require("cspell").diagnostics.with({
-            disabled_filetypes = { "harpoon", "NvimTree_1", "NvimTree" },
+            disabled_filetypes = disabled_filetypes,
             -- Force the severity to be HINT
             diagnostics_postprocess = function(diagnostic)
               diagnostic.severity = vim.diagnostic.severity.HINT
@@ -327,7 +406,7 @@ return {
 
           -- code actions
           require("cspell").code_actions,
-          builtins.code_actions.eslint_d.with({
+          require("none-ls.code_actions.eslint_d").with({
             cwd = eslintCwd,
           }),
           builtins.code_actions.refactoring,

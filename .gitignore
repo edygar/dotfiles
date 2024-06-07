@@ -41,6 +41,7 @@ cscope.po.out
 Session.vim
 .netrwhist
 .localrc.lua
+.luarc.json
 cspell.json
 *~
 

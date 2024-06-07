@@ -117,13 +117,13 @@ return {
       },
       -- you can enable a preset for easier configuration
       presets = {
-        bottom_search = true, -- use a classic bottom cmdline for search
-        command_palette = true, -- position the cmdline and popupmenu together
+        bottom_search = true,         -- use a classic bottom cmdline for search
+        command_palette = true,       -- position the cmdline and popupmenu together
         long_message_to_split = true, -- long messages will be sent to a split
-        lsp_doc_border = true, -- add a border to hover docs and signature help
+        lsp_doc_border = true,        -- add a border to hover docs and signature help
       },
       cmdline = {
-        enabled = true, -- enables the Noice cmdline UI
+        enabled = true,   -- enables the Noice cmdline UI
         view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
       },
       views = {
@@ -154,17 +154,17 @@ return {
       local wk = require("which-key")
       wk.setup({
         window = {
-          border = "single", -- none, single, double, shadow
-          position = "bottom", -- bottom, top
-          margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
+          border = "single",        -- none, single, double, shadow
+          position = "bottom",      -- bottom, top
+          margin = { 1, 0, 1, 0 },  -- extra window margin [top, right, bottom, left]
           padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
           winblend = 10,
         },
         layout = {
           height = { min = 4, max = 25 }, -- min and max height of the columns
           width = { min = 20, max = 50 }, -- min and max width of the columns
-          spacing = 3, -- spacing between columns
-          align = "left", -- align columns left, center or right
+          spacing = 3,                    -- spacing between columns
+          align = "left",                 -- align columns left, center or right
         },
       })
       wk.register({
@@ -703,14 +703,14 @@ return {
     event = { "BufReadPre" },
     opts = {
       filetype = { "*" },
-      RGB = true, -- #RGB hex codes
-      RRGGBB = true, -- #RRGGBB hex codes
-      names = false, -- "Name" codes like Blue oe blue
-      RRGGBBAA = true, -- #RRGGBBAA hex codes
-      rgb_fn = true, -- CSS rgb() and rgba() functions
-      hsl_fn = true, -- CSS hsl() and hsla() functions
-      css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-      css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+      RGB = true,          -- #RGB hex codes
+      RRGGBB = true,       -- #RRGGBB hex codes
+      names = false,       -- "Name" codes like Blue oe blue
+      RRGGBBAA = true,     -- #RRGGBBAA hex codes
+      rgb_fn = true,       -- CSS rgb() and rgba() functions
+      hsl_fn = true,       -- CSS hsl() and hsla() functions
+      css = false,         -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+      css_fn = false,      -- Enable all CSS *functions*: rgb_fn, hsl_fn
       -- Available modes: foreground, background, virtualtext
       mode = "background", -- Set the display mode.)
     },

@@ -1,10 +1,8 @@
 #!/usr/bin/env zsh
-
-eval "$(pyenv init -)"
+export LANG="en_US.UTF-8"
 
 [[ -f $HOME/.zprofile ]] && . $HOME/.zprofile
 [[ -f $HOME/.env.zsh ]] && . $HOME/.env.zsh
-
 
 RUSTC_WRAPPER=sccache
 ZSH_DISABLE_COMPFIX=true
