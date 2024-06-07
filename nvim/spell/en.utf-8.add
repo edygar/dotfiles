@@ -6,3 +6,11 @@ GraphQL
 config
 DebtCollection
 orders/!
+div/!
+CreateTable/!
+any/!
+transform/!
+join/!
+data/!
+const/!
+formatMoney/!

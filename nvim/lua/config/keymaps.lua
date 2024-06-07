@@ -81,9 +81,6 @@ map("n", "to", ":tabonly<cr>", { desc = "Close all other tab" })
 
 -- toggle options
 map("n", "<leader>of", require("lazyvim.plugins.lsp.format").toggle, { desc = "Toggle format on Save" })
-map("n", "<leader>ob", function()
-  Util.toggle("spell")
-end, { desc = "Toggle Spelling" })
 map("n", "<leader>os", function()
   Util.toggle("spell")
 end, { desc = "Toggle Spelling" })

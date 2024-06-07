@@ -104,8 +104,8 @@ return {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
-      "hrsh7th/cmp-buffer", -- buffer completions
-      "hrsh7th/cmp-path", -- path completions
+      "hrsh7th/cmp-buffer",  -- buffer completions
+      "hrsh7th/cmp-path",    -- path completions
       "hrsh7th/cmp-cmdline", -- cmdline completions
       -- "saadparwaiz1/cmp_luasnip", -- snippet completions
       "hrsh7th/cmp-nvim-lsp",
@@ -222,7 +222,7 @@ return {
           { name = "nvim_lua" },
           { name = "nvim_lsp" },
           { name = "copilot" },
-          { name = "buffer", keyword_length = 3 },
+          { name = "buffer",                 keyword_length = 3 },
           { name = "path" },
           { name = "emoji" },
           { name = "nvim_lsp_signature_help" },
@@ -278,9 +278,9 @@ return {
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>cd", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
+      { "<leader>cd", "<cmd>TroubleToggle document_diagnostics<cr>",  desc = "Document Diagnostics (Trouble)" },
       { "<leader>cD", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
-      { "gR", "<cmd>TroubleToggle lsp_references<cr>", desc = "List references using Trouble" },
+      { "gR",         "<cmd>TroubleToggle lsp_references<cr>",        desc = "List references using Trouble" },
       {
         "[D",
         function()
@@ -376,7 +376,7 @@ return {
       })
     end,
   },
-  { "nacro90/numb.nvim", config = true, event = "CmdlineEnter" },
+  { "nacro90/numb.nvim",      config = true,       event = "CmdlineEnter" },
   { "echasnovski/mini.pairs", main = "mini.pairs", event = "InsertEnter", config = true },
   { "folke/neodev.nvim" },
   {
@@ -446,7 +446,7 @@ return {
         mode = "n",
         desc = "Go to the next failed test",
       },
-      { "]n", '<cmd>lua require("neotest").jump.next()<CR>', mode = "n", desc = "Go to the next test" },
+      { "]n",         '<cmd>lua require("neotest").jump.next()<CR>',  mode = "n", desc = "Go to the next test" },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -490,4 +490,32 @@ return {
     },
   },
   { "arthurxavierx/vim-caser" },
+  {
+    "David-Kunz/gen.nvim",
+    keys = {
+      {
+        "<leader>cg",
+        ":Gen<CR>",
+        desc = "Starts AI generation",
+        mode = { "n", "v" },
+      },
+      {
+        "<leader>ag",
+        ":Gen<CR>",
+        desc = "Starts AI generation",
+        mode = { "n", "v" },
+      },
+      {
+        "<leader>ac",
+        ":Gen Chat<CR>",
+        desc = "Starts AI generation",
+        mode = { "n", "v" },
+      }
+    },
+    opts = {
+      model = "llama3",
+      display_mode = "split",
+      show_prompt = true
+    }
+  },
 }

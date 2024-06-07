@@ -99,4 +99,32 @@ return {
     end,
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
   },
+  {
+    "okuuva/auto-save.nvim",
+    keys = {
+      {
+        "<leader>ots",
+        "<cmd>ASToggle<CR>",
+        mode = "n",
+        desc = "Toggle auto save",
+      },
+    },
+    lazy = false,
+    config = {
+      enabled = true,
+      execution_message = {
+        enabled = false,
+      },
+      debounce_delay = 500,
+      noautocmd = true,
+      condition = function()
+        return #vim.diagnostic.get(0, { severity = { min = vim.diagnostic.severity.ERROR } }) == 0
+      end,
+      trigger_events = { -- See :h events
+        immediate_save = { "BufLeave", "FocusLost", "InsertLeave" }, -- vim events that trigger an immediate save
+        defer_save = { "TextChanged", "CursorHoldI" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
+        cancel_defered_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+      },
+    },
+  },
 }

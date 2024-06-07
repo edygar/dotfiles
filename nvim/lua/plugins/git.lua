@@ -20,7 +20,7 @@ return {
       },
       signcolumn = true,
       numhl = true,
-      current_line_blame = true,
+      current_line_blame = false,
       current_line_blame_opts = {
         virt_text = true,
         virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
@@ -46,6 +46,10 @@ return {
         map({ "n", "v" }, "<leader>gr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
         map("n", "<leader>gR", "<cmd>!git reset %<cr>", "Reset whole file")
         map("n", "<leader>gt", "<cmd>silent !git restore %<cr>", "Restore file")
+        map("n", "<leader>gl", function()
+          gs.diffthis("~")
+        end)
+        map("n", "<leader>ob", gs.toggle_current_line_blame, "Toggle current line blame")
 
         map("n", "<leader>gb", function()
           gs.blame_line({ full = true })
