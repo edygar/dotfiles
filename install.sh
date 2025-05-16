@@ -27,6 +27,10 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 
 # Link configuration files from the dotfiles directory
 echo "Linking configurations..."
+
+mkdir -p "$HOME/.config/alacritty"
+ln -sf "$HOME/.dotfiles/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
+
 mkdir -p "$HOME/.config/kitty"
 ln -sf "$HOME/.dotfiles/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 ln -sf "$HOME/.dotfiles/kitty/macos-launch-services-cmdline" "$HOME/.config/kitty/"

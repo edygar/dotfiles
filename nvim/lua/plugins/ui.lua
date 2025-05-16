@@ -6,8 +6,8 @@ return {
       local palette = require("onedarker.palette")
       local hl = vim.api.nvim_set_hl
 
-      palette.bg = "#272727"
-      palette.alt_bg = "#242424"
+      palette.bg = "NONE"
+      palette.alt_bg = "NONE"
       palette.hint = palette.green
 
       vim.api.nvim_create_autocmd("ColorScheme", {
@@ -30,13 +30,18 @@ return {
           hl(0, "DiffChange", { bg = "#3B3307" })
           hl(0, "DiffText", { bg = "#4D520D" })
           hl(0, "AlphaHeader", { fg = palette.green })
+
+          hl(0, "WinBar", { bg = palette.bg })
+          hl(0, "WinBarNC", { bg = palette.bg })
+
+          -- hl(0, "CmpItemKindCody", { fg = palette.red })
+          hl(0, "llama_hl_hint", { fg = palette.gray, ctermfg = 209 })
+          hl(0, "llama_hl_info", { fg = palette.light_gray, ctermfg = 119 })
         end,
       })
       vim.cmd("colorscheme onedarker")
     end,
   },
-
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
   -- Better `vim.notify()`
   {
@@ -117,13 +122,13 @@ return {
       },
       -- you can enable a preset for easier configuration
       presets = {
-        bottom_search = true,         -- use a classic bottom cmdline for search
-        command_palette = true,       -- position the cmdline and popupmenu together
+        bottom_search = true, -- use a classic bottom cmdline for search
+        command_palette = true, -- position the cmdline and popupmenu together
         long_message_to_split = true, -- long messages will be sent to a split
-        lsp_doc_border = true,        -- add a border to hover docs and signature help
+        lsp_doc_border = true, -- add a border to hover docs and signature help
       },
       cmdline = {
-        enabled = true,   -- enables the Noice cmdline UI
+        enabled = true, -- enables the Noice cmdline UI
         view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
       },
       views = {
@@ -152,32 +157,38 @@ return {
     end,
     config = function(_, opts)
       local wk = require("which-key")
-      wk.setup({
-        window = {
-          border = "single",        -- none, single, double, shadow
-          position = "bottom",      -- bottom, top
-          margin = { 1, 0, 1, 0 },  -- extra window margin [top, right, bottom, left]
-          padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
-          winblend = 10,
-        },
-        layout = {
-          height = { min = 4, max = 25 }, -- min and max height of the columns
-          width = { min = 20, max = 50 }, -- min and max width of the columns
-          spacing = 3,                    -- spacing between columns
-          align = "left",                 -- align columns left, center or right
-        },
+      wk.setup(
+        ---@class wk.Opts
+        {
+          win = {
+            no_overlap = true,
+            border = "single", -- none, single, double, shadow
+            -- margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
+            padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
+            bo = {},
+            wo = {
+              winblend = 10,
+            },
+          },
+          layout = {
+            height = { min = 4, max = 25 }, -- min and max height of the columns
+            width = { min = 20, max = 50 }, -- min and max width of the columns
+            spacing = 3, -- spacing between columns
+            align = "left", -- align columns left, center or right
+          },
+        }
+      )
+      wk.add({
+        { "<leader>b", group = "Buffers" },
+        { "<leader>s", group = "Sessions" },
+        { "<leader>d", group = "Diagnostics" },
+        { "<leader>f", group = "Find" },
+        { "<leader>g", group = "Git" },
+        { "<leader>m", group = "Marks" },
+        { "<leader>o", group = "Toggle options" },
+        { "<leader>r", hidden = true },
+        { "<leader>=", hidden = true },
       })
-      wk.register({
-        ["b"] = { name = "Buffers" },
-        ["s"] = { name = "Sessions", s = "which_key_ignore" },
-        ["d"] = { name = "Diagnostics" },
-        ["f"] = { name = "Find" },
-        ["g"] = { name = "Git" },
-        ["m"] = { name = "Marks" },
-        ["o"] = { name = "Toggle options" },
-        ["r"] = "which_key_ignore",
-        ["="] = "which_key_ignore",
-      }, { prefix = "<leader>" })
     end,
   },
 
@@ -248,37 +259,8 @@ return {
       })
     end,
   },
-
   {
-    "SmiteshP/nvim-navic",
-    lazy = true,
-    init = function()
-      vim.g.navic_silence = true
-      require("lazyvim.util").on_attach(function(client, buffer)
-        if client.server_capabilities.documentSymbolProvider then
-          require("nvim-navic").attach(client, buffer)
-        end
-      end)
-    end,
-    opts = {
-      separator = "  ",
-      highlight = true,
-      click = true,
-      icons = require("lazyvim.config").icons.kinds,
-      lsp = {
-        on_attach = true,
-        preference = { "tsserver" },
-      },
-    },
-    -- config = function(_, opts)
-    --   local navic = require("nvim-navic")
-    --   navic.setup(opts)
-    --   require("custom.winbar").setup()
-    -- end,
-  },
-
-  {
-    "theofabilous/dropbar.nvim",
+    "Bekaboo/dropbar.nvim",
     branch = "feat-fuzzy-finding",
     keys = {
       { "<leader>j", "<cmd>lua require('dropbar.api').pick()<CR>" },
@@ -542,7 +524,7 @@ return {
             return language_servers
           end
 
-          local clients = vim.lsp.get_active_clients()
+          local clients = vim.lsp.get_clients()
           local client_names = {}
           local copilot_active = false
 
@@ -644,9 +626,6 @@ return {
                 right = 0,
               },
             },
-            { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
-          },
-          lualine_x = {
             language_server,
             {
               require("lazy.status").updates,
@@ -654,11 +633,18 @@ return {
               color = { fg = "#ff9e64" },
             },
           },
+          lualine_x = {
+            { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
+          },
           lualine_y = {
-            -- stylua: ignore
+
             {
-              function() return require("noice").api.status.command.get() end,
-              cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+              function()
+                return require("noice").api.status.command.get()
+              end,
+              cond = function()
+                return package.loaded["noice"] and require("noice").api.status.command.has()
+              end,
               color = Util.fg("Statement"),
             },
 
@@ -703,14 +689,14 @@ return {
     event = { "BufReadPre" },
     opts = {
       filetype = { "*" },
-      RGB = true,          -- #RGB hex codes
-      RRGGBB = true,       -- #RRGGBB hex codes
-      names = false,       -- "Name" codes like Blue oe blue
-      RRGGBBAA = true,     -- #RRGGBBAA hex codes
-      rgb_fn = true,       -- CSS rgb() and rgba() functions
-      hsl_fn = true,       -- CSS hsl() and hsla() functions
-      css = false,         -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-      css_fn = false,      -- Enable all CSS *functions*: rgb_fn, hsl_fn
+      RGB = true, -- #RGB hex codes
+      RRGGBB = true, -- #RRGGBB hex codes
+      names = false, -- "Name" codes like Blue oe blue
+      RRGGBBAA = true, -- #RRGGBBAA hex codes
+      rgb_fn = true, -- CSS rgb() and rgba() functions
+      hsl_fn = true, -- CSS hsl() and hsla() functions
+      css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+      css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
       -- Available modes: foreground, background, virtualtext
       mode = "background", -- Set the display mode.)
     },

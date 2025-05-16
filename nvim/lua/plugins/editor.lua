@@ -52,7 +52,7 @@ return {
         extra = true,
       },
 
-      pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+      -- pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
     },
     dependencies = {
       "JoosepAlviste/nvim-ts-context-commentstring",
@@ -99,18 +99,54 @@ return {
 
   -- a bunch of snippets to use
   { "rafamadriz/friendly-snippets" },
-
+  {
+    "greggh/claude-code.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim", -- Required for git operations
+    },
+    config = function()
+      require("claude-code").setup()
+    end,
+  },
+  {
+    "ggml-org/llama.vim",
+    enabled = true,
+    init = function()
+      vim.g.llama_config = {
+        ["endpoint"] = "http://127.0.0.1:8012/infill",
+        ["api_key"] = "",
+        ["n_prefix"] = 256,
+        ["n_suffix"] = 64,
+        ["n_predict"] = 128,
+        ["t_max_prompt_ms"] = 500,
+        ["t_max_predict_ms"] = 500,
+        ["show_info"] = 2,
+        ["auto_fim"] = true,
+        ["max_line_suffix"] = 8,
+        ["max_cache_keys"] = 250,
+        ["ring_n_chunks"] = 16,
+        ["ring_chunk_size"] = 64,
+        ["ring_scope"] = 1024,
+        ["ring_update_ms"] = 1000,
+      }
+    end,
+  },
+  {
+    "kiddos/gemini.nvim",
+    enabled = false,
+    opts = {},
+  },
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
-      "hrsh7th/cmp-buffer",  -- buffer completions
-      "hrsh7th/cmp-path",    -- path completions
+      -- "github/copilot.vim",
+      "hrsh7th/cmp-buffer", -- buffer completions
+      "hrsh7th/cmp-path", -- path completions
       "hrsh7th/cmp-cmdline", -- cmdline completions
       -- "saadparwaiz1/cmp_luasnip", -- snippet completions
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-emoji",
-      "zbirenbaum/copilot-cmp",
       "hrsh7th/cmp-nvim-lua",
       "hrsh7th/cmp-nvim-lsp-signature-help",
     },
@@ -217,12 +253,11 @@ return {
           end,
         },
         sources = {
-          -- { name = "luasnip" },
+          { name = "codeium" },
           { name = "crates" },
           { name = "nvim_lua" },
           { name = "nvim_lsp" },
-          { name = "copilot" },
-          { name = "buffer",                 keyword_length = 3 },
+          { name = "buffer", keyword_length = 3 },
           { name = "path" },
           { name = "emoji" },
           { name = "nvim_lsp_signature_help" },
@@ -275,12 +310,13 @@ return {
 
   {
     "folke/trouble.nvim",
+    enabled = true,
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>cd", "<cmd>TroubleToggle document_diagnostics<cr>",  desc = "Document Diagnostics (Trouble)" },
+      { "<leader>cd", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
       { "<leader>cD", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
-      { "gR",         "<cmd>TroubleToggle lsp_references<cr>",        desc = "List references using Trouble" },
+      { "gR", "<cmd>TroubleToggle lsp_references<cr>", desc = "List references using Trouble" },
       {
         "[D",
         function()
@@ -306,77 +342,7 @@ return {
     },
   },
 
-  {
-    "zbirenbaum/copilot.lua",
-    event = "InsertEnter",
-    cmd = "Copilot",
-    keys = {
-      {
-        "<Tab>",
-        function()
-          if require("copilot.suggestion").is_visible() then
-            require("copilot.suggestion").accept()
-          else
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
-          end
-        end,
-        mode = "i",
-        { desc = "Super Tab" },
-      },
-    },
-    opts = {
-      panel = {
-        enabled = true,
-        auto_refresh = false,
-        keymap = {
-          jump_prev = "[[",
-          jump_next = "]]",
-          accept = "<CR>",
-          refresh = "gr",
-          open = "<M-CR>",
-        },
-        layout = {
-          position = "bottom", -- | top | left | right
-          ratio = 0.4,
-        },
-      },
-      suggestion = {
-        enabled = true,
-        auto_trigger = false,
-        debounce = 75,
-        keymap = {
-          accept = false,
-          accept_word = false,
-          accept_line = false,
-          next = "<Up>",
-          prev = "<Down>",
-          dismiss = "<Left>",
-        },
-      },
-      filetypes = {
-        yaml = false,
-        markdown = false,
-        help = false,
-        gitcommit = false,
-        gitrebase = false,
-        hgcommit = false,
-        svn = false,
-        cvs = false,
-        ["."] = false,
-      },
-      copilot_node_command = "node", -- Node.js version must be > 16.x
-      server_opts_overrides = {},
-    },
-    config = function(_, opts)
-      require("copilot").setup(opts)
-      vim.api.nvim_create_autocmd({ "InsertEnter" }, {
-        callback = function()
-          require("copilot.suggestion").toggle_auto_trigger()
-        end,
-      })
-    end,
-  },
-  { "nacro90/numb.nvim",      config = true,       event = "CmdlineEnter" },
+  { "nacro90/numb.nvim", config = true, event = "CmdlineEnter" },
   { "echasnovski/mini.pairs", main = "mini.pairs", event = "InsertEnter", config = true },
   { "folke/neodev.nvim" },
   {
@@ -446,7 +412,7 @@ return {
         mode = "n",
         desc = "Go to the next failed test",
       },
-      { "]n",         '<cmd>lua require("neotest").jump.next()<CR>',  mode = "n", desc = "Go to the next test" },
+      { "]n", '<cmd>lua require("neotest").jump.next()<CR>', mode = "n", desc = "Go to the next test" },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -490,32 +456,4 @@ return {
     },
   },
   { "arthurxavierx/vim-caser" },
-  {
-    "David-Kunz/gen.nvim",
-    keys = {
-      {
-        "<leader>cg",
-        ":Gen<CR>",
-        desc = "Starts AI generation",
-        mode = { "n", "v" },
-      },
-      {
-        "<leader>ag",
-        ":Gen<CR>",
-        desc = "Starts AI generation",
-        mode = { "n", "v" },
-      },
-      {
-        "<leader>ac",
-        ":Gen Chat<CR>",
-        desc = "Starts AI generation",
-        mode = { "n", "v" },
-      }
-    },
-    opts = {
-      model = "llama3",
-      display_mode = "split",
-      show_prompt = true
-    }
-  },
 }

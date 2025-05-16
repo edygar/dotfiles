@@ -26,3 +26,12 @@ vim.api.nvim_create_autocmd({
     end
   end,
 })
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "*/.localrc.lua",
+  callback = function()
+    vim.defer_fn(function()
+      vim.cmd("LspStop")
+    end, 1000)
+  end,
+})

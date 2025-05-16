@@ -59,3 +59,18 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
     vim.cmd("tabdo wincmd =")
   end,
 })
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    -- Check if the llama-server is running by grepping its command line.
+    local handle = io.popen("pgrep -f 'llama-server'")
+    local result = handle:read("*a")
+    handle:close()
+    if result == "" then
+      -- Launch kitty in detached mode running the llama-server command.
+      os.execute([[
+        kitty-launcher.zsh "Servers" "LLAMA" "llama-server -hf ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF --port 8012 -ngl 99 -fa -ub 1024 -b 1024 --ctx-size 0 --cache-reuse 256"
+      ]])
+    end
+  end,
+})

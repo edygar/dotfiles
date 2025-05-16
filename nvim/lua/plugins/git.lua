@@ -136,4 +136,28 @@ return {
       }
     end,
   },
+  {
+    "awerebea/git-worktree.nvim",
+    branch = "handle_changes_in_telescope_api",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+    },
+    keys = {
+      {
+        "<Leader>fw",
+        "<CMD>lua require('telescope').extensions.git_worktree.git_worktrees()<CR>",
+        desc = "Change git Worktree",
+        mode = { "n" },
+      },
+      {
+        "<Leader>fW",
+        "<CMD>lua require('telescope').extensions.git_worktree.create_git_worktree()<CR>",
+        desc = "Create git Worktree",
+        mode = { "n" },
+      },
+    },
+    opts = function()
+      require("telescope").load_extension("git_worktree")
+    end,
+  },
 }
