@@ -232,6 +232,8 @@ return {
 
   {
     "stevearc/oil.nvim",
+
+    cmd = "Oil",
     keys = {
       {
         "<leader>E",
@@ -359,6 +361,11 @@ return {
       },
       { "<leader>fgs", "<cmd>Telescope git_status<CR>", desc = "Git status" },
       { "<leader>fgc", "<cmd>Telescope git_commits<CR>", desc = "Git commits" },
+      {
+        "<space>fa",
+        "<cmd>lua require('sg.extensions.telescope').fuzzy_search_results()<CR>",
+        desc = "Semantic Search",
+      },
     },
     opts = function()
       local actions = require("telescope.actions")
@@ -369,7 +376,7 @@ return {
       return {
         defaults = vim.tbl_extend("keep", themes.get_ivy(), {
           file_sorter = require("telescope.sorters").get_fzf_sorter,
-          path_display = { "truncate" },
+          -- path_display = { "truncate" },
           selection_caret = "\u{e0b1} ",
           prompt_prefix = "",
           color_devicons = true,
@@ -405,18 +412,23 @@ return {
               ["<PageDown>"] = actions.results_scrolling_down,
               ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
               ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
+              ["<C-y>"] = function()
+                local entry = action_state.get_selected_entry()
+                vim.fn.setreg("+", entry.value)
+                print("Yanked: " .. entry.value)
+              end,
               ["<C-q>"] = function(bufnr)
                 actions.send_to_qflist(bufnr)
                 vim.cmd("Telescope quickfix")
               end,
-              ["<M-q>"] = function(bufnr)
+              ["<C-M-q>"] = function(bufnr)
                 actions.send_selected_to_qflist(bufnr)
                 vim.cmd("Telescope quickfix")
               end,
               ["<esc><esc>"] = actions.close,
             },
             n = {
-              ["tt"] = require("trouble.providers.telescope").open_with_trouble,
+              -- ["tt"] = require("trouble.providers.telescope").open_with_trouble,
               ["<C-e>"] = function(prompt_bufnr)
                 local action_state = require("telescope.actions.state")
                 local Path = require("plenary.path")
@@ -448,8 +460,8 @@ return {
               ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
               ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
               ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
-              ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
-              ["<M-p>"] = layoutActions.toggle_preview,
+              ["<C-M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+              ["<C-M-p>"] = layoutActions.toggle_preview,
               ["<C-S-p>"] = layoutActions.toggle_preview,
               ["j"] = actions.move_selection_next,
               ["k"] = actions.move_selection_previous,
@@ -465,6 +477,11 @@ return {
               ["<C-d>"] = actions.preview_scrolling_down,
               ["<PageUp>"] = actions.results_scrolling_up,
               ["<PageDown>"] = actions.results_scrolling_down,
+              ["<C-y>"] = function(prompt_bufnr)
+                local entry = action_state.get_selected_entry()
+                vim.fn.setreg("+", entry.value)
+                print("Yanked: " .. entry.value)
+              end,
             },
           },
         }),

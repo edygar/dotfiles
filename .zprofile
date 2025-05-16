@@ -1,16 +1,15 @@
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-export PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
 export VOLTA_HOME="$HOME/.volta"
+export PYENV_ROOT="$HOME/.pyenv"
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
+export PATH="$VOLTA_HOME/bin:$PATH"
 export PATH="$PATH:$HOME/.dotfiles/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
-export PATH="$VOLTA_HOME/bin:$PATH"
 export PATH="$PATH:$HOME/.local/bin"
-
-export PATH="$PATH:$HOME/Library/Python/$PYTHON_VERSION/bin"
 export PATH="$PATH:/Applications/kitty.app/Contents/MacOS"
-export PATH="$HOME/.pyenv/bin:$PATH"
+export PATH="$PATH:/Applications/Alacritty.app/Contents/MacOS"
+export PATH="$PATH:/opt/homebrew/opt/openjdk@21/bin"
+
+export JAVA_HOME="/Users/edygar.oliveira/Library/Java/JavaVirtualMachines/corretto-17.0.12/Contents/Home"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 

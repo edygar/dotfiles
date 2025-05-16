@@ -1,3 +1,30 @@
+local function biome_lsp_or_prettier(bufnr)
+  local has_biome_lsp = vim.lsp.get_clients({
+    bufnr = bufnr,
+    name = "biome",
+  })[1]
+  if has_biome_lsp then
+    return {}
+  end
+  local has_prettier = vim.fs.find({
+    -- https://prettier.io/docs/en/configuration.html
+    ".prettierrc",
+    ".prettierrc.json",
+    ".prettierrc.yml",
+    ".prettierrc.yaml",
+    ".prettierrc.json5",
+    ".prettierrc.js",
+    ".prettierrc.cjs",
+    ".prettierrc.toml",
+    "prettier.config.js",
+    "prettier.config.cjs",
+  }, { upward = true })[1]
+  if has_prettier then
+    return { "prettier" }
+  end
+  return { "biome" }
+end
+
 return {
   -- lspconfig
   {
@@ -8,11 +35,12 @@ return {
       { "<leader>cI", "<CMD>LspInfo<CR>", mode = "n" },
     },
     dependencies = {
+      { "jose-elias-alvarez/typescript.nvim" },
       { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
       { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      { "jose-elias-alvarez/typescript.nvim", init },
+      "nvimdev/lspsaga.nvim",
       {
         "hrsh7th/cmp-nvim-lsp",
         cond = function()
@@ -57,7 +85,22 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
+        kotlin_language_server = {},
         jsonls = {},
+        eslint = {
+          filetypes = {
+            "html",
+            "javascript",
+            "javascriptreact",
+            "javascript.jsx",
+            "typescript",
+            "typescriptreact",
+            "typescript.tsx",
+            "vue",
+            "svelte",
+            "astro",
+          },
+        },
         lua_ls = {
           -- mason = false, -- set to false if you don't want this server to be installed with mason
           settings = {
@@ -76,6 +119,7 @@ return {
             },
           },
         },
+
         tsserver = {
           settings = {
             inlay_hints = { enabled = true },
@@ -172,10 +216,19 @@ return {
 
         local map = vim.keymap.set
 
+        local clients = vim.lsp.get_active_clients()
+
+        for _, client in ipairs(clients) do
+          if client.name == "eslint" then
+            map("n", "<leader>cF", "<cmd>EslintFixAll<CR>", keysOpts("Fix All"))
+          end
+        end
+
         map("n", "<leader>c?", vim.diagnostic.open_float, keysOpts("Line Diagnostics"))
 
-        local format = function()
+        local format = function(args)
           require("lazyvim.plugins.lsp.format").format({ force = true })
+          require("conform").format({ bufnr = args.buf })
         end
 
         map("n", "<leader>=", format, keysOpts("Format document"))
@@ -360,39 +413,23 @@ return {
       local builtins = nls.builtins
       local h = require("null-ls.helpers")
       local u = require("null-ls.utils")
-      local eslintCwd = h.cache.by_bufnr(function(params)
-        return u.root_pattern(
-          -- https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new
-          "eslint.config.js",
-          -- https://eslint.org/docs/user-guide/configuring/configuration-files#configuration-file-formats
-          ".eslintrc",
-          ".eslintrc.js",
-          ".eslintrc.cjs",
-          ".eslintrc.yaml",
-          ".eslintrc.yml",
-          ".eslintrc.json",
-          "package.json"
-        )(params.bufname)
-      end)
 
       local disabled_filetypes = { "harpoon", "NvimTree_1", "NvimTree", "Bot", "gen.nvim" }
       return {
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
-          require("none-ls.formatting.eslint_d").with({
-            cwd = eslintCwd,
-          }),
           builtins.formatting.prettierd.with({
             extra_filetypes = { "toml", "solidity", "prisma" },
+            condition = function(utils)
+              return not utils.root_has_file("biome.json")
+            end,
           }),
           builtins.formatting.stylua,
           builtins.formatting.shfmt,
+          builtins.formatting.ktlint,
 
           -- diagnostics
-          require("none-ls.diagnostics.eslint_d").with({
-            cwd = eslintCwd,
-            disabled_filetypes = disabled_filetypes,
-          }),
+          builtins.diagnostics.ktlint,
           builtins.diagnostics.markdownlint.with({
             disabled_filetypes = disabled_filetypes,
           }),
@@ -406,9 +443,6 @@ return {
 
           -- code actions
           require("cspell").code_actions,
-          require("none-ls.code_actions.eslint_d").with({
-            cwd = eslintCwd,
-          }),
           builtins.code_actions.refactoring,
           builtins.hover.dictionary,
           builtins.code_actions.gitsigns,
@@ -447,6 +481,21 @@ return {
     end,
   },
 
+  {
+    "stevearc/conform.nvim",
+    ---@class ConformOpts
+    opts = {
+      formatters_by_ft = {
+        javascript = biome_lsp_or_prettier,
+        typescript = biome_lsp_or_prettier,
+        javascriptreact = biome_lsp_or_prettier,
+        typescriptreact = biome_lsp_or_prettier,
+        json = { "biome" },
+        jsonc = { "biome" },
+      },
+    },
+  },
+
   -- cmdline tools and lsp servers
   {
     "williamboman/mason.nvim",
@@ -456,6 +505,7 @@ return {
       ensure_installed = {
         "stylua",
         "shfmt",
+        "eslint-lsp",
         -- "flake8",
       },
     },

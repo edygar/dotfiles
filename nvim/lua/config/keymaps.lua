@@ -22,7 +22,7 @@ map("n", "<leader>wF", function()
   vim.cmd("w")
   require("lazyvim.plugins.lsp.format").toggle()
 end, { desc = "Save current buffer unformatted" })
-map("n", "<M-q>", "<cmd>bd<CR>", { silent = true, desc = "Close current window" })
+map("n", "<C-M-q>", "<cmd>bd<CR>", { silent = true, desc = "Close current window" })
 map("n", "<leader>h", "<cmd>nohlsearch<cr>", { desc = "Toggles search highlight" })
 map("n", "<esc><esc>", "<cmd>nohlsearch<cr>", { desc = "Toggles search highlight" })
 map("v", "//", [[y/\V<C-R>=escape(@",'/\')<CR><CR>gv<ESC>:%s//<C-R>0]], opts)
@@ -96,4 +96,18 @@ map("n", "<leader>od", Util.toggle_diagnostics, { desc = "Toggle Diagnostics" })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 map("n", "<leader>oc", function()
   Util.toggle("conceallevel", false, { 0, conceallevel })
+  if vim.o.conceallevel == 0 then
+    -- require("tailwind-fold").disable()
+  else
+    -- require("tailwind-fold").enable()
+  end
 end, { desc = "Toggle Conceal" })
+
+vim.api.nvim_create_user_command("ShowBufferInfo", function()
+  local buf = vim.api.nvim_get_current_buf()
+  local buf_name = vim.api.nvim_buf_get_name(buf)
+  local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+  print("Current buffer name: " .. buf_name)
+  print("Current filetype: " .. filetype)
+end, {})
+map("n", "<leader>DD", ":ShowBufferInfo<cr>", { desc = "Debug" })

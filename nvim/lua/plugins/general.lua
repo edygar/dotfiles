@@ -59,7 +59,6 @@ return {
         desc = "Toogle Projects in Monorepo organization",
       },
     },
-
     config = function()
       require("monorepo").setup({
         silent = false, -- Supresses vim.notify messages
@@ -110,20 +109,50 @@ return {
       },
     },
     lazy = false,
-    config = {
-      enabled = true,
+    opts = {
+      enabled = false,
       execution_message = {
         enabled = false,
       },
-      debounce_delay = 500,
-      noautocmd = true,
-      condition = function()
-        return #vim.diagnostic.get(0, { severity = { min = vim.diagnostic.severity.ERROR } }) == 0
-      end,
+      debounce_delay = 1000,
       trigger_events = { -- See :h events
         immediate_save = { "BufLeave", "FocusLost", "InsertLeave" }, -- vim events that trigger an immediate save
-        defer_save = { "TextChanged", "CursorHoldI" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
+        defer_save = { "InsertLeave", "CursorHoldI", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
         cancel_defered_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+      },
+    },
+  },
+  {
+    "GustavoKatel/tasks.nvim",
+    requires = { "nvim-lua/plenary.nvim" },
+    opts = function()
+      local source_npm = require("tasks.sources.npm")
+      local source_tasksjson = require("tasks.sources.tasksjson")
+
+      return {
+        sources = {
+          npm = source_npm,
+          vscode = source_tasksjson,
+        },
+      }
+    end,
+    init = function()
+      pcall(function()
+        require("telescope").load_extension("tasks")
+      end)
+    end,
+    keys = {
+      {
+        "<leader>fx",
+        "<cmd>Telescope tasks specs<CR>",
+        mode = "n",
+        desc = "Run task",
+        {
+          "<leader>fx",
+          "<cmd>Telescope tasks running<CR>",
+          mode = "n",
+          desc = "See running tasks",
+        },
       },
     },
   },

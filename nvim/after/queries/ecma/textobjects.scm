@@ -12,6 +12,4 @@
 (variable_declarator (array_pattern (_) @list_item))
 (property_signature) @list_item
 (pair) @list_item
-(jsx_self_closing_element attribute: (_) @list_item)
-(jsx_element open_tag: attribute: (_) @list_item)
 (import_clause (named_imports (_) @list_item))

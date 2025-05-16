@@ -1,5 +1,6 @@
 vim.api.nvim_create_autocmd({
   "VimEnter",
+  "FocusGained",
   "DirChanged",
   "VimResume",
 }, {
