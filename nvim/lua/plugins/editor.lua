@@ -307,16 +307,19 @@ return {
       })
     end,
   },
-
+  {
+    "skywind3000/asyncrun.vim",
+    cmd = { "AsyncRun", "AsyncStop", "AsyncTask" },
+  },
   {
     "folke/trouble.nvim",
     enabled = true,
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>cd", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
-      { "<leader>cD", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
-      { "gR", "<cmd>TroubleToggle lsp_references<cr>", desc = "List references using Trouble" },
+      { "<leader>cd", "<cmd>Trouble diagnostics toggle<cr>", desc = "Document Diagnostics (Trouble)" },
+      -- { "<leader>cD", "<cmd>Trouble workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
+      { "gR", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "List references using Trouble" },
       {
         "[D",
         function()

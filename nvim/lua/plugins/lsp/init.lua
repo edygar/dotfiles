@@ -35,7 +35,8 @@ return {
       { "<leader>cI", "<CMD>LspInfo<CR>", mode = "n" },
     },
     dependencies = {
-      { "jose-elias-alvarez/typescript.nvim" },
+      { "yioneko/nvim-vtsls" },
+      -- { "jose-elias-alvarez/typescript.nvim" },
       { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
       { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
@@ -120,7 +121,7 @@ return {
           },
         },
 
-        tsserver = {
+        vtsls = {
           settings = {
             inlay_hints = { enabled = true },
             typescript = {
@@ -171,29 +172,39 @@ return {
       -- return true if you don't want this server to be setup with lspconfig
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
+        eslint = function()
+          require("lazyvim.util").lsp.on_attach(function(client)
+            if client.name == "eslint" then
+              client.server_capabilities.documentFormattingProvider = true
+            elseif client.name == "vtsls" then
+              client.server_capabilities.documentFormattingProvider = false
+            end
+          end)
+        end,
+
         -- example to setup with typescript.nvim
-        tsserver = function(_, opts)
+        vtsls = function(_, opts)
           require("lazyvim.util").on_attach(function(client, buffer)
-            if client.name == "tsserver" then
+            if client.name == "vtsls" then
               -- stylua: ignore
-              vim.keymap.set("n", "<leader>cF", "<cmd>TypescriptFixAll<CR>",
+              vim.keymap.set("n", "<leader>cF", "<cmd>VtsExec fix_all<CR>",
                 { buffer = buffer, desc = "Fix All" })
               vim.keymap.set(
                 "n",
                 "<leader>cM",
-                "<cmd>TypescriptAddMissingImports<CR>",
+                "<cmd>VtsExec add_missing_imports<CR>",
                 { buffer = buffer, desc = "Add missing imports" }
               )
               vim.keymap.set(
                 "n",
                 "<leader>cO",
-                "<cmd>TypescriptOrganizeImports<CR>",
+                "<cmd>VtsExec organize_imports<CR>",
                 { buffer = buffer, desc = "Organize Imports" }
               )
               -- stylua: ignore
-              vim.keymap.set("n", "<leader>cR", "<cmd>TypescriptRenameFile<CR>",
+              vim.keymap.set("n", "<leader>cR", "<cmd>VtsExec rename_file<CR>",
                 { desc = "Rename File", buffer = buffer })
-              vim.keymap.set("n", "<leader>cU", "<cmd>TypescriptRemoveUnused<CR>", { desc = "Remove unused" })
+              vim.keymap.set("n", "<leader>cU", "<cmd>VtsExec remove_unused<CR>", { desc = "Remove unused" })
             end
           end)
           require("typescript").setup({ server = opts })
@@ -216,11 +227,11 @@ return {
 
         local map = vim.keymap.set
 
-        local clients = vim.lsp.get_active_clients()
+        local clients = vim.lsp.get_clients()
 
         for _, client in ipairs(clients) do
           if client.name == "eslint" then
-            map("n", "<leader>cF", "<cmd>EslintFixAll<CR>", keysOpts("Fix All"))
+            map("n", "<leader>cF", "<cmd>LspEslintFixAll<CR>", keysOpts("Fix All"))
           end
         end
 
@@ -339,7 +350,7 @@ return {
       local have_mason, mlsp = pcall(require, "mason-lspconfig")
       local all_mslp_servers = {}
       if have_mason then
-        all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
+        all_mslp_servers = require("mason-lspconfig").get_available_servers()
       end
 
       local ensure_installed = {} ---@type string[]
@@ -356,49 +367,18 @@ return {
       end
 
       if have_mason then
-        mlsp.setup({ ensure_installed = ensure_installed })
-        mlsp.setup_handlers({ setup })
+        mlsp.setup({ automatic_enable = true, handlers = setup })
       end
 
-      if Util.lsp_get_config("denols") and Util.lsp_get_config("tsserver") then
+      if Util.lsp_get_config("denols") and Util.lsp_get_config("vtsls") then
         local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        Util.lsp_disable("tsserver", is_deno)
+        Util.lsp_disable("vtsls", is_deno)
         Util.lsp_disable("denols", function(root_dir)
           return not is_deno(root_dir)
         end)
       end
     end,
   },
-  {
-    "lvimuser/lsp-inlayhints.nvim",
-    ft = { "javascript", "javascriptreact", "json", "jsonc", "typescript", "typescriptreact", "svelte" },
-    config = function(_, options)
-      vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
-      vim.api.nvim_create_autocmd("LspAttach", {
-        group = "LspAttach_inlayhints",
-        callback = function(args)
-          if not (args.data and args.data.client_id) then
-            return
-          end
-
-          local bufnr = args.buf
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          require("lsp-inlayhints").on_attach(client, bufnr)
-        end,
-      })
-      require("lsp-inlayhints").setup(options)
-      local palette = require("onedarker.palette")
-      vim.api.nvim_set_hl(0, "LspInlayHint", { fg = palette.gray })
-
-      vim.api.nvim_set_keymap(
-        "n",
-        "<leader>oi",
-        "<cmd>lua require('lsp-inlayhints').toggle()<CR>",
-        { noremap = true, silent = true }
-      )
-    end,
-  },
-
   -- formatters
   {
     "nvimtools/none-ls.nvim",
@@ -551,6 +531,13 @@ return {
         end,
         desc = "Toggle LSP lines",
       },
+    },
+  },
+  {
+    "dmmulroy/tsc.nvim",
+    keys = { { "<leader>cD", "<cmd>TSC<cr>", desc = "TSC" } },
+    opts = {
+      use_trouble_qflist = true,
     },
   },
 }

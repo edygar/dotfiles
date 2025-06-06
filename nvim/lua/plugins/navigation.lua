@@ -373,6 +373,31 @@ return {
       local themes = require("telescope.themes")
       local action_state = require("telescope.actions.state")
 
+      local function get_entry_path(entry)
+        -- Try common fields for file pickers
+        return entry.path or entry.filename or entry.value
+      end
+
+      local function add_project(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        local rel_path = entry and entry[1]
+        local cwd = nil
+        if entry and getmetatable(entry) and getmetatable(entry).cwd then
+          cwd = getmetatable(entry).cwd
+        else
+          cwd = vim.fn.getcwd()
+        end
+        if rel_path and cwd then
+          local abs_path = vim.fn.fnamemodify(cwd .. "/" .. rel_path, ":p")
+          local project_dir = vim.fn.fnamemodify(abs_path, ":h")
+          local project_dir_rel = vim.fn.fnamemodify(project_dir, ":." .. cwd)
+          require("monorepo").add_project("/" .. project_dir_rel)
+        else
+          vim.notify("No valid file path found!", vim.log.levels.WARN)
+        end
+      end
+
       return {
         defaults = vim.tbl_extend("keep", themes.get_ivy(), {
           file_sorter = require("telescope.sorters").get_fzf_sorter,
@@ -386,6 +411,7 @@ return {
               ["<C-f>"] = function()
                 vim.cmd("stopinsert")
               end,
+              ["<C-a>"] = add_project,
               ["<C-n>"] = actions.cycle_history_next,
               ["<C-p>"] = actions.cycle_history_prev,
               ["<C-e>"] = function(prompt_bufnr)
@@ -429,6 +455,7 @@ return {
             },
             n = {
               -- ["tt"] = require("trouble.providers.telescope").open_with_trouble,
+              ["<C-a>"] = add_project,
               ["<C-e>"] = function(prompt_bufnr)
                 local action_state = require("telescope.actions.state")
                 local Path = require("plenary.path")
