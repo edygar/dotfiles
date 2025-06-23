@@ -1,3 +1,9 @@
+local status, Util = pcall(require, "lazyvim.util")
+
+if not status then
+  return {}
+end
+
 local function biome_lsp_or_prettier(bufnr)
   local has_biome_lsp = vim.lsp.get_clients({
     bufnr = bufnr,
@@ -37,15 +43,15 @@ return {
     dependencies = {
       { "yioneko/nvim-vtsls" },
       -- { "jose-elias-alvarez/typescript.nvim" },
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-      { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
+      { "folke/neoconf.nvim", cmd = "Neoconf",                                config = true },
+      { "folke/neodev.nvim",  opts = { experimental = { pathStrict = true } } },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "nvimdev/lspsaga.nvim",
       {
         "hrsh7th/cmp-nvim-lsp",
         cond = function()
-          return require("lazyvim.util").has("nvim-cmp")
+          return Util.has("nvim-cmp")
         end,
       },
     },
@@ -173,7 +179,7 @@ return {
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         eslint = function()
-          require("lazyvim.util").lsp.on_attach(function(client)
+          Util.lsp.on_attach(function(client)
             if client.name == "eslint" then
               client.server_capabilities.documentFormattingProvider = true
             elseif client.name == "vtsls" then
@@ -184,7 +190,7 @@ return {
 
         -- example to setup with typescript.nvim
         vtsls = function(_, opts)
-          require("lazyvim.util").on_attach(function(client, buffer)
+          Util.on_attach(function(client, buffer)
             if client.name == "vtsls" then
               -- stylua: ignore
               vim.keymap.set("n", "<leader>cF", "<cmd>VtsExec fix_all<CR>",
@@ -216,7 +222,6 @@ return {
     },
     ---@param opts PluginLspOpts
     config = function(_, opts)
-      local Util = require("lazyvim.util")
       -- setup autoformat
       require("lazyvim.plugins.lsp.format").setup(opts)
       -- setup formatting and keymaps
@@ -295,25 +300,25 @@ return {
 
       if type(opts.diagnostics.float) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
         opts.diagnostics.float.prefix = vim.fn.has("nvim-0.10.0") == 0 and "● "
-          or function(diagnostic)
-            local icons = require("lazyvim.config").icons.diagnostics
-            for d, icon in pairs(icons) do
-              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-                return icon
+            or function(diagnostic)
+              local icons = require("lazyvim.config").icons.diagnostics
+              for d, icon in pairs(icons) do
+                if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+                  return icon
+                end
               end
             end
-          end
       end
       if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
         opts.diagnostics.virtual_text.prefix = vim.fn.has("nvim-0.10.0") == 0 and "● "
-          or function(diagnostic)
-            local icons = require("lazyvim.config").icons.diagnostics
-            for d, icon in pairs(icons) do
-              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-                return icon
+            or function(diagnostic)
+              local icons = require("lazyvim.config").icons.diagnostics
+              for d, icon in pairs(icons) do
+                if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+                  return icon
+                end
               end
             end
-          end
       end
 
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
