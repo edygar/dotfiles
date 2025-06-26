@@ -4,7 +4,7 @@ id=$(kitty @ ls | jq ".[] | select(.is_active == true)| .tabs[] | select(.title 
 
 if [[ -z "$id" ]];
 then
-  kitty @ launch --type tab --tab-title $tab_title --cwd="$HOME/.config/AstroNvim/" /bin/zsh -ic 'v'
+  kitty @ launch --type tab --tab-title $tab_title --cwd="$HOME/.dotfiles/" /bin/zsh -ic 'v'
 else
   kitty @ focus-tab --match id:"$id"
   exit 0;
