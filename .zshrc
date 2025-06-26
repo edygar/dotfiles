@@ -67,3 +67,10 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 source "/Users/edygar.oliveira/.sdkman/bin/sdkman-init.sh"
+
+# bun completions
+[ -s "/Users/edygar.oliveira/.bun/_bun" ] && source "/Users/edygar.oliveira/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
