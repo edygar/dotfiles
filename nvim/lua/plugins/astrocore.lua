@@ -2,6 +2,21 @@
 -- Configuration documentation can be found with `:h astrocore`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
 --       as this provides autocomplete and documentation while editing
+local get_current_branch = function()
+  local ok, branch = pcall(vim.fn.system, "git branch --show-current")
+
+  if not ok then return nil end
+
+  -- Check if git command succeeded (vim.v.shell_error == 0)
+  if vim.v.shell_error ~= 0 then return nil end
+  return vim.trim(branch)
+end
+
+local function map(mode, maps, fn, opts)
+  for _, key in ipairs(maps) do
+    vim.keymap.set(mode, key, fn, opts)
+  end
+end
 
 ---@type LazySpec
 return {
@@ -59,6 +74,7 @@ return {
         conceallevel = 3, -- so that `` is visible in markdown files
         confirm = true, -- Confirm to save changes before exiting modified buffer
         cursorline = true, -- highlight the current line
+        cursorlineopt = "both",
         expandtab = true, -- convert tabs to spaces
         fileencoding = "utf-8", -- the encoding written to a file
         foldenable = false, -- disable folding by default
@@ -91,7 +107,7 @@ return {
         shiftwidth = 2, -- the number of spaces inserted for each indentation
         showcmd = false,
         showmode = false, -- Dont show mode since we have a statusline
-        showtabline = 0, -- always show tabs
+        showtabline = 1, -- always show tabs
         sidescrolloff = 8, -- Columns of context
         signcolumn = "yes", -- Always show the signcolumn, otherwise it would shift the text each time
         signcolumn = "yes", -- sets vim.opt.signcolumn to yes
@@ -132,6 +148,8 @@ return {
     mappings = {
       -- first key is the mode
       n = {
+        ["<Leader>wq"] = { "<cmd>wq<CR>", desc = "Write and quit" },
+        ["<Leader>wa"] = { "<cmd>wa<CR>", desc = "Write all" },
         ["<Leader>fj"] = { "<cmd>lua Snacks.picker.jumps()<CR>", desc = "Lists Jumplist" },
         ["[j"] = { "<C-o>" },
         ["]j"] = { "<C-i>" },
@@ -212,6 +230,7 @@ return {
           desc = "Opens explorer picker",
         },
         ["<Leader>fP"] = { "<Cmd>lua Snacks.picker()<CR>", desc = "Opens pickers" },
+        ["<Leader>fH"] = { "<Cmd>lua Snacks.picker.highlights()<CR>", desc = "Finds highlights" },
 
         ["<Leader>b"] = { desc = require("astroui").get_icon("Tab", 1, true) .. "Buffers" },
         ["<Leader>bc"] = { function() Snacks.bufdelete.delete() end, desc = "Close this buffer" },
@@ -219,9 +238,118 @@ return {
         ["<Leader>bC"] = { function() Snacks.bufdelete.all() end, desc = "Close all buffers" },
         ["<Leader>bD"] = { function() Snacks.bufdelete.all() end, desc = "Close all buffers" },
         ["<Leader>bo"] = { function() Snacks.bufdelete.other() end, desc = "Close other buffers" },
+        ["ycb"] = {
+          function() vim.fn.setreg("+", get_current_branch()) end,
+          desc = "Yank current branch",
+        },
+        ["<Leader>gi"] = {
+          "<Cmd>norm ycb^Pa - <CR><Cmd>lua vim.api.nvim_feedkeys('a', 'n', false)<CR>",
+          desc = "Insert current branch",
+        },
+        ["<Leader>uv"] = {
+          function() require("tiny-inline-diagnostic").toggle() end,
+          desc = "Toggle virtual text",
+        },
+
+        ["<Leader>ue"] = {
+          function()
+            local virtualedit = vim.opt.virtualedit:get() -- Get the current value as a list
+            if vim.tbl_contains(virtualedit, "block") then
+              vim.opt.virtualedit = { "all" }
+              vim.notify "VirtualEdit set to: all"
+            else
+              vim.opt.virtualedit = { "block" }
+              vim.notify "VirtualEdit set to: block"
+            end
+          end,
+          desc = "Toggle virtual_text",
+        },
       },
       i = {
         ["<C-M-q>"] = { "<cmd>bd<CR>", silent = true, desc = "Close current window" },
+      },
+      x = {
+        ["<Leader>gh"] = { "<cmd>'<,'>DiffviewFileHistory<cr>", desc = "Open file history" },
+      },
+    },
+    autocmds = {
+      -- set up autocommand to choose the correct language server
+      eslint_over_typescript_formatting = {
+        {
+          event = "LspAttach",
+          callback = function(args)
+            local bufnr = args.buf
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            local vtslsClient = client and client.name == "vtsls" and client
+              or vim.lsp.get_clients({ name = "vtsls", bufnr = bufnr })[1]
+
+            local eslintClient = client and client.name == "eslint" and client
+              or vim.lsp.get_clients { name = "eslint", bufnr = bufnr }
+
+            if eslintClient and vtslsClient then
+              vtslsClient.server_capabilities.documentFormattingProvider = false
+              vtslsClient.server_capabilities.documentRangeFormattingProvider = false
+
+              map("n", { "grF", "<Leader>lF" }, function()
+                vim.cmd "silent! VtsExec remove_unused"
+                vim.cmd "silent! VtsExec remove_unused_imports"
+                vim.cmd "silent! VtsExec organize_imports "
+                vim.schedule(function() vim.cmd "silent! EslintFixAll" end)
+              end, {
+                desc = "Fix all issues from Eslint",
+              })
+            end
+          end,
+        },
+      },
+
+      vtsls_keymaps = {
+        {
+          event = "LspAttach",
+          callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            if not client or client.name ~= "vtsls" then return end
+            local bufnr = args.buf
+
+            map(
+              "n",
+              { "gD" },
+              "<cmd>VtsExec goto_source_definition<CR>",
+              { buffer = bufnr, desc = "Go to source definition" }
+            )
+            map(
+              "n",
+              { "grm", "<leader>lm" },
+              "<cmd>VtsExec add_missing_imports<CR>",
+              { buffer = bufnr, desc = "Add missing imports" }
+            )
+            map(
+              "n",
+              { "gro", "<leader>lo" },
+              "<cmd>VtsExec organize_imports<CR>",
+              { buffer = bufnr, desc = "Organize Imports" }
+            )
+            map(
+              "n",
+              { "grN", "<leader>lN", "<leader>lR" },
+              "<cmd>VtsExec rename_file<CR>",
+              { desc = "Rename File", buffer = bufnr }
+            )
+            map("n", { "gru", "<leader>lu" }, "<cmd>VtsExec remove_unused<CR>", { desc = "Remove unused" })
+
+            vim.lsp.commands["editor.action.showReferences"] = function(command, ctx)
+              local locations = command.arguments[3]
+              local clt = vim.lsp.get_client_by_id(ctx.client_id)
+              if clt == nil then return end
+
+              if locations and #locations > 0 then
+                local items = vim.lsp.util.locations_to_items(locations, clt.offset_encoding)
+                vim.fn.setloclist(0, {}, " ", { title = "References", items = items, context = ctx })
+                vim.api.nvim_command "lopen"
+              end
+            end
+          end,
+        },
       },
     },
   },

@@ -8,5 +8,6 @@ return {
   -- { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.recipes.picker-nvchad-theme" },
   { import = "astrocommunity.diagnostics.trouble-nvim" },
-  { import = "astrocommunity.pack.typescript-all-in-one" },
+  { import = "astrocommunity.utility.noice-nvim" },
+  { import = "astrocommunity.test.neotest" },
 }

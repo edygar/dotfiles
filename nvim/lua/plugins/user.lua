@@ -1,9 +1,275 @@
--- Youcan also add or configure plugins by creating files in this `plugins/` folder
+-- You can also add or configure plugins by creating files in this `plugins/` folder
 -- PLEASE REMOVE THE EXAMPLES YOU HAVE NO INTEREST IN BEFORE ENABLING THIS FILE
 -- Here are some examples:
 local IS_KITTY_SCROLLBACK = false
+local function chars_to_right_of_word()
+  -- Get current cursor position
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local row, col = cursor[1], cursor[2]
+
+  -- Get the current line
+  local line = vim.api.nvim_get_current_line()
+
+  -- Find word boundaries around cursor position
+  local word_start = col
+  local word_end = col
+
+  -- Find start of word (move backwards)
+  while word_start > 0 and line:sub(word_start, word_start):match "[%w_]" do
+    word_start = word_start - 1
+  end
+  if not line:sub(word_start, word_start):match "[%w_]" then word_start = word_start + 1 end
+
+  -- Find end of word (move forwards)
+  while word_end <= #line and line:sub(word_end + 1, word_end + 1):match "[%w_]" do
+    word_end = word_end + 1
+  end
+
+  -- Calculate relative position (1-based)
+  local relative_pos = col - word_start + 1
+
+  return relative_pos
+end
 ---@type LazySpec
 return {
+  {
+    "folke/snacks.nvim",
+    opts = function(_, opts)
+      return vim.tbl_extend(
+        "force",
+        opts,
+        ---@type snacks.Config
+        {
+          statuscolumn = { enabled = false },
+          explorer = {
+            replace_netrw = true,
+          },
+          input = {
+            win = {
+              relative = "cursor",
+              title_pos = "left",
+              row = -1,
+              col = function() return -chars_to_right_of_word() - 5 end,
+            },
+          },
+          picker = {
+            ui_select = true,
+            layout = {
+              layout = {
+                position = "float",
+
+                row = 1,
+                width = 0.9,
+                height = 0.9,
+                border = "none",
+                box = "vertical",
+                {
+                  win = "preview",
+                  title = "{preview}",
+                  border = "rounded",
+                  height = 0.80,
+                },
+                {
+                  box = "vertical",
+                  border = "rounded",
+                  title = "{title} {live} {flags}",
+                  title_pos = "left",
+                  { win = "input", height = 1, border = "bottom" },
+                  { win = "list", border = "none" },
+                },
+              },
+            },
+            sources = {
+              files = {
+                follow = true,
+              },
+              lines = {
+                layout = {
+                  fullscreen = true,
+                  layout = {
+                    box = "vertical",
+                    backdrop = false,
+                    row = -1,
+                    width = 0,
+                    height = 0.4,
+                    border = "top",
+                    title = " {title} {live} {flags}",
+                    title_pos = "left",
+                    { win = "input", height = 1, border = "bottom" },
+                    {
+                      box = "horizontal",
+                      { win = "list", border = "none" },
+                      { win = "preview", title = "{preview}", width = 0.6, border = "left" },
+                    },
+                  },
+                },
+              },
+              explorer = {
+                diagnostics_open = true,
+                git_status_open = true,
+                layout = {
+                  preview = "main",
+                  fullscreen = false,
+                  layout = {
+                    backdrop = false,
+                    width = 40,
+                    min_width = 40,
+                    height = 0,
+                    position = "right",
+                    border = "none",
+                    box = "vertical",
+                    {
+                      win = "input",
+                      height = 1,
+                      border = "bottom",
+                      title = "{title} {live} {flags}",
+                      title_pos = "center",
+                    },
+                    { win = "list", border = "none" },
+                    { win = "preview", title = "{preview}", height = 0.4, border = "top" },
+                  },
+                },
+                win = {
+                  input = {
+                    keys = {
+                      ["-"] = {
+                        "explorer_focus_parent",
+                        mode = { "n" },
+                      },
+                      ["<c-s-h>"] = {
+                        "resize_wider",
+                        mode = { "n", "i" },
+                      },
+                      ["<c-s-l>"] = {
+                        "resize_narrower",
+                        mode = { "n", "i" },
+                      },
+                      ["<c-h>"] = {
+                        "focus_editor",
+                        mode = { "n", "i" },
+                      },
+                    },
+                  },
+                  list = {
+                    keys = {
+                      ["<S-CR>"] = {
+                        "explorer_toggle_all",
+                        mode = { "n" },
+                      },
+                      ["-"] = {
+                        "explorer_focus_parent",
+                        mode = { "n" },
+                      },
+                      ["<c-s-h>"] = {
+                        "resize_wider",
+                        mode = { "n", "i" },
+                      },
+                      ["<c-s-l>"] = {
+                        "resize_narrower",
+                        mode = { "n", "i" },
+                      },
+                      ["<c-h>"] = {
+                        "focus_editor",
+                        mode = { "n", "i" },
+                      },
+                    },
+                  },
+                },
+
+                actions = {
+                  ["explorer_toggle_all"] = function(picker)
+                    local Tree = require "snacks.explorer.tree"
+                    local start = Tree:find(picker:dir())
+                    if start == nil then return end
+                    local toggle_to = not start.open
+
+                    local toggle_all
+                    toggle_all = function(path)
+                      Tree:walk(Tree:find(path), function(node)
+                        if node.dir then
+                          node.open = toggle_to
+                          if toggle_to then
+                            Tree:expand(node)
+                          else
+                            Tree:close(node.path)
+                          end
+                        end
+                      end, { all = true })
+                    end
+
+                    toggle_all(picker:dir())
+                    require("snacks.explorer.actions").update(picker, { refresh = true })
+                  end,
+                  ["explorer_focus_parent"] = function(picker) vim.cmd("cd " .. vim.fn.fnamemodify(picker:dir(), ":h")) end,
+                  ["explorer_focus"] = function(picker) vim.cmd("cd " .. picker:dir()) end,
+                  ["cancel"] = function() vim.cmd [[wincmd h]] end,
+                  ["focus_editor"] = function() vim.cmd [[wincmd h]] end,
+                  ["resize_wider"] = function()
+                    vim.cmd [[wincmd h]]
+                    vim.cmd [[vertical resize -2]]
+                    vim.cmd [[wincmd l]]
+                  end,
+                  ["resize_narrower"] = function()
+                    vim.cmd [[wincmd h]]
+                    vim.cmd [[vertical resize +2]]
+                    vim.cmd [[wincmd l]]
+                  end,
+                },
+              },
+            },
+            picker = {
+              actions = {
+                ["explorer_focus_parent"] = function(picker) vim.cmd("cd " .. vim.fn.fnamemodify(picker:dir(), ":h")) end,
+                ["explorer_focus"] = function(picker) vim.cmd("cd " .. picker:dir()) end,
+                ["cancel"] = function() vim.cmd [[wincmd h]] end,
+                ["focus_editor"] = function() vim.cmd [[wincmd h]] end,
+                ["resize_wider"] = function()
+                  vim.cmd [[wincmd h]]
+                  vim.cmd [[vertical resize -2]]
+                  vim.cmd [[wincmd l]]
+                end,
+                ["resize_narrower"] = function()
+                  vim.cmd [[wincmd h]]
+                  vim.cmd [[vertical resize +2]]
+                  vim.cmd [[wincmd l]]
+                end,
+              },
+            },
+            formatters = {
+              file = {
+                filename_first = true,
+                truncate = 1 / 0,
+              },
+            },
+            win = {
+              input = {
+                keys = {
+                  ["<c-a-d>"] = { "inspect", mode = { "n", "i" } },
+                  ["<c-a-f>"] = { "toggle_follow", mode = { "i", "n" } },
+                  ["<c-a-h>"] = { "toggle_hidden", mode = { "i", "n" } },
+                  ["<c-a-i>"] = { "toggle_ignored", mode = { "i", "n" } },
+                  ["<c-a-m>"] = { "toggle_maximize", mode = { "i", "n" } },
+                  ["<c-a-p>"] = { "toggle_preview", mode = { "i", "n" } },
+                  ["<c-a-w>"] = { "cycle_win", mode = { "i", "n" } },
+                },
+              },
+              list = {
+                keys = {
+                  ["<c-a-d>"] = "inspect",
+                  ["<c-a-f>"] = "toggle_follow",
+                  ["<c-a-h>"] = "toggle_hidden",
+                  ["<c-a-i>"] = "toggle_ignored",
+                  ["<c-a-m>"] = "toggle_maximize",
+                  ["<c-a-p>"] = "toggle_preview",
+                  ["<c-a-w>"] = "cycle_win",
+                },
+              },
+            },
+          },
+        }
+      )
+    end,
+  },
   {
     "mbbill/undotree",
     keys = {
@@ -12,51 +278,6 @@ return {
     config = function()
       vim.g.undotree_WindowLayout = 4
       vim.g.undotree_SetFocusWhenToggle = 1
-    end,
-  },
-  {
-    "lunarvim/onedarker.nvim",
-    config = function()
-      local palette = require "onedarker.palette"
-      local hl = vim.api.nvim_set_hl
-
-      palette.bg = "NONE"
-      palette.alt_bg = "NONE"
-      palette.hint = palette.green
-
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        callback = function()
-          if vim.g.colors_name ~= "onedarker" then return end
-
-          hl(0, "DropBarIconUISeparator", { fg = palette.gray })
-          hl(0, "TreesitterContextBottom", { underline = true, sp = palette.gray })
-          hl(0, "NonText", { fg = palette.gray, bg = palette.alt_bg })
-          hl(0, "FoldColumn", { fg = palette.gray, bg = palette.alt_bg })
-          hl(0, "SpellBad", { fg = "NONE", bg = "NONE", sp = palette.hint, undercurl = true })
-          hl(0, "WhichKeyFloat", { fg = "NONE", bg = "NONE" })
-          hl(0, "TelescopeNormal", { fg = palette.fg, bg = palette.bg })
-          hl(0, "Whitespace", { fg = palette.gray, bg = palette.bg })
-          hl(0, "GitSignsCurrentLineBlame", { fg = palette.gray })
-          hl(0, "DiffviewDiffAddAsDelete", { bg = "#431313" })
-          hl(0, "DiffDelete", { bg = "#431313" })
-          hl(0, "DiffviewDiffDelete", { bg = "#431313" })
-          hl(0, "DiffAdd", { bg = "#142a03" })
-          hl(0, "DiffChange", { bg = "#3B3307" })
-          hl(0, "DiffText", { bg = "#4D520D" })
-          hl(0, "AlphaHeader", { fg = palette.green })
-
-          hl(0, "WinBar", { bg = palette.bg })
-          hl(0, "WinBarNC", { bg = palette.bg })
-
-          -- hl(0, "CmpItemKindCody", { fg = palette.red })
-          hl(0, "llama_hl_hint", { fg = palette.gray, ctermfg = 209 })
-          hl(0, "llama_hl_info", { fg = palette.light_gray, ctermfg = 119 })
-
-          hl(0, "SnacksIndent", { fg = palette.gray })
-          hl(0, "SnacksIndentScope", { fg = palette.light_gray })
-        end,
-      })
-      vim.cmd "colorscheme onedarker"
     end,
   },
   {
@@ -80,6 +301,13 @@ return {
         "junegunn/fzf.vim",
       },
     },
+    opts = function()
+      return {
+        preview = {
+          winblend = 30,
+        },
+      }
+    end,
   },
   {
     "Juksuu/worktrees.nvim",
@@ -147,105 +375,33 @@ return {
   },
   {
     "rebelot/heirline.nvim",
-    opts = function(_, opts) opts.winbar = nil end,
-  },
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    event = { "BufReadPost", "BufNewFile" },
-    opts = function()
-      local highlight = {
-        "CursorColumn",
-        "Whitespace",
-      }
-      return {
-        -- char = "▏",
-        indent = { char = "▏" },
-        -- whitespace = {
-        --   highlight = highlight,
-        --   remove_blankline_trail = true,
-        -- },
-        exclude = {
-          filetypes = {
-            "",
-            "neotest-summary",
-            "Cybu",
-            "DressingSelect",
-            "Jaq",
-            "NvimTree",
-            "Outline",
-            "Trouble",
-            "aerial",
-            "alpha",
-            "checkhealth",
-            "dap-repl",
-            "dap-terminal",
-            "dapui_breakpoints",
-            "dapui_console",
-            "dapui_scopes",
-            "dapui_stacks",
-            "dapui_watches",
-            "dashboard",
-            "fugitive",
-            "gitcommit",
-            "harpoon",
-            "help",
-            "lazy",
-            "lspinfo",
-            "man",
-            "minpacprgs",
-            "neo-tree",
-            "neogitstatus",
-            "nofile",
-            "packer",
-            "qf",
-            "spectre_panel",
-            "startify",
-            "toggleterm",
-            "undotree",
-            "whichkey",
+    opts = function(_, opts)
+      local status = require "astroui.status"
+      local cached_func = function(func, ...)
+        local cached
+        local args = { ... }
+        return function(self)
+          if cached == nil then cached = func(unpack(args)) end
+          if type(cached) == "function" then return cached(self) end
+          return cached
+        end
+      end
+      opts.winbar = nil
+      opts.tabline = { -- bufferline
+        status.component.fill { hl = { bg = "tabline_bg" } }, -- fill the rest of the tabline with background color
+        { -- tab list
+          condition = function() return #vim.api.nvim_list_tabpages() >= 2 end, -- only show tabs if there are more than one
+          status.heirline.make_tablist { -- component for each tab
+            provider = status.provider.tabnr(),
+            hl = function(self) return status.hl.get_attributes(status.heirline.tab_type(self, "tab"), true) end,
           },
-          buftypes = {
-            "BqfPreview",
-            "Cybu",
-            "DressingSelect",
-            "Jaq",
-            "NvimTree",
-            "Outline",
-            "Trouble",
-            "aerial",
-            "alpha",
-            "checkhealth",
-            "dap-repl",
-            "dap-terminal",
-            "dapui_breakpoints",
-            "dapui_console",
-            "dapui_scopes",
-            "dapui_stacks",
-            "dapui_watches",
-            "dashboard",
-            "fugitive",
-            "gitcommit",
-            "harpoon",
-            "help",
-            "lazy",
-            "lspinfo",
-            "man",
-            "minpacprgs",
-            "neo-tree",
-            "neogitstatus",
-            "nofile",
-            "neotest-summary",
-            "packer",
-            "prompt",
-            "qf",
-            "quickfix",
-            "spectre_panel",
-            "startify",
-            "terminal",
-            "toggleterm",
-            "undotree",
-            "whichkey",
+          { -- close button for current tab
+            provider = status.provider.close_button { kind = "TabClose", padding = { left = 1, right = 1 } },
+            hl = cached_func(status.hl.get_attributes, "tab_close", true),
+            on_click = {
+              callback = function() require("astrocore.buffer").close_tab() end,
+              name = "heirline_tabline_close_tab_callback",
+            },
           },
         },
       }
@@ -303,6 +459,7 @@ return {
       }
     end,
   },
+
   {
     "smjonas/live-command.nvim",
     opts = {
@@ -311,7 +468,6 @@ return {
       },
     },
   },
-
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -606,66 +762,143 @@ return {
       { "<leader>j", "<Cmd>lua require('dropbar.api').pick()<CR>" },
     },
     lazy = false,
-    opts = {
-      bar = {
-        enable = function(buf, win)
-          if IS_KITTY_SCROLLBACK then return false end
-          return not vim.api.nvim_win_get_config(win).zindex
-            and vim.bo[buf].buftype == ""
-            and vim.api.nvim_buf_get_name(buf) ~= ""
-            and not vim.wo[win].diff
-            and not IS_KITTY_SCROLLBACK
-        end,
-      },
-      icons = {
-        ui = {
-          menu = {
-            indicator = " ",
-          },
-          bar = {
-            separator = "  ",
-          },
-        },
-      },
-      menu = {
-        keymaps = {
-          ["."] = function()
-            local menu = require("dropbar.utils").menu.get_current()
-            print(vim.fn.json_encode(menu))
+    opts = function()
+      return {
+        bar = {
+          truncate = false,
+          enable = function(buf, win)
+            if IS_KITTY_SCROLLBACK then return false end
+            return not vim.api.nvim_win_get_config(win).zindex
+              and vim.bo[buf].buftype == ""
+              and vim.api.nvim_buf_get_name(buf) ~= ""
+              and not vim.wo[win].diff
+              and not IS_KITTY_SCROLLBACK
           end,
-          ["/"] = function()
+          sources = function(buf, _)
+            local sources = require "dropbar.sources"
+            local custom_path = require "custom.dropbar.path"
             local utils = require "dropbar.utils"
-            local menu = utils.menu.get_current()
-            if not menu then return end
-            menu:fuzzy_find_open()
-          end,
-          ["i"] = function()
-            local utils = require "dropbar.utils"
-            local menu = utils.menu.get_current()
-            if not menu then return end
-            menu:fuzzy_find_open()
-          end,
-          ["<Esc><Esc>"] = function() vim.cmd "wincmd c" end,
-          ["<Esc>"] = function() vim.cmd "wincmd c" end,
-          ["q"] = function()
-            local api = require "dropbar.api"
-            local menu = api.dropbar_menu_t()
-            while menu do
-              vim.cmd("bd " .. menu.buf)
-              menu = api.dropbar_menu_t()
+
+            if vim.bo[buf].ft == "markdown" then
+              return {
+                custom_path,
+                sources.markdown,
+              }
             end
-          end,
-          ["<Space>"] = function()
-            local menu = require("dropbar.api").menu.get_current()
-            if not menu then return end
-            local cursor = vim.api.nvim_win_get_cursor(menu.win)
-            local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
-            if component then menu:on_click() end
+            if vim.bo[buf].buftype == "terminal" then return {
+              sources.terminal,
+            } end
+            return {
+              custom_path,
+              utils.source.fallback {
+                sources.lsp,
+                sources.treesitter,
+              },
+            }
           end,
         },
-      },
-    },
-    config = true,
+        icons = {
+          ui = {
+            menu = {
+              indicator = " ",
+            },
+            bar = {
+              separator = "  ",
+            },
+          },
+        },
+        menu = {
+          win_configs = {
+            style = "minimal",
+            border = "rounded",
+            row = function(menu)
+              return menu.prev_menu and menu.prev_menu.clicked_at and menu.prev_menu.clicked_at[1] - vim.fn.line "w0"
+                or 0
+            end,
+            ---@param menu dropbar_menu_t
+            col = function(menu)
+              if menu.prev_menu then
+                return menu.prev_menu._win_configs.width + (menu.prev_menu.scrollbar and 1 or 0)
+              end
+              local mouse = vim.fn.getmousepos()
+              local bar = require("dropbar.api").get_dropbar(vim.api.nvim_win_get_buf(menu.prev_win), menu.prev_win)
+              if not bar then return mouse.wincol end
+              local _, range = bar:get_component_at(math.max(0, mouse.wincol - 1))
+              return range and range.start or mouse.wincol
+            end,
+            relative = "win",
+            win = function(menu) return menu.prev_menu and menu.prev_menu.win or vim.fn.getmousepos().winid end,
+            height = function(menu)
+              return math.max(
+                1,
+                math.min(#menu.entries, vim.go.pumheight ~= 0 and vim.go.pumheight or math.ceil(vim.go.lines / 4))
+              )
+            end,
+            width = function(menu)
+              local min_width = vim.go.pumwidth ~= 0 and vim.go.pumwidth or 8
+              if vim.tbl_isempty(menu.entries) then return min_width end
+              return math.max(
+                min_width,
+                math.max(unpack(vim.tbl_map(function(entry) return entry:displaywidth() end, menu.entries)))
+              )
+            end,
+            zindex = function(menu)
+              if not menu.prev_menu then return end
+              return menu.prev_menu.scrollbar
+                  and menu.prev_menu.scrollbar.thumb
+                  and vim.api.nvim_win_get_config(menu.prev_menu.scrollbar.thumb).zindex
+                or vim.api.nvim_win_get_config(menu.prev_win).zindex
+            end,
+          },
+          keymaps = {
+            ["/"] = function()
+              local utils = require "dropbar.utils"
+              local menu = utils.menu.get_current()
+              if not menu then return end
+              menu:fuzzy_find_open()
+            end,
+            ["i"] = function()
+              local utils = require "dropbar.utils"
+              local menu = utils.menu.get_current()
+              if not menu then return end
+              menu:fuzzy_find_open()
+            end,
+            ["<Esc>"] = function() vim.cmd "wincmd c" end,
+            ["<Backspace>"] = function() vim.cmd "wincmd c" end,
+            ["<C-c>"] = function()
+              local menu = require("dropbar.utils").menu.get_current()
+              while menu do
+                vim.cmd("bd " .. menu.buf)
+                menu = require("dropbar.utils").menu.get_current()
+              end
+            end,
+            ["q"] = function()
+              local menu = require("dropbar.utils").menu.get_current()
+              while menu do
+                vim.cmd("bd " .. menu.buf)
+                menu = require("dropbar.utils").menu.get_current()
+              end
+            end,
+            ["y"] = function(...)
+              local menu = require("dropbar.utils").menu.get_current()
+              print(vim.inspect(...))
+              print(vim.inspect(menu))
+            end,
+
+            ["<Right>"] = function()
+              local menu = require("dropbar.utils").menu.get_current()
+              if not menu then return end
+              local cursor = vim.api.nvim_win_get_cursor(menu.win)
+              local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
+              if component then component:on_click() end
+            end,
+            ["<Left>"] = function() vim.cmd "wincmd c" end,
+            ["<Up>"] = "k",
+            ["<Down>"] = "j",
+          },
+        },
+      }
+    end,
     dependencies = {
       "kyazdani42/nvim-web-devicons",
       {
@@ -684,140 +917,134 @@ return {
     },
   },
   {
-    "folke/snacks.nvim",
-    opts = function(_, opts)
-      return vim.tbl_extend(
-        "force",
-        opts,
-        ---@type snacks.Config
-        {
-          statuscolumn = { enabled = false },
-          explorer = {
-            replace_netrw = true,
-          },
-          picker = {
-            ui_select = true,
-            layout = { preset = "ivy", layout = { position = "bottom", height = 0 } },
-            sources = {
-              files = {
-                follow = true,
-              },
-              explorer = {
-                diagnostics_open = true,
-                git_status_open = true,
-                layout = { preset = "sidebar", layout = { position = "right" }, preview = false },
-                win = {
-                  input = {
-                    keys = {
-                      ["-"] = {
-                        "explorer_focus_parent",
-                        mode = { "n" },
-                      },
-                      ["<c-s-h>"] = {
-                        "resize_wider",
-                        mode = { "n", "i" },
-                      },
-                      ["<c-s-l>"] = {
-                        "resize_narrower",
-                        mode = { "n", "i" },
-                      },
-                      ["<c-h>"] = {
-                        "focus_editor",
-                        mode = { "n", "i" },
-                      },
-                    },
-                  },
-                  list = {
-                    keys = {
-                      ["-"] = {
-                        "explorer_focus_parent",
-                        mode = { "n" },
-                      },
-                      ["<c-s-h>"] = {
-                        "resize_wider",
-                        mode = { "n", "i" },
-                      },
-                      ["<c-s-l>"] = {
-                        "resize_narrower",
-                        mode = { "n", "i" },
-                      },
-                      ["<c-h>"] = {
-                        "focus_editor",
-                        mode = { "n", "i" },
-                      },
-                    },
-                  },
-                },
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      cmdline = {
+        enabled = true, -- enables the Noice cmdline UI
+        view = "cmdline", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
+      },
 
-                actions = {
-                  ["explorer_focus_parent"] = function(picker) vim.cmd("cd " .. vim.fn.fnamemodify(picker:dir(), ":h")) end,
-                  ["explorer_focus"] = function(picker) vim.cmd("cd " .. picker:dir()) end,
-                  ["cancel"] = function() vim.cmd [[wincmd h]] end,
-                  ["focus_editor"] = function() vim.cmd [[wincmd h]] end,
-                  ["resize_wider"] = function()
-                    vim.cmd [[wincmd h]]
-                    vim.cmd [[vertical resize -2]]
-                    vim.cmd [[wincmd l]]
-                  end,
-                  ["resize_narrower"] = function()
-                    vim.cmd [[wincmd h]]
-                    vim.cmd [[vertical resize +2]]
-                    vim.cmd [[wincmd l]]
-                  end,
-                },
-              },
-            },
-            picker = {
-              actions = {
-                ["explorer_focus_parent"] = function(picker) vim.cmd("cd " .. vim.fn.fnamemodify(picker:dir(), ":h")) end,
-                ["explorer_focus"] = function(picker) vim.cmd("cd " .. picker:dir()) end,
-                ["cancel"] = function() vim.cmd [[wincmd h]] end,
-                ["focus_editor"] = function() vim.cmd [[wincmd h]] end,
-                ["resize_wider"] = function()
-                  vim.cmd [[wincmd h]]
-                  vim.cmd [[vertical resize -2]]
-                  vim.cmd [[wincmd l]]
-                end,
-                ["resize_narrower"] = function()
-                  vim.cmd [[wincmd h]]
-                  vim.cmd [[vertical resize +2]]
-                  vim.cmd [[wincmd l]]
-                end,
-              },
-            },
-            formatters = {
-              file = {
-                filename_first = true,
-                truncate = false,
-              },
-            },
-            win = {
-              input = {
-                keys = {
-                  ["<c-a-d>"] = { "inspect", mode = { "n", "i" } },
-                  ["<c-a-f>"] = { "toggle_follow", mode = { "i", "n" } },
-                  ["<c-a-h>"] = { "toggle_hidden", mode = { "i", "n" } },
-                  ["<c-a-i>"] = { "toggle_ignored", mode = { "i", "n" } },
-                  ["<c-a-m>"] = { "toggle_maximize", mode = { "i", "n" } },
-                  ["<c-a-p>"] = { "toggle_preview", mode = { "i", "n" } },
-                  ["<c-a-w>"] = { "cycle_win", mode = { "i", "n" } },
-                },
-              },
-              list = {
-                keys = {
-                  ["<c-a-d>"] = "inspect",
-                  ["<c-a-f>"] = "toggle_follow",
-                  ["<c-a-h>"] = "toggle_hidden",
-                  ["<c-a-i>"] = "toggle_ignored",
-                  ["<c-a-m>"] = "toggle_maximize",
-                  ["<c-a-p>"] = "toggle_preview",
-                  ["<c-a-w>"] = "cycle_win",
-                },
+      presets = {
+        bottom_search = true, -- use a classic bottom cmdline for search
+        command_palette = true, -- position the cmdline and popupmenu together
+        long_message_to_split = true, -- long messages will be sent to a split
+        lsp_doc_border = true, -- add a border to hover docs and signature help
+      },
+    },
+  },
+  {
+    "ruifm/gitlinker.nvim",
+    keys = {
+      { "<leader>gy", nil, mode = "n", desc = "Get repository link to current line" },
+      { "<leader>gy", nil, mode = "v", desc = "Get repository link to current line" },
+    },
+    opts = {},
+  },
+  {
+    "rachartier/tiny-code-action.nvim",
+    dependencies = {
+      { "nvim-lua/plenary.nvim" },
+      {
+        "folke/snacks.nvim",
+      },
+    },
+    event = "LspAttach",
+    opts = {
+      backend = "delta",
+      picker = {
+        "snacks",
+        opts = {
+          layout = {
+            backdrop = 40,
+            position = "float",
+            layout = {
+              backdrop = 40,
+              position = "float",
+              row = 1,
+              width = 0.9,
+              height = 0.9,
+              border = "none",
+              box = "vertical",
+              { win = "preview", title = "{preview}", height = 0.8, width = 0, border = "rounded" },
+              {
+                box = "vertical",
+                border = "rounded",
+                title = "{title} {live} {flags}",
+                title_pos = "left",
+                { win = "input", height = 1, border = "bottom" },
+                { win = "list", border = "none" },
               },
             },
           },
-        }
-      )
+        },
+      },
+    },
+  },
+  {
+    "rachartier/tiny-inline-diagnostic.nvim",
+    event = "VeryLazy", -- Or `LspAttach`
+    priority = 1000, -- needs to be loaded in first
+    config = function()
+      require("tiny-inline-diagnostic").setup {
+        options = {
+          multilines = {
+            -- Enable multiline diagnostic messages
+            enabled = true,
+
+            -- Always show messages on all lines for multiline diagnostics
+            always_show = true,
+
+            -- Trim whitespaces from the start/end of each line
+            trim_whitespaces = false,
+
+            -- Replace tabs with spaces in multiline diagnostics
+            tabstop = 4,
+          },
+        },
+      }
+
+      vim.diagnostic.config { virtual_text = false }
+    end,
+  },
+  {
+    "sindrets/diffview.nvim",
+    cmd = {
+      "DiffviewOpen",
+      "DiffviewFileHistory",
+    },
+    keys = {
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", mode = "n", desc = "Open diff view" },
+      { "<leader>gD", "<cmd>DiffviewOpen master..HEAD<cr>", mode = "n", desc = "History since master" },
+      { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", mode = "n", desc = "Open file git history" },
+      { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", mode = "n", desc = "Open Git history" },
+      { "<leader>gh", "<cmd>'<,'>DiffviewFileHistory<cr>", mode = "v", desc = "Open file history" },
+    },
+    opts = function()
+      local actions = require "diffview.actions"
+      return {
+        keymaps = {
+          file_history_panel = {
+            ["q"] = function() vim.cmd "DiffviewClose" end,
+            ["<C-u>"] = actions.scroll_view(-8),
+            ["<C-d>"] = actions.scroll_view(8),
+            ["<up>"] = actions.select_prev_entry,
+            ["K"] = actions.select_prev_entry,
+            ["<down>"] = actions.select_next_entry,
+            ["J"] = actions.select_next_entry,
+          },
+
+          file_panel = {
+            ["q"] = function() vim.cmd "DiffviewClose" end,
+            ["<C-u>"] = actions.scroll_view(-8),
+            ["<C-d>"] = actions.scroll_view(8),
+            ["<up>"] = actions.select_prev_entry,
+            ["K"] = actions.select_prev_entry,
+            ["<down>"] = actions.select_next_entry,
+            ["J"] = actions.select_next_entry,
+          },
+        },
+      }
     end,
   },
 }
