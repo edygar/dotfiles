@@ -1,0 +1,7 @@
+{
+  "cmp": {
+    "prefix": ["cmp"],
+    "body": ["const $1() => {", "\treturn ${2:<></>}", "}"],
+    "description": "Arrow function"
+  }
+}

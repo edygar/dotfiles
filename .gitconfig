@@ -62,10 +62,10 @@
 
   # log
   l = log --graph --date=short
-  changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
-  short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
-  simple = log --pretty=format:\" * %s\"
-  shortnocolor = log --pretty=format:\"%h %cr %cn %s\"
+  changes ="log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status"
+  short ="log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\""
+  simple ="log --pretty=format:\" * %s\""
+  shortnocolor ="log --pretty=format:\"%h %cr %cn %s\""
 
   # pull
   pl = pull                         # pull
@@ -158,8 +158,9 @@
   enabled = true
 
 [delta]
-    side-by-side = true
     syntax-theme = OneHalfDark
+    navigate = true
+    wrap-max-lines = 0
 
 [include]
   path = ~/.gitconfig.user
@@ -170,9 +171,6 @@
 [interactive]
     diffFilter = delta --color-only
 
-[delta]
-    navigate = true    # use n and N to move between diff sections
-    light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
 
 [merge]
     conflictstyle = diff3
