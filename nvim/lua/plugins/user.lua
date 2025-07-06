@@ -811,44 +811,6 @@ return {
           win_configs = {
             style = "minimal",
             border = "rounded",
-            row = function(menu)
-              return menu.prev_menu and menu.prev_menu.clicked_at and menu.prev_menu.clicked_at[1] - vim.fn.line "w0"
-                or 0
-            end,
-            ---@param menu dropbar_menu_t
-            col = function(menu)
-              if menu.prev_menu then
-                return menu.prev_menu._win_configs.width + (menu.prev_menu.scrollbar and 1 or 0)
-              end
-              local mouse = vim.fn.getmousepos()
-              local bar = require("dropbar.api").get_dropbar(vim.api.nvim_win_get_buf(menu.prev_win), menu.prev_win)
-              if not bar then return mouse.wincol end
-              local _, range = bar:get_component_at(math.max(0, mouse.wincol - 1))
-              return range and range.start or mouse.wincol
-            end,
-            relative = "win",
-            win = function(menu) return menu.prev_menu and menu.prev_menu.win or vim.fn.getmousepos().winid end,
-            height = function(menu)
-              return math.max(
-                1,
-                math.min(#menu.entries, vim.go.pumheight ~= 0 and vim.go.pumheight or math.ceil(vim.go.lines / 4))
-              )
-            end,
-            width = function(menu)
-              local min_width = vim.go.pumwidth ~= 0 and vim.go.pumwidth or 8
-              if vim.tbl_isempty(menu.entries) then return min_width end
-              return math.max(
-                min_width,
-                math.max(unpack(vim.tbl_map(function(entry) return entry:displaywidth() end, menu.entries)))
-              )
-            end,
-            zindex = function(menu)
-              if not menu.prev_menu then return end
-              return menu.prev_menu.scrollbar
-                  and menu.prev_menu.scrollbar.thumb
-                  and vim.api.nvim_win_get_config(menu.prev_menu.scrollbar.thumb).zindex
-                or vim.api.nvim_win_get_config(menu.prev_win).zindex
-            end,
           },
           keymaps = {
             ["/"] = function()
@@ -862,6 +824,60 @@ return {
               local menu = utils.menu.get_current()
               if not menu then return end
               menu:fuzzy_find_open()
+            end,
+            ["H"] = function()
+              local root = require("dropbar.utils").menu.get_current():root()
+              root:close()
+
+              local dropbar = require("dropbar.api").get_dropbar(vim.api.nvim_win_get_buf(root.prev_win), root.prev_win)
+              if not dropbar then
+                root:toggle()
+                return
+              end
+
+              local current_idx
+              for idx, component in ipairs(dropbar.components) do
+                if component.menu == root then
+                  current_idx = idx
+                  break
+                end
+              end
+
+              if current_idx == nil or current_idx == 0 then
+                root:toggle()
+                return
+              end
+
+              vim.defer_fn(function() dropbar:pick(current_idx - 1) end, 100)
+            end,
+
+            ["L"] = function()
+              local root = require("dropbar.utils").menu.get_current():root()
+              root:close()
+
+              local dropbar = require("dropbar.api").get_dropbar(vim.api.nvim_win_get_buf(root.prev_win), root.prev_win)
+              if not dropbar then
+                dropbar = require("dropbar.utils").bar.get_current()
+                if not dropbar then
+                  root:toggle()
+                  return
+                end
+              end
+
+              local current_idx
+              for idx, component in ipairs(dropbar.components) do
+                if component.menu == root then
+                  current_idx = idx
+                  break
+                end
+              end
+
+              if current_idx == nil or current_idx == #dropbar.components then
+                root:toggle()
+                return
+              end
+
+              vim.defer_fn(function() dropbar:pick(current_idx + 1) end, 100)
             end,
             ["<Esc>"] = function() vim.cmd "wincmd c" end,
             ["<Backspace>"] = function() vim.cmd "wincmd c" end,
@@ -1045,6 +1061,40 @@ return {
           },
         },
       }
+    end,
+  },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/neotest-jest",
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = function(_, opts)
+      return vim.tbl_deep_extend("force", opts, {
+        discovery = {
+          enabled = false,
+        },
+        adapters = {
+          require "neotest-jest" {
+            jestCommand = "npm test --",
+            cwd = function(file_path)
+              -- Match and extract the path up to (but not including) "src/"
+              local parent_path = file_path:gsub("(.-)/src/.*", "%1")
+
+              if parent_path ~= file_path then
+                -- If the replacement occurred, return the extracted path
+                return parent_path
+              else
+                -- Fallback to the current working directory
+                return vim.fn.getcwd()
+              end
+            end,
+          },
+        },
+      })
     end,
   },
 }
