@@ -70,7 +70,7 @@ return {
           fg = "#EEAF58",
         },
         DiffviewDiffAddAsDelete = { bg = "#4B1818" },
-        DiffDelete = { fg = "#4B1818", bg = "#4B1818" },
+        DiffDelete = { bg = "#4B1818" },
         DiffviewDiffDelete = { bg = "#4B1818" },
         DiffAdd = { bg = "#163003" },
         DiffChange = { bg = "#0B1802" },

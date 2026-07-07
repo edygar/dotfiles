@@ -125,7 +125,6 @@ return {
         termguicolors = true, -- set term gui colors (most terminals support this)
         timeoutlen = 1000, -- time to wait for a mapped sequence to complete (in milliseconds)
         undofile = true, -- enable persistent undo
-        undofile = true, -- enable persistent undo
         undolevels = 10000,
         updatetime = 0, -- faster completion (4000ms default)
         updatetime = 200, -- Save swap file and trigger CursorHold
@@ -148,11 +147,80 @@ return {
     mappings = {
       -- first key is the mode
       n = {
+        ["<Leader>ww"] = { "<cmd>w<CR>", desc = "Write current file" },
         ["<Leader>wq"] = { "<cmd>wq<CR>", desc = "Write and quit" },
         ["<Leader>wa"] = { "<cmd>wa<CR>", desc = "Write all" },
         ["<Leader>fj"] = { "<cmd>lua Snacks.picker.jumps()<CR>", desc = "Lists Jumplist" },
         ["[j"] = { "<C-o>" },
         ["]j"] = { "<C-i>" },
+        ["<Leader>fy"] = {
+          function()
+            -- Get clipboard content
+            local clipboard = vim.fn.getreg "+"
+
+            -- Clean up the path (remove leading/trailing whitespace)
+            local path = vim.trim(clipboard)
+
+            if path == "" then return end
+
+            -- Split path into components
+            local components = {}
+            for component in string.gmatch(path, "[^/]+") do
+              table.insert(components, component)
+            end
+
+            if #components == 0 then return end
+
+            local best_search = nil
+            local best_count = 0
+
+            -- Walk from right to left, building search terms
+            for i = #components, 1, -1 do
+              -- Build search term from current position to end
+              local search_parts = {}
+              for j = i, #components do
+                table.insert(search_parts, components[j])
+              end
+              local search_term = "**/" .. table.concat(search_parts, "/")
+
+              -- Count files matching this search term using fd
+              local count = 0
+              local fd_cmd = string.format("fd -tf -p -g '%s' 2>/dev/null", search_term)
+              local handle = io.popen(fd_cmd)
+              local file = nil
+              if handle then
+                for line in handle:lines() do
+                  file = line
+                  count = count + 1
+                end
+                handle:close()
+              end
+
+              -- Keep track of the best search term (last one with results)
+              --
+              if count == 1 then
+                vim.cmd("e " .. file)
+                return
+              end
+
+              if count > 0 then
+                best_search = search_term
+                best_count = count
+              end
+            end
+
+            -- Open file picker with the best search term
+            if best_search then
+              Snacks.picker.files { pattern = best_search }
+            else
+              -- Fallback to searching just the filename
+              local filename = components[#components]
+              Snacks.picker.files { pattern = filename }
+            end
+          end,
+          silent = true,
+          desc = "Search clipboard file",
+        },
 
         ["<C-M-q>"] = { "<cmd>bd<CR>", silent = true, desc = "Close current window" },
         ["<Leader>fq"] = {
@@ -263,6 +331,19 @@ return {
             end
           end,
           desc = "Toggle virtual_text",
+        },
+        ["<Leader>to"] = {
+          function() require("astrocore").toggle_term_cmd { cmd = "opencode", direction = "float" } end,
+          desc = "ToggleTerm opencode",
+        },
+
+        ["<C-j>"] = { "<cmd>KittyNavigateDown<cr>", desc = "Go to lower window" },
+        ["<C-h>"] = { "<cmd>KittyNavigateLeft<cr>", desc = "Go to left window" },
+        ["<C-k>"] = { "<cmd>KittyNavigateUp<cr>", desc = "Go to upper window" },
+        ["<C-l>"] = { "<cmd>KittyNavigateRight<cr>", desc = "Go to right window" },
+        ["<leader>gb"] = {
+          function() package.loaded.gitsigns.blame_line { full = true } end,
+          desc = "Opens the Hunk Preview in a popup",
         },
       },
       i = {

@@ -30,6 +30,26 @@ local function chars_to_right_of_word()
 
   return relative_pos
 end
+
+function ShowZIndex()
+  local wins = vim.api.nvim_list_wins()
+  for _, win in ipairs(wins) do
+    local config = vim.api.nvim_win_get_config(win)
+    local bufnr = vim.api.nvim_win_get_buf(win)
+    local bufname = vim.api.nvim_buf_get_name(bufnr)
+    local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+    print(
+      string.format(
+        "Win %d: zindex=%s, buf=%s, ft=%s",
+        win,
+        config.zindex or "nil",
+        vim.fn.fnamemodify(bufname, ":t"),
+        ft
+      )
+    )
+  end
+end
+
 ---@type LazySpec
 return {
   {
@@ -109,7 +129,6 @@ return {
                 git_status_open = true,
                 layout = {
                   preview = "main",
-                  fullscreen = false,
                   layout = {
                     backdrop = false,
                     width = 40,
@@ -121,15 +140,27 @@ return {
                     {
                       win = "input",
                       height = 1,
-                      border = "bottom",
+                      border = "rounded",
                       title = "{title} {live} {flags}",
                       title_pos = "center",
                     },
-                    { win = "list", border = "none" },
-                    { win = "preview", title = "{preview}", height = 0.4, border = "top" },
+                    {
+                      win = "list",
+                      border = "none",
+                    },
+                    {
+                      win = "preview",
+                      title = "{preview}",
+                      height = 0.4,
+                      border = "top",
+                    },
                   },
                 },
                 win = {
+                  preview = {
+                    zindex = 33,
+                  },
+
                   input = {
                     keys = {
                       ["-"] = {
@@ -152,6 +183,14 @@ return {
                   },
                   list = {
                     keys = {
+                      ["<C-r>"] = {
+                        "explorer_reveal",
+                        mode = { "n" },
+                      },
+                      ["R"] = {
+                        "explorer_reveal",
+                        mode = { "n" },
+                      },
                       ["<S-CR>"] = {
                         "explorer_toggle_all",
                         mode = { "n" },
@@ -172,11 +211,16 @@ return {
                         "focus_editor",
                         mode = { "n", "i" },
                       },
+                      ["<c-l>"] = {
+                        "navigate_away",
+                        mode = { "n", "i" },
+                      },
                     },
                   },
                 },
-
                 actions = {
+                  ["explorer_with_oil"] = function(_, item) vim.cmd("Oil " .. Snacks.picker.util.path(item)) end,
+                  ["explorer_reveal"] = function(_, item) os.execute("open -R " .. Snacks.picker.util.path(item)) end,
                   ["explorer_toggle_all"] = function(picker)
                     local Tree = require "snacks.explorer.tree"
                     local start = Tree:find(picker:dir())
@@ -204,6 +248,7 @@ return {
                   ["explorer_focus"] = function(picker) vim.cmd("cd " .. picker:dir()) end,
                   ["cancel"] = function() vim.cmd [[wincmd h]] end,
                   ["focus_editor"] = function() vim.cmd [[wincmd h]] end,
+                  ["navigate_away"] = function() vim.cmd "KittyNavigateRight" end,
                   ["resize_wider"] = function()
                     vim.cmd [[wincmd h]]
                     vim.cmd [[vertical resize -2]]
@@ -266,6 +311,7 @@ return {
               },
             },
           },
+          preview = {},
         }
       )
     end,
@@ -360,9 +406,6 @@ return {
         callbacks = {
           after_launch = function()
             -- Define mappings for your *main Neovim instance* (already correct)
-            vim.keymap.set("n", "<leader>q", "<Plug>(KsbQuitAll)", { buffer = true, silent = true }) -- quit kitty-scrollback.nvim with Esc key
-            vim.keymap.set("n", "q", "<cmd>wqa!<cr>", { buffer = true, silent = true }) -- quit kitty-scrollback.nvim with Esc key
-
             IS_KITTY_SCROLLBACK = true
           end,
         },
@@ -760,9 +803,69 @@ return {
     "Bekaboo/dropbar.nvim",
     keys = {
       { "<leader>j", "<Cmd>lua require('dropbar.api').pick()<CR>" },
+      { "['", "<Cmd>lua require('dropbar.api').goto_context_start()<CR>", desc = "Go to start of current context" },
+      { "]'", "<Cmd>lua require('dropbar.api').select_next_context()<CR>", desc = "Select next context" },
+      { "<leader>'", "<Cmd>lua require('dropbar.api').select_next_context()<CR>" },
+      { "<leader>,", "<Cmd>lua require('dropbar.api').select_next_context()<CR>" },
+      { "<leader>;", "<Cmd>lua require('dropbar.api').select_next_context()<CR>" },
+      { "[;", "<Cmd>lua require('dropbar.api').goto_context_start()<CR>", desc = "Go to start of current context" },
+      { "];", "<Cmd>lua require('dropbar.api').select_next_context()<CR>", desc = "Select next context" },
     },
     lazy = false,
     opts = function()
+      local go_dropbar_next = function()
+        local root = require("dropbar.utils").menu.get_current():root()
+        root:close()
+
+        local dropbar = require("dropbar.api").get_dropbar(vim.api.nvim_win_get_buf(root.prev_win), root.prev_win)
+        if not dropbar then
+          dropbar = require("dropbar.utils").bar.get_current()
+          if not dropbar then
+            root:toggle()
+            return
+          end
+        end
+
+        local current_idx
+        for idx, component in ipairs(dropbar.components) do
+          if component.menu == root then
+            current_idx = idx
+            break
+          end
+        end
+
+        if current_idx == nil or current_idx == #dropbar.components then
+          root:toggle()
+          return
+        end
+
+        vim.defer_fn(function() dropbar:pick(current_idx + 1) end, 100)
+      end
+      local go_dropbar_prev = function()
+        local root = require("dropbar.utils").menu.get_current():root()
+        root:close()
+
+        local dropbar = require("dropbar.api").get_dropbar(vim.api.nvim_win_get_buf(root.prev_win), root.prev_win)
+        if not dropbar then
+          root:toggle()
+          return
+        end
+
+        local current_idx
+        for idx, component in ipairs(dropbar.components) do
+          if component.menu == root then
+            current_idx = idx
+            break
+          end
+        end
+
+        if current_idx == nil or current_idx == 0 then
+          root:toggle()
+          return
+        end
+
+        vim.defer_fn(function() dropbar:pick(current_idx - 1) end, 100)
+      end
       return {
         bar = {
           truncate = false,
@@ -825,60 +928,9 @@ return {
               if not menu then return end
               menu:fuzzy_find_open()
             end,
-            ["H"] = function()
-              local root = require("dropbar.utils").menu.get_current():root()
-              root:close()
+            ["H"] = go_dropbar_prev,
 
-              local dropbar = require("dropbar.api").get_dropbar(vim.api.nvim_win_get_buf(root.prev_win), root.prev_win)
-              if not dropbar then
-                root:toggle()
-                return
-              end
-
-              local current_idx
-              for idx, component in ipairs(dropbar.components) do
-                if component.menu == root then
-                  current_idx = idx
-                  break
-                end
-              end
-
-              if current_idx == nil or current_idx == 0 then
-                root:toggle()
-                return
-              end
-
-              vim.defer_fn(function() dropbar:pick(current_idx - 1) end, 100)
-            end,
-
-            ["L"] = function()
-              local root = require("dropbar.utils").menu.get_current():root()
-              root:close()
-
-              local dropbar = require("dropbar.api").get_dropbar(vim.api.nvim_win_get_buf(root.prev_win), root.prev_win)
-              if not dropbar then
-                dropbar = require("dropbar.utils").bar.get_current()
-                if not dropbar then
-                  root:toggle()
-                  return
-                end
-              end
-
-              local current_idx
-              for idx, component in ipairs(dropbar.components) do
-                if component.menu == root then
-                  current_idx = idx
-                  break
-                end
-              end
-
-              if current_idx == nil or current_idx == #dropbar.components then
-                root:toggle()
-                return
-              end
-
-              vim.defer_fn(function() dropbar:pick(current_idx + 1) end, 100)
-            end,
+            ["L"] = go_dropbar_next,
             ["<Esc>"] = function() vim.cmd "wincmd c" end,
             ["<Backspace>"] = function() vim.cmd "wincmd c" end,
             ["<C-c>"] = function()
@@ -895,10 +947,11 @@ return {
                 menu = require("dropbar.utils").menu.get_current()
               end
             end,
-            ["y"] = function(...)
+
+            ["<Left>"] = function()
+              vim.cmd "wincmd c"
               local menu = require("dropbar.utils").menu.get_current()
-              print(vim.inspect(...))
-              print(vim.inspect(menu))
+              if not menu then go_dropbar_prev() end
             end,
 
             ["<Right>"] = function()
@@ -908,7 +961,6 @@ return {
               local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
               if component then component:on_click() end
             end,
-            ["<Left>"] = function() vim.cmd "wincmd c" end,
             ["<Up>"] = "k",
             ["<Down>"] = "j",
           },
@@ -1079,7 +1131,17 @@ return {
         },
         adapters = {
           require "neotest-jest" {
+            isTestFile = function(file_path)
+              -- Check if the file is under a __tests__ directory or has a .test suffix
+              return file_path:match "__tests__/" or file_path:match "%.test%.[jt]sx?$"
+            end,
             jestCommand = "npm test --",
+            strategy_config = function(default_strategy, _)
+              default_strategy["type"] = "chrome"
+
+              return default_strategy
+            end,
+
             cwd = function(file_path)
               -- Match and extract the path up to (but not including) "src/"
               local parent_path = file_path:gsub("(.-)/src/.*", "%1")
@@ -1096,5 +1158,102 @@ return {
         },
       })
     end,
+  },
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "pocco81/dap-buddy.nvim",
+    },
+    keys = {
+      {
+        "<leader>dt",
+        function() require("neotest").run.run { strategy = "dap" } end,
+        desc = "Debug Nearest",
+      },
+    },
+    opts = function()
+      local js_based_languages = {
+        "typescript",
+        "javascript",
+        "typescriptreact",
+        "javascriptreact",
+      }
+      local dap = require "dap"
+      for _, language in ipairs(js_based_languages) do
+        dap.configurations[language] = {
+          {
+            type = "pwa-node",
+            request = "launch",
+            name = "Launch Test Current File (pwa-node with jest)",
+            cwd = vim.fn.getcwd(),
+            runtimeArgs = { "${workspaceFolder}/node_modules/react-app-rewired/scripts/test.js" },
+            runtimeExecutable = "node",
+            args = { "${file}", "--coverage", "false" },
+            rootPath = "${workspaceFolder}",
+            sourceMaps = true,
+            console = "integratedTerminal",
+            internalConsoleOptions = "neverOpen",
+            skipFiles = { "<node_internals>/**", "node_modules/**" },
+          },
+        }
+      end
+    end,
+  },
+  {
+    "MagicDuck/grug-far.nvim",
+    keys = {
+      {
+        "<Leader>ss",
+        function() require("grug-far").open() end,
+        mode = "n",
+      },
+      {
+        "<Leader>sw",
+        function() require("grug-far").open { prefills = { search = vim.fn.expand "<cword>" } } end,
+        mode = "n",
+      },
+
+      {
+        "<Leader>sc",
+        function() require("grug-far").open { prefills = { paths = vim.fn.expand "%" } } end,
+        mode = "n",
+      },
+    },
+  },
+  { "knubie/vim-kitty-navigator" },
+  {
+    "okuuva/auto-save.nvim",
+    keys = {
+      {
+        "<leader>uts",
+        "<cmd>ASToggle<CR>",
+        mode = "n",
+        desc = "Toggle auto save",
+      },
+    },
+    lazy = false,
+    opts = {
+      enabled = false,
+      debounce_delay = 1000,
+      trigger_events = { -- See :h events
+        immediate_save = { "BufLeave", "FocusLost", "InsertLeave" }, -- vim events that trigger an immediate save
+        defer_save = { "InsertLeave", "CursorHoldI", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
+        cancel_deferred_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+      },
+    },
+    {
+      "stevearc/oil.nvim",
+
+      cmd = "Oil",
+      keys = {
+        {
+          "<leader>E",
+          function() require("oil").open() end,
+          mode = "n",
+          desc = "Open parent directory",
+        },
+      },
+      opts = {},
+    },
   },
 }

@@ -158,6 +158,7 @@
   enabled = true
 
 [delta]
+    side-by-side = true
     syntax-theme = OneHalfDark
     navigate = true
     wrap-max-lines = 0

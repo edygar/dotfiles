@@ -14,7 +14,14 @@ alias vim="nvim"
 alias v="nvim"
 alias .dotfiles="cd ~/.dotfiles && nvim"
 alias dotfiles="cd ~/.dotfiles && nvim"
-
+nvim-next() {
+  local root="$HOME/dev/personal/neovim"
+  VIMRUNTIME="$root/runtime" \
+  NVIM_APPNAME=nvim-next \
+  "$root/build/bin/nvim" \
+    --cmd "set runtimepath=$root/build/lib/nvim,$root/runtime" \
+    "$@"
+}
 
 alias cat='bat'
 
@@ -122,3 +129,9 @@ alias cl='clear'
 # usage: fn foo
 # to find all files containing 'foo' in the name
 function fn() { ls **/*$1* }
+
+function img-data() {
+  TYPE=$(file --mime-type -b $1)
+  ENC=$(base64 -i $1)
+  echo "data:$TYPE;base64,$ENC"
+}

@@ -68,7 +68,6 @@ return {
               },
 
               preferences = {
-                importModuleSpecifier = "non-relative",
                 importModuleSpecifierEnding = "minimal",
                 includePackageJsonAutoImports = "auto",
                 updateImportsOnFileMove = {

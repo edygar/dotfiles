@@ -1,0 +1,326 @@
+{
+  "actions" : [
+    {
+      "actions" : [
+        {
+          "key" : "b",
+          "label" : "[B]rowser",
+          "type" : "application",
+          "value" : "/Applications/Google Chrome.app"
+        },
+        {
+          "key" : "s",
+          "label" : "[S]lack",
+          "type" : "application",
+          "value" : "/Applications/Slack.app"
+        },
+        {
+          "key" : "w",
+          "label" : "[W]hatsApp",
+          "type" : "application",
+          "value" : "/Users/edygar.oliveira/Applications/WhatsApp.app"
+        },
+        {
+          "key" : "t",
+          "label" : "[T]erminal Kitty",
+          "type" : "application",
+          "value" : "/Applications/kitty.app"
+        },
+        {
+          "iconPath" : "/System/Applications/Notes.app",
+          "key" : "n",
+          "label" : "[N]otes",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/raycast-notes/raycast-notes"
+        },
+        {
+          "iconPath" : "/Users/edygar.oliveira/Applications/Chrome Apps.localized/Google Meet.app",
+          "key" : "m",
+          "label" : "Google [M]eet",
+          "type" : "url",
+          "value" : "raycast://script-commands/focus-tab?arguments=https%3A%2F%2Fmeet.google.com&arguments=no"
+        },
+        {
+          "iconPath" : "/Users/edygar.oliveira/Applications/Chrome Apps.localized/YouTube.app",
+          "key" : "y",
+          "label" : "YouTube",
+          "type" : "url",
+          "value" : "raycast://script-commands/focus-tab?arguments=youtube&arguments=yes"
+        },
+        {
+          "key" : "g",
+          "label" : "Gmail (Profile 0)",
+          "type" : "url",
+          "value" : "raycast://script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0&arguments=no"
+        },
+        {
+          "key" : "G",
+          "label" : "Gmail (Profile 1)",
+          "type" : "url",
+          "value" : "raycast://script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F1&arguments=no"
+        },
+        {
+          "key" : "c",
+          "label" : "Calendar",
+          "type" : "url",
+          "value" : "raycast://script-commands/focus-tab?arguments=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fu%2F0%2Fr&arguments=no"
+        },
+        {
+          "key" : "l",
+          "label" : "Local Env",
+          "type" : "url",
+          "value" : "raycast://script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A3817&arguments=no"
+        },
+        {
+          "key" : "d",
+          "label" : "Swagger",
+          "type" : "url",
+          "value" : "raycast://script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A8000&arguments=no"
+        }
+      ],
+      "iconPath" : "rectangle.portrait.and.arrow.right",
+      "key" : "g",
+      "label" : "Go to...",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "iconPath" : "/Applications/Google Chrome.app",
+          "key" : "b",
+          "label" : "Browser tabs",
+          "type" : "url",
+          "value" : "raycast://extensions/Codely/google-chrome/search-tab"
+        },
+        {
+          "iconPath" : "/System/Library/CoreServices/Finder.app",
+          "key" : "f",
+          "label" : "Files",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/file-search/search-files"
+        },
+        {
+          "iconPath" : "/Applications/Slack.app",
+          "key" : "s",
+          "label" : "Slack",
+          "type" : "url",
+          "value" : "raycast://script-commands/shortcut?arguments=Slack&arguments=cmd%20k"
+        },
+        {
+          "key" : "w",
+          "label" : "WhatsApp",
+          "type" : "url",
+          "value" : "raycast://script-commands/shortcut?arguments=WhatsApp&arguments=cmd%20k"
+        }
+      ],
+      "iconPath" : "magnifyingglass",
+      "key" : "s",
+      "label" : "Search",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "iconPath" : "house.fill",
+          "key" : "h",
+          "label" : "Home",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/file-search/search-files?fallbackText=~/"
+        },
+        {
+          "iconPath" : "square.and.arrow.down.fill",
+          "key" : "n",
+          "label" : "Downloads",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/file-search/search-files?fallbackText=~/Downloads/"
+        },
+        {
+          "iconPath" : "desktopcomputer.and.arrow.down",
+          "key" : "d",
+          "label" : "Desktop",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/file-search/search-files?fallbackText=~/Desktop/"
+        }
+      ],
+      "key" : "f",
+      "label" : "Browse folder",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "iconPath" : "house.fill",
+          "key" : "h",
+          "label" : "Home",
+          "type" : "folder",
+          "value" : "/Users/edygar.oliveira"
+        },
+        {
+          "iconPath" : "desktopcomputer.and.arrow.down",
+          "key" : "d",
+          "label" : "Desktop",
+          "type" : "folder",
+          "value" : "/Users/edygar.oliveira/Desktop"
+        },
+        {
+          "iconPath" : "square.and.arrow.down.fill",
+          "key" : "n",
+          "label" : "Downloads",
+          "type" : "folder",
+          "value" : "/Users/edygar.oliveira/Downloads"
+        }
+      ],
+      "key" : "F",
+      "label" : "Open folder",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "iconPath" : "camera.on.rectangle.fill",
+          "key" : "c",
+          "label" : "Screenshots",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/screenshots/search-screenshots"
+        },
+        {
+          "key" : "n",
+          "label" : "Notes",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/raycast-notes/raycast-notes"
+        },
+        {
+          "key" : "t",
+          "label" : "Ticket",
+          "type" : "url",
+          "value" : "raycast://script-commands/get-ticket?arguments={selection}&arguments={clipboard}"
+        },
+        {
+          "iconPath" : "wallet.pass",
+          "key" : "s",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/snippets/search-snippets"
+        }
+      ],
+      "key" : "r",
+      "label" : "Raycast",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "a",
+          "label" : "WorkSpace A",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20A%20--fail-if-noop"
+        },
+        {
+          "key" : "b",
+          "label" : "WorkSpace B",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20B%20--fail-if-noop"
+        },
+        {
+          "key" : "d",
+          "label" : "WorkSpace D",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20D%20--fail-if-noop"
+        },
+        {
+          "key" : "f",
+          "label" : "WorkSpace F",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20F%20--fail-if-noop"
+        },
+        {
+          "key" : "g",
+          "label" : "WorkSpace G",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20G%20--fail-if-noop"
+        },
+        {
+          "key" : "m",
+          "label" : "WorkSpace M",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20M%20--fail-if-noop"
+        },
+        {
+          "key" : "o",
+          "label" : "WorkSpace O",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20O%20--fail-if-noop"
+        },
+        {
+          "key" : "p",
+          "label" : "WorkSpace P",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20P%20--fail-if-noop"
+        },
+        {
+          "key" : "q",
+          "label" : "WorkSpace Q",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20Q%20--fail-if-noop"
+        },
+        {
+          "key" : "r",
+          "label" : "WorkSpace R",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20R%20--fail-if-noop"
+        },
+        {
+          "key" : "s",
+          "label" : "WorkSpace S",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20S%20--fail-if-noop"
+        },
+        {
+          "key" : "t",
+          "label" : "WorkSpace T",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20T%20--fail-if-noop"
+        },
+        {
+          "key" : "u",
+          "label" : "WorkSpace U",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20U%20--fail-if-noop"
+        },
+        {
+          "key" : "v",
+          "label" : "WorkSpace V",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20V%20--fail-if-noop"
+        },
+        {
+          "key" : "x",
+          "label" : "WorkSpace X",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20X%20--fail-if-noop"
+        },
+        {
+          "key" : "z",
+          "label" : "WorkSpace Z",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=aerospace%20workspace%20Z%20--fail-if-noop"
+        }
+      ],
+      "key" : "w",
+      "label" : "Workspace",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "C",
+          "type" : "url",
+          "value" : "raycast://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Constant%20Case%22%7D"
+        }
+      ],
+      "key" : "c",
+      "label" : "Change case",
+      "type" : "group"
+    }
+  ],
+  "type" : "group"
+}

@@ -74,3 +74,30 @@ source "/Users/edygar.oliveira/.sdkman/bin/sdkman-init.sh"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH=/Users/edygar.oliveira/.opencode/bin:$PATH
+
+# >>> Revolut OpenCode provider API keys >>>
+# Managed by Jamf for Revolut OpenCode. Do not edit inside this block.
+load_together_ai_coding_api_key_0() {
+  if [[ -z "${TOGETHER_AI_CODING_API_KEY:-}" ]]; then
+    local provider_key
+    provider_key="$(/usr/bin/security find-generic-password -s 'together-ai-coding-api-key' -w /Library/Keychains/System.keychain 2>/dev/null)" || return 1
+    export TOGETHER_AI_CODING_API_KEY="$provider_key"
+  fi
+}
+load_together_ai_coding_api_key_0 >/dev/null 2>&1
+unset -f load_together_ai_coding_api_key_0 2>/dev/null || true
+
+load_fireworks_non_coding_api_key_0() {
+  if [[ -z "${FIREWORKS_NON_CODING_API_KEY:-}" ]]; then
+    local provider_key
+    provider_key="$(/usr/bin/security find-generic-password -s 'fireworks-non-coding-api-key' -w /Library/Keychains/System.keychain 2>/dev/null)" || return 1
+    export FIREWORKS_NON_CODING_API_KEY="$provider_key"
+  fi
+}
+load_fireworks_non_coding_api_key_0 >/dev/null 2>&1
+unset -f load_fireworks_non_coding_api_key_0 2>/dev/null || true
+
+# <<< Revolut OpenCode provider API keys <<<

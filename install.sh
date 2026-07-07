@@ -35,6 +35,7 @@ mkdir -p "$HOME/.config/kitty"
 ln -sf "$HOME/.dotfiles/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 ln -sf "$HOME/.dotfiles/kitty/macos-launch-services-cmdline" "$HOME/.config/kitty/"
 ln -sf "$HOME/.dotfiles/nvim" "$HOME/.config/"
+ln -sf "$HOME/.dotfiles/nvim-next" "$HOME/.config/"
 curl https://raw.githubusercontent.com/knubie/vim-kitty-navigator/master/pass_keys.py > "$HOME/.config/kitty/pass_keys.py"
 curl https://raw.githubusercontent.com/knubie/vim-kitty-navigator/master/get_layout.py > "$HOME/.config/kitty/get_layout.py"
 chmod +x $HOME/.config/kitty/{pass_keys,get_layout}.py

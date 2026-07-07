@@ -41,6 +41,7 @@ cscope.po.out
 Session.vim
 .netrwhist
 .localrc.lua
+.claude
 .luarc.json
 cspell.json
 *~
@@ -48,4 +49,4 @@ cspell.json
 # SASS
 # ----------------------------------------------------------------------------------------------
 .sass-cache
-j
+
