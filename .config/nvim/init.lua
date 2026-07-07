@@ -1,10 +1,5 @@
 vim.opt.termguicolors = true
 
--- vim.ui.select via fzf-lua
-vim.ui.select = function(items, opts, on_choice)
-	require("fzf-lua").ui.select(items, opts, on_choice)
-end
-
 vim.api.nvim_create_autocmd("ColorScheme", {
 	pattern = "onedarker",
 	callback = function()
@@ -428,8 +423,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- ============================================================================
 vim.pack.add({
 	"https://www.github.com/lewis6991/gitsigns.nvim",
-	"https://www.github.com/ibhagwan/fzf-lua",
-	"https://www.github.com/nvim-tree/nvim-tree.lua",
+	"https://www.github.com/folke/snacks.nvim",
 	{
 		src = "https://github.com/nvim-treesitter/nvim-treesitter",
 		branch = "main",
@@ -504,48 +498,180 @@ end
 
 setup_treesitter()
 
-require("nvim-tree").setup({
-	view = {
-		width = 35,
+-- ============================================================================
+-- SNACKS
+-- ============================================================================
+Snacks = require("snacks")
+
+Snacks.setup({
+	statuscolumn = { enabled = false },
+	explorer = { replace_netrw = true },
+	input = {
+		win = {
+			relative = "cursor",
+			title_pos = "left",
+			row = -1,
+		},
 	},
-	filters = {
-		dotfiles = false,
+	picker = {
+		ui_select = true,
+		layout = {
+			layout = {
+				position = "float",
+				row = 1,
+				width = 0.9,
+				height = 0.9,
+				border = "none",
+				box = "vertical",
+				{
+					win = "preview",
+					title = "{preview}",
+					border = "rounded",
+					height = 0.80,
+				},
+				{
+					box = "vertical",
+					border = "rounded",
+					title = "{title} {live} {flags}",
+					title_pos = "left",
+					{ win = "input", height = 1, border = "bottom" },
+					{ win = "list", border = "none" },
+				},
+			},
+		},
+		sources = {
+			files = { follow = true },
+			explorer = {
+				diagnostics_open = true,
+				git_status_open = true,
+				layout = {
+					preview = "main",
+					layout = {
+						backdrop = false,
+						width = 40,
+						min_width = 40,
+						height = 0,
+						position = "right",
+						border = "none",
+						box = "vertical",
+						{
+							win = "input",
+							height = 1,
+							border = "rounded",
+							title = "{title} {live} {flags}",
+							title_pos = "center",
+						},
+						{ win = "list", border = "none" },
+						{
+							win = "preview",
+							title = "{preview}",
+							height = 0.4,
+							border = "top",
+						},
+					},
+				},
+				win = {
+					preview = { zindex = 33 },
+					input = {
+						keys = {
+							["-"] = { "explorer_focus_parent", mode = { "n" } },
+							["<c-s-h>"] = { "resize_wider", mode = { "n", "i" } },
+							["<c-s-l>"] = { "resize_narrower", mode = { "n", "i" } },
+							["<c-h>"] = { "focus_editor", mode = { "n", "i" } },
+						},
+					},
+					list = {
+						keys = {
+							["<C-r>"] = { "explorer_reveal", mode = { "n" } },
+							["R"] = { "explorer_reveal", mode = { "n" } },
+							["<S-CR>"] = { "explorer_toggle_all", mode = { "n" } },
+							["-"] = { "explorer_focus_parent", mode = { "n" } },
+							["<c-s-h>"] = { "resize_wider", mode = { "n", "i" } },
+							["<c-s-l>"] = { "resize_narrower", mode = { "n", "i" } },
+							["<c-h>"] = { "focus_editor", mode = { "n", "i" } },
+							["<c-l>"] = { "navigate_away", mode = { "n", "i" } },
+						},
+					},
+				},
+				actions = {
+					explorer_reveal = function(_, item) os.execute("open -R " .. Snacks.picker.util.path(item)) end,
+					explorer_toggle_all = function(picker)
+						local Tree = require("snacks.explorer.tree")
+						local start = Tree:find(picker:dir())
+						if start == nil then return end
+						local toggle_to = not start.open
+						local toggle_all
+						toggle_all = function(path)
+							Tree:walk(Tree:find(path), function(node)
+								if node.dir then
+									node.open = toggle_to
+									if toggle_to then
+										Tree:expand(node)
+									else
+										Tree:close(node.path)
+									end
+								end
+							end, { all = true })
+						end
+						toggle_all(picker:dir())
+						require("snacks.explorer.actions").update(picker, { refresh = true })
+					end,
+					explorer_focus_parent = function(picker) vim.cmd("cd " .. vim.fn.fnamemodify(picker:dir(), ":h")) end,
+					focus_editor = function() vim.cmd("wincmd h") end,
+					navigate_away = function() vim.cmd("wincmd l") end,
+					resize_wider = function()
+						vim.cmd("wincmd h")
+						vim.cmd("vertical resize -2")
+						vim.cmd("wincmd l")
+					end,
+					resize_narrower = function()
+						vim.cmd("wincmd h")
+						vim.cmd("vertical resize +2")
+						vim.cmd("wincmd l")
+					end,
+				},
+			},
+		},
+		formatters = {
+			file = { filename_first = true, truncate = 1 / 0 },
+		},
+		win = {
+			input = {
+				keys = {
+					["<c-a-d>"] = { "inspect", mode = { "n", "i" } },
+					["<c-a-f>"] = { "toggle_follow", mode = { "i", "n" } },
+					["<c-a-h>"] = { "toggle_hidden", mode = { "i", "n" } },
+					["<c-a-i>"] = { "toggle_ignored", mode = { "i", "n" } },
+					["<c-a-m>"] = { "toggle_maximize", mode = { "i", "n" } },
+					["<c-a-p>"] = { "toggle_preview", mode = { "i", "n" } },
+					["<c-a-w>"] = { "cycle_win", mode = { "i", "n" } },
+				},
+			},
+			list = {
+				keys = {
+					["<c-a-d>"] = "inspect",
+					["<c-a-f>"] = "toggle_follow",
+					["<c-a-h>"] = "toggle_hidden",
+					["<c-a-i>"] = "toggle_ignored",
+					["<c-a-m>"] = "toggle_maximize",
+					["<c-a-p>"] = "toggle_preview",
+					["<c-a-w>"] = "cycle_win",
+				},
+			},
+		},
 	},
-	renderer = {
-		group_empty = true,
-	},
+	preview = {},
 })
-vim.keymap.set("n", "<leader>e", function()
-	require("nvim-tree.api").tree.toggle()
-end, { desc = "Toggle NvimTree" })
 
-vim.api.nvim_set_hl(0, "NvimTreeNormalNC", { bg = "none" })
-vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-vim.api.nvim_set_hl(0, "NvimTreeSignColumn", { bg = "none" })
-vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", { fg = "#2a2a2a", bg = "none" })
-vim.api.nvim_set_hl(0, "NvimTreeEndOfBuffer", { bg = "none" })
-
-require("fzf-lua").setup({})
-
-vim.keymap.set("n", "<leader>ff", function()
-	require("fzf-lua").files()
-end, { desc = "FZF Files" })
-vim.keymap.set("n", "<leader>fg", function()
-	require("fzf-lua").live_grep()
-end, { desc = "FZF Live Grep" })
-vim.keymap.set("n", "<leader>fb", function()
-	require("fzf-lua").buffers()
-end, { desc = "FZF Buffers" })
-vim.keymap.set("n", "<leader>fh", function()
-	require("fzf-lua").help_tags()
-end, { desc = "FZF Help Tags" })
-vim.keymap.set("n", "<leader>fx", function()
-	require("fzf-lua").diagnostics_document()
-end, { desc = "FZF Diagnostics Document" })
-vim.keymap.set("n", "<leader>fX", function()
-	require("fzf-lua").diagnostics_workspace()
-end, { desc = "FZF Diagnostics Workspace" })
+-- Picker keymaps
+vim.keymap.set("n", "<leader>e", function() Snacks.explorer() end, { desc = "Toggle Explorer" })
+vim.keymap.set("n", "<leader>ff", function() Snacks.picker.files() end, { desc = "Find Files" })
+vim.keymap.set("n", "<leader>fg", function() Snacks.picker.grep() end, { desc = "Live Grep" })
+vim.keymap.set("n", "<leader>fb", function() Snacks.picker.buffers() end, { desc = "Buffers" })
+vim.keymap.set("n", "<leader>fh", function() Snacks.picker.help() end, { desc = "Help Tags" })
+vim.keymap.set("n", "<leader>fx", function() Snacks.picker.diagnostics() end, { desc = "Diagnostics" })
+vim.keymap.set("n", "<leader>fX", function() Snacks.picker.diagnostics_buffer() end, { desc = "Buffer Diagnostics" })
+vim.keymap.set("n", "<leader>gw", function() Snacks.picker.worktrees() end, { desc = "Git Worktrees" })
 
 require("mini.ai").setup({})
 require("mini.comment").setup({})
@@ -653,19 +779,15 @@ local function lsp_on_attach(ev)
 	local opts = { noremap = true, silent = true, buffer = bufnr }
 
 	vim.keymap.set("n", "<leader>gd", function()
-		require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
+		Snacks.picker.lsp_definitions()
 	end, opts)
-
 	vim.keymap.set("n", "<leader>gD", vim.lsp.buf.definition, opts)
-
 	vim.keymap.set("n", "<leader>gS", function()
 		vim.cmd("vsplit")
 		vim.lsp.buf.definition()
 	end, opts)
-
 	vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 	vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-
 	vim.keymap.set("n", "<leader>D", function()
 		vim.diagnostic.open_float({ scope = "line" })
 	end, opts)
@@ -675,30 +797,24 @@ local function lsp_on_attach(ev)
 	vim.keymap.set("n", "<leader>nd", function()
 		vim.diagnostic.jump({ count = 1 })
 	end, opts)
-
 	vim.keymap.set("n", "<leader>pd", function()
 		vim.diagnostic.jump({ count = -1 })
 	end, opts)
-
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-
-	vim.keymap.set("n", "<leader>fd", function()
-		require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
-	end, opts)
 	vim.keymap.set("n", "<leader>fr", function()
-		require("fzf-lua").lsp_references()
+		Snacks.picker.lsp_references()
 	end, opts)
 	vim.keymap.set("n", "<leader>ft", function()
-		require("fzf-lua").lsp_typedefs()
+		Snacks.picker.lsp_type_definitions()
 	end, opts)
 	vim.keymap.set("n", "<leader>fs", function()
-		require("fzf-lua").lsp_document_symbols()
+		Snacks.picker.lsp_symbols()
 	end, opts)
 	vim.keymap.set("n", "<leader>fw", function()
-		require("fzf-lua").lsp_workspace_symbols()
+		Snacks.picker.lsp_workspace_symbols()
 	end, opts)
 	vim.keymap.set("n", "<leader>fi", function()
-		require("fzf-lua").lsp_implementations()
+		Snacks.picker.lsp_implementations()
 	end, opts)
 
 	if client:supports_method("textDocument/codeAction", bufnr) then
