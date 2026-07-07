@@ -1,0 +1,12 @@
+gui:
+  showIcons: true
+  theme:
+    activeLineBorderColor:
+      - default
+      - default
+    selectedLineBgColor:
+      - default
+git:
+  paging:
+    colorArg: always
+    pager: delta

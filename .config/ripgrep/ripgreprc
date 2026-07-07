@@ -1,0 +1,6 @@
+--max-columns=150
+--max-columns-preview
+--smart-case
+--colors=match:fg:39
+--colors=path:fg:37
+--colors=line:fg:240
