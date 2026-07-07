@@ -1,6 +1,11 @@
 vim.opt.termguicolors = true
 vim.cmd.colorscheme("habamax")
 
+-- vim.ui.select via fzf-lua
+vim.ui.select = function(items, opts, on_choice)
+	require("fzf-lua").ui.select(items, opts, on_choice)
+end
+
 local function set_transparent() -- set UI component to transparent
 	local groups = {
 		"Normal",
