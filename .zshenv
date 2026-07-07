@@ -9,4 +9,4 @@ export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export SHELL_SESSIONS_DISABLE=1
 
 # Minimal path
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/nvim/bin:$HOME/.cargo/bin:/opt/homebrew/bin:$PATH"

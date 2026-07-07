@@ -2,7 +2,6 @@ cask "font-sauce-code-pro-nerd-font"
 
 # Packages
 brew "mise"
-brew "neovim"
 brew "jq"
 brew "fd"
 brew "fzf"
