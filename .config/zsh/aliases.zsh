@@ -1,7 +1,41 @@
 # Local overrides
 [[ -f $HOME/.aliases.zsh ]] && . $HOME/.aliases.zsh
 
+# Editor
+alias vim="nvim"
+alias vi="nvim"
+alias v="nvim"
+
+# Navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+
+# zoxide
+eval "$(zoxide init zsh)"
+alias z="zoxide"
+
+# ls / eza
+alias ls="eza"
+alias ll="eza -lah"
+alias la="eza -a"
+alias tree="eza --tree"
+alias lh="eza -alt --header | head"
+
+# Misc
+alias cat="bat"
+alias c="clear"
+alias cl="clear"
+alias less='less -r'
+alias tf='tail -f'
+alias l='less'
+alias screen='TERM=screen screen'
+
 # Git Aliases
+alias g="git"
 alias gs='git status'
 alias gstsh='git stash'
 alias gst='git stash'
@@ -63,18 +97,7 @@ alias gbg='git bisect good'
 alias gbb='git bisect bad'
 alias gdmb='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
-# Shell aliases
-alias less='less -r'
-alias tf='tail -f'
-alias l='less'
-alias lh='ls -alt | head'
-alias screen='TERM=screen screen'
-alias cl='clear'
-
 # Global aliases
-alias -g ...='../..'
-alias -g ....='../../..'
-alias -g .....='../../../..'
 alias -g C='| wc -l'
 alias -g H='| head'
 alias -g L="| less"

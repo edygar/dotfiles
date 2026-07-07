@@ -55,23 +55,5 @@ eval "$(starship init zsh)"
 [[ -f "$ZDOTDIR/aliases.zsh" ]] && source "$ZDOTDIR/aliases.zsh"
 [[ -f "$ZDOTDIR/key-bindings.zsh" ]] && source "$ZDOTDIR/key-bindings.zsh"
 
-# Aliases
+# dotfiles bare repo
 alias dotfiles="git --git-dir=$HOME/Code/personal/dotfiles --work-tree=$HOME"
-alias c="clear"
-alias ..="cd .."
-alias ...="cd ../.."
-
-alias ls="eza"
-alias ll="eza -lah"
-alias la="eza -a"
-alias tree="eza --tree"
-
-alias cat="bat"
-
-alias vim="nvim"
-alias vi="nvim"
-
-alias g="git"
-alias gs="git status"
-alias gd="git diff"
-alias gl="git log --oneline --graph --decorate"
