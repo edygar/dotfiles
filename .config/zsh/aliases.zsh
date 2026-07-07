@@ -18,11 +18,11 @@ alias -g .....='../../../..'
 eval "$(zoxide init zsh)"
 
 # ls / eza
-alias ls="eza"
-alias ll="eza -lah"
-alias la="eza -a"
-alias tree="eza --tree"
-alias lh="eza -alt --header | head"
+alias ls="eza --icons"
+alias ll="eza -lah --icons --git"
+alias la="eza -a --icons"
+alias tree="eza --tree --icons"
+alias lh="eza -alt --icons --header | head"
 
 # Misc
 alias cat="bat"
