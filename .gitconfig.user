@@ -5,6 +5,3 @@
 
 [includeIf "gitdir:~/Code/revolut/"]
 	path = ~/.gitconfig.revolut
-
-[includeIf "gitdir:~/Code/personal/vizi/"]
-	path = ~/.gitconfig.vizi
