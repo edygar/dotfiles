@@ -19,3 +19,4 @@ brew "zsh-autosuggestions"
 # Casks
 cask "kitty"
 cask "mouseless@preview"
+cask "1password"
