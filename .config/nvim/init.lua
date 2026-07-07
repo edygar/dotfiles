@@ -439,7 +439,7 @@ vim.pack.add({
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://www.github.com/echasnovski/mini.nvim",
 	"https://github.com/creativenull/efmls-configs-nvim",
-	"https://github.com/lunalambdan/onedarker.nvim",
+	"https://github.com/LunarVim/onedarker.nvim",
 	"https://github.com/mikesmithgh/kitty-scrollback.nvim",
 })
 
