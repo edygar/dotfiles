@@ -4,8 +4,9 @@ format = """
 [╭─](fg:245) \
 $directory\
 $fill\
-$git_status\
 $git_branch\
+$git_status\
+$cmd_duration\
 $time\
 \n[╰─](fg:245) $character"""
 
@@ -14,11 +15,13 @@ symbol = ' '
 style = 'fg:240'
 
 [directory]
-style = 'fg:39'
-format = '[ $path ]($style)'
-truncation_length = 3
+style = 'fg:39 bg:240'
+format = '[ $path ]($style)[](fg:240)'
+truncation_length = 0
 truncation_symbol = '…/'
 home_symbol = '~'
+repo_root_style = 'fg:39 bg:240 bold'
+repo_root_format = '[ $before_root_path ]($style)[ $repo_root ]($repo_root_style)[ $path ]($style)[](fg:240)'
 
 [directory.substitutions]
 "Documents" = "󰈙 "
@@ -26,31 +29,39 @@ home_symbol = '~'
 "Music" = "󰝚 "
 "Pictures" = " "
 "Developer" = "󰲋 "
+"Code" = "󰲋 "
 
 [git_branch]
 symbol = ' '
-style = 'fg:37'
-format = '[$symbol$branch]($style) '
+style = 'fg:39 bg:238'
+format = '[ $symbol $branch ]($style)[](fg:238)'
 
 [git_status]
-style = 'fg:196'
-format = '[$symbol]($style) '
-conflicted = '✗'
-ahead = ''
-behind = ''
-diverged = ''
-up_to_date = ''
-untracked = '✗'
-stashed = ''
-modified = '✗'
-staged = ''
-renamed = ''
-deleted = ''
+style = 'fg:196 bg:238'
+format = '[ $all_status$ahead_behind ]($style)[](fg:238)'
+conflicted = '≠'
+ahead = '⇡${count}'
+behind = '⇣${count}'
+diverged = '⇕⇡${ahead_count}⇣${behind_count}'
+up_to_date = '✓'
+untracked = '?'
+stashed = '$'
+modified = '!'
+staged = '+'
+renamed = '»'
+deleted = '✘'
+
+[cmd_duration]
+disabled = false
+style = 'fg:240'
+format = '[$duration]($style) '
+min_time = 2000
+show_milliseconds = false
 
 [time]
 disabled = false
 style = 'fg:37'
-format = '[$time]($style) '
+format = '[ $time 󰔚]($style) '
 time_format = '%H:%M:%S'
 
 [character]
@@ -60,9 +71,6 @@ vimcmd_symbol = '[❮](fg:39)'
 vimcmd_replace_one_symbol = '[❮](fg:purple)'
 vimcmd_replace_symbol = '[❮](fg:purple)'
 vimcmd_visual_symbol = '[❮](fg:yellow)'
-
-[cmd_duration]
-disabled = true
 
 [line_break]
 disabled = false
