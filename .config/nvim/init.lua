@@ -438,6 +438,7 @@ vim.pack.add({
 	"https://www.github.com/echasnovski/mini.nvim",
 	"https://github.com/creativenull/efmls-configs-nvim",
 	"https://github.com/LunarVim/onedarker.nvim",
+	"https://github.com/mikesmithgh/kitty-scrollback.nvim",
 })
 
 -- ============================================================================
@@ -698,6 +699,8 @@ require("gitsigns").setup({
 })
 
 require("mason").setup({})
+
+require("kitty-scrollback").setup({})
 
 vim.keymap.set("n", "]h", function()
 	require("gitsigns").nav_hunk("next")
