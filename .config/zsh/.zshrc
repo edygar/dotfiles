@@ -48,7 +48,8 @@ eval "$(mise activate zsh)"
 eval "$(starship init zsh)"
 
 # zsh-autosuggestions
-source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -f "$(brew --prefix 2>/dev/null)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && \
+  source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # Source shell configs
 [[ -f "$ZDOTDIR/aliases.zsh" ]] && source "$ZDOTDIR/aliases.zsh"
