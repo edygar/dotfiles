@@ -115,9 +115,7 @@
   keepBackup = false
 
 [mergetool "vimdiff"]
-  # to be done
-  cmd="nvim -d -c 'DiffviewOpen' $MERGED"     # use fugitive.vim for 3-way merge
-  keepbackup=false
+  cmd = nvim -d $LOCAL $REMOTE $MERGED -c 'wincmd w | wincmd _'
 
 [merge]
   summary = true
