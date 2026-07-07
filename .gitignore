@@ -55,6 +55,8 @@ cspell.json
 .CFUserTextEncoding
 .zshrc
 .config/zsh/.zsh_history
+.gitconfig.revolut
+.gitconfig.vizi
 .config/opencode/node_modules/
 .config/opencode/package-lock.json
 .config/raycast-x/extensions/node_modules/
