@@ -15,6 +15,7 @@ brew "starship"
 brew "tree"
 brew "rust"
 brew "zsh-autosuggestions"
+brew "tree-sitter"
 
 # Casks
 cask "kitty"
