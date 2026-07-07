@@ -24,8 +24,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 	end,
 })
 
-vim.cmd.colorscheme("onedarker")
-
 -- ============================================================================
 -- OPTIONS
 -- ============================================================================
@@ -446,6 +444,8 @@ vim.pack.add({
 -- ============================================================================
 -- PLUGIN CONFIGS
 -- ============================================================================
+
+vim.cmd.colorscheme("onedarker")
 
 local setup_treesitter = function()
 	local treesitter = require("nvim-treesitter")
