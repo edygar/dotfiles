@@ -15,13 +15,11 @@ symbol = ' '
 style = 'fg:240'
 
 [directory]
-style = 'fg:39 bg:240'
-format = '[ $path ]($style)[](fg:240)'
+style = 'fg:39'
+format = '[ $path ]($style)'
 truncation_length = 0
 truncation_symbol = '…/'
 home_symbol = '~'
-repo_root_style = 'fg:39 bg:240 bold'
-repo_root_format = '[ $before_root_path ]($style)[ $repo_root ]($repo_root_style)[ $path ]($style)[](fg:240)'
 
 [directory.substitutions]
 "Documents" = "󰈙 "
@@ -33,12 +31,12 @@ repo_root_format = '[ $before_root_path ]($style)[ $repo_root ]($repo_root_style
 
 [git_branch]
 symbol = ' '
-style = 'fg:39 bg:238'
-format = '[ $symbol $branch ]($style)[](fg:238)'
+style = 'fg:37'
+format = '[$symbol$branch]($style) '
 
 [git_status]
-style = 'fg:196 bg:238'
-format = '[ $all_status$ahead_behind ]($style)[](fg:238)'
+style = 'fg:196'
+format = '[$all_status$ahead_behind]($style) '
 conflicted = '≠'
 ahead = '⇡${count}'
 behind = '⇣${count}'
@@ -61,7 +59,7 @@ show_milliseconds = false
 [time]
 disabled = false
 style = 'fg:37'
-format = '[ $time 󰔚]($style) '
+format = '[$time]($style) '
 time_format = '%H:%M:%S'
 
 [character]
