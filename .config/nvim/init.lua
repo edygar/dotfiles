@@ -1,33 +1,35 @@
 vim.opt.termguicolors = true
-vim.cmd.colorscheme("habamax")
 
 -- vim.ui.select via fzf-lua
 vim.ui.select = function(items, opts, on_choice)
 	require("fzf-lua").ui.select(items, opts, on_choice)
 end
 
-local function set_transparent() -- set UI component to transparent
-	local groups = {
-		"Normal",
-		"NormalNC",
-		"EndOfBuffer",
-		"NormalFloat",
-		"FloatBorder",
-		"SignColumn",
-		"StatusLine",
-		"StatusLineNC",
-		"TabLine",
-		"TabLineFill",
-		"TabLineSel",
-		"ColorColumn",
-	}
-	for _, g in ipairs(groups) do
-		vim.api.nvim_set_hl(0, g, { bg = "none" })
-	end
-	vim.api.nvim_set_hl(0, "TabLineFill", { bg = "none", fg = "#767676" })
-end
+vim.api.nvim_create_autocmd("ColorScheme", {
+	pattern = "onedarker",
+	callback = function()
+		local groups = {
+			"Normal",
+			"NormalNC",
+			"EndOfBuffer",
+			"NormalFloat",
+			"FloatBorder",
+			"SignColumn",
+			"StatusLine",
+			"StatusLineNC",
+			"TabLine",
+			"TabLineFill",
+			"TabLineSel",
+			"ColorColumn",
+		}
+		for _, g in ipairs(groups) do
+			vim.api.nvim_set_hl(0, g, { bg = "none" })
+		end
+		vim.api.nvim_set_hl(0, "TabLineFill", { bg = "none", fg = "#767676" })
+	end,
+})
 
-set_transparent()
+vim.cmd.colorscheme("onedarker")
 
 -- ============================================================================
 -- OPTIONS
@@ -443,6 +445,7 @@ vim.pack.add({
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://www.github.com/echasnovski/mini.nvim",
 	"https://github.com/creativenull/efmls-configs-nvim",
+	"https://github.com/lunalambdan/onedarker.nvim",
 	"https://github.com/mikesmithgh/kitty-scrollback.nvim",
 })
 
