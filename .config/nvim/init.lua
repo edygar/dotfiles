@@ -436,6 +436,7 @@ vim.pack.add({
 		version = vim.version.range("1.*"),
 	},
 	"https://github.com/L3MON4D3/LuaSnip",
+	"https://github.com/mikesmithgh/kitty-scrollback.nvim",
 })
 
 -- ============================================================================
@@ -562,6 +563,8 @@ require("gitsigns").setup({
 })
 
 require("mason").setup({})
+
+require("kitty-scrollback").setup({})
 
 vim.keymap.set("n", "]h", function()
 	require("gitsigns").nav_hunk("next")
