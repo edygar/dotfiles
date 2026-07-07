@@ -1,5 +1,5 @@
 tap "homebrew/cask-fonts"
-cask "font-source-code-pro"
+cask "font-sauce-code-pro-nerd-font"
 
 # Packages
 brew "mise"
