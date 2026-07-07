@@ -17,7 +17,8 @@ style = 'fg:240'
 [directory]
 style = 'fg:39'
 format = '[ $path ]($style)'
-truncation_length = 0
+truncate_to_repo = false
+truncation_length = 100
 truncation_symbol = '…/'
 home_symbol = '~'
 
