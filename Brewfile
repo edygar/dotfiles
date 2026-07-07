@@ -1,4 +1,3 @@
-tap "homebrew/cask-fonts"
 cask "font-sauce-code-pro-nerd-font"
 
 # Packages
