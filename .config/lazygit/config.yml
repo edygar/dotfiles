@@ -8,7 +8,7 @@ customCommands:
     context: "files"
     key: "K"
     output: terminal
-  - command: 'nvim "$HOME/Library/Application Support/lazygit/config.yml"'
+  - command: 'nvim "$HOME/.config/lazygit/config.yml"'
     context: "status"
     key: "o"
     output: terminal
