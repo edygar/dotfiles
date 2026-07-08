@@ -78,7 +78,7 @@ return {
             event = { "InsertLeave", "BufEnter" },
             callback = function(args)
               if require("astrolsp").config.features.codelens then
-                vim.lsp.codelens.refresh { bufnr = args.buf }
+                vim.lsp.codelens.enable(true, { bufnr = args.buf })
               end
             end,
             desc = "Refresh codelens (buffer)",

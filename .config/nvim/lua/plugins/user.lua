@@ -257,7 +257,7 @@ return {
         mode = { "n" },
       },
     },
-    opts = {},
+    opts = { switch_file_command = "Oil" },
   },
   {
     "rebelot/heirline.nvim",
@@ -337,6 +337,7 @@ return {
   },
   {
     "smjonas/live-command.nvim",
+    main = "live-command",
     opts = { commands = { Norm = { cmd = "norm" } } },
   },
   {
@@ -687,5 +688,16 @@ return {
       { "<C-A-h>", "<Cmd>STSSelectParentNode<cr>", desc = "Navigate to outer", mode = "x", noremap = true, silent = true },
     },
     config = true,
+  },
+  {
+    "AstroNvim/astrocore",
+    opts = function(_, opts)
+      opts.diagnostics = opts.diagnostics or {}
+      opts.diagnostics.jump = {
+        on_jump = function(_, bufnr)
+          vim.diagnostic.open_float({ bufnr = bufnr, scope = "cursor", focus = false })
+        end,
+      }
+    end,
   },
 }

@@ -255,8 +255,6 @@ return {
           end,
           desc = "Toggle line number style",
         },
-          desc = "Toggle line number style",
-        },
         ["<Leader>ue"] = {
           function()
             local virtualedit = vim.opt.virtualedit:get()
@@ -278,7 +276,7 @@ return {
         ["<C-h>"] = { "<cmd>KittyNavigateLeft<cr>", desc = "Go to left window" },
         ["<C-k>"] = { "<cmd>KittyNavigateUp<cr>", desc = "Go to upper window" },
         ["<C-l>"] = { "<cmd>KittyNavigateRight<cr>", desc = "Go to right window" },
-        ["<leader>gb"] = {
+        ["<Leader>gB"] = {
           function() package.loaded.gitsigns.blame_line { full = true } end,
           desc = "Opens the Hunk Preview in a popup",
         },

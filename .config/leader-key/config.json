@@ -216,20 +216,6 @@
     {
       "actions" : [
         {
-          "key" : "r",
-          "label" : "[R]eload all configs",
-          "type" : "url",
-          "value" : "raycast://script-commands/sh?arguments=~/.local/bin/raycast-reload-configs.zsh"
-        }
-      ],
-      "iconPath" : "arrow.clockwise",
-      "key" : "R",
-      "label" : "Reload",
-      "type" : "group"
-    },
-    {
-      "actions" : [
-        {
           "key" : "a",
           "label" : "WorkSpace A",
           "type" : "url",
@@ -397,6 +383,13 @@
       "key" : "a",
       "label" : "AeroSpace",
       "type" : "group"
+    },
+    {
+      "iconPath" : "arrow.trianglehead.counterclockwise",
+      "key" : "R",
+      "label" : "Reload all configs!",
+      "type" : "url",
+      "value" : "raycast-x://extensions/raycast/script-commands/reload-configs"
     }
   ],
   "type" : "group"

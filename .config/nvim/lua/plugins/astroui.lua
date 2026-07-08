@@ -12,9 +12,9 @@ return {
     colorscheme = "onedarker",
     highlights = {
       onedarker = {
-        Normal = { bg = "NONE" },
+        Normal = { fg = "#abb2bf", bg = "NONE" },
         NonText = { fg = "#808080" },
-        NormalFloat = { fg = "NONE", bg = "NONE" },
+        NormalFloat = { fg = "#abb2bf", bg = "NONE" },
         Folded = { fg = "#808080", bg = "#1E1E1E" },
         FoldColumn = { bg = "NONE" },
         CursorLine = { bg = "#1c1c1e" },

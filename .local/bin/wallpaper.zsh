@@ -63,15 +63,20 @@ fetch_jwst() {
     return 1
   fi
   local key=$(cat "$JWST_KEY_FILE")
-  local response=$(curl -sL -H "API-Key: $key" "https://api.jwstapi.com/all/type/jpg?page=1&per_page=1" 2>/dev/null)
+  # Get a random page to vary results
+  local page=$(( (RANDOM % 50) + 1 ))
+  local response=$(curl -sL -H "X-API-Key: $key" "https://api.jwstapi.com/all/type/jpg?page=${page}&per_page=20" 2>/dev/null)
 
+  # Filter out thumbnails, get full-res images
   local image_url=$(echo "$response" | python3 -c "
-import sys, json
+import sys, json, random
 data = json.load(sys.stdin)
 body = data.get('body', [])
-if isinstance(body, list) and len(body) > 0:
-    item = body[0]
-    print(item.get('location') or item.get('url') or item.get('hdUrl', ''))
+if isinstance(body, list):
+    full_res = [item for item in body if 'thumb' not in item.get('id', '').lower()]
+    if full_res:
+        item = random.choice(full_res)
+        print(item.get('location', ''))
 " 2>/dev/null)
 
   if [[ -n "$image_url" ]]; then
@@ -107,11 +112,11 @@ fetch_wallpaper() {
   local filename="$WALLPAPER_DIR/wallpaper_${timestamp}.jpg"
   local image_url=""
 
-  # Try sources in order: JWST > APOD > Unsplash
-  image_url=$(fetch_jwst 2>/dev/null)
+  # Try sources in order: APOD (best quality) > JWST (raw science) > Unsplash
+  image_url=$(fetch_apod 2>/dev/null)
 
   if [[ -z "$image_url" ]]; then
-    image_url=$(fetch_apod 2>/dev/null)
+    image_url=$(fetch_jwst 2>/dev/null)
   fi
 
   if [[ -z "$image_url" ]]; then
@@ -128,11 +133,20 @@ fetch_wallpaper() {
   curl -sL -o "$filename" "$image_url" 2>/dev/null
 
   if file "$filename" | grep -q "JPEG\|PNG\|GIF"; then
-    local files=("$WALLPAPER_DIR"/wallpaper_*.*(.N))
-    if [[ ${#files} -gt $MAX_WALLPAPERS ]]; then
-      rm -f "${files[1]}"
+    # Check minimum resolution (skip tiny banners/strips)
+    local width=$(sips -g pixelWidth "$filename" 2>/dev/null | awk '/pixelWidth/{print $2}')
+    local height=$(sips -g pixelHeight "$filename" 2>/dev/null | awk '/pixelHeight/{print $2}')
+    if [[ -n "$width" ]] && [[ -n "$height" ]] && [[ "$width" -ge 1000 ]] && [[ "$height" -ge 500 ]]; then
+      local files=("$WALLPAPER_DIR"/wallpaper_*.*(.N))
+      if [[ ${#files} -gt $MAX_WALLPAPERS ]]; then
+        rm -f "${files[1]}"
+      fi
+      echo "$filename"
+    else
+      rm -f "$filename"
+      echo "Image too small (${width}x${height}), skipping"
+      return 1
     fi
-    echo "$filename"
   else
     rm -f "$filename"
     echo "Downloaded file is not a valid image"
@@ -177,8 +191,25 @@ case "${1:-}" in
     echo "Downloading initial space wallpapers..."
     for i in {1..6}; do
       printf "  [$i] "
-      local wallpaper=$(fetch_wallpaper)
-      if [[ $? -eq 0 ]]; then
+      local wallpaper=""
+      # Alternate: APOD (beautiful processed) and JWST (raw science)
+      if (( i % 2 == 0 )); then
+        local jwst_url=$(fetch_jwst 2>/dev/null)
+        if [[ -n "$jwst_url" ]]; then
+          local ts=$(date +%s)
+          local fn="$WALLPAPER_DIR/wallpaper_${ts}.jpg"
+          curl -sL -o "$fn" "$jwst_url" 2>/dev/null
+          if file "$fn" | grep -q "JPEG"; then
+            wallpaper="$fn"
+          else
+            rm -f "$fn"
+          fi
+        fi
+      fi
+      if [[ -z "$wallpaper" ]]; then
+        wallpaper=$(fetch_wallpaper)
+      fi
+      if [[ $? -eq 0 ]] && [[ -n "$wallpaper" ]]; then
         echo "$(basename "$wallpaper")"
       else
         echo "FAILED"
