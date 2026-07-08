@@ -66,4 +66,5 @@ cspell.json
 .local/share/nvim/
 .config/nvim/.neoconf.json
 .config/nvim/lazy-lock.json
+.config/wallpapers/
 
