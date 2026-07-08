@@ -1,23 +1,29 @@
 #!/bin/bash
 
-# Sketchybar main config
-# Inspired by linkarzu/dotfiles-latest, adapted for AeroSpace
-
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/icons.sh"
 
 ITEM_DIR="$CONFIG_DIR/items"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
-# Font - same as kitty/nvim
 FONT="SauceCodePro Nerd Font"
-PADDINGS=2
 
-# Bar appearance
+PADDINGS=1
+
+# Setting up and starting the helper process
+HELPER=git.felix.helper
+killall helper
+(cd $CONFIG_DIR/helper && make)
+$CONFIG_DIR/helper/helper $HELPER >/dev/null 2>&1 &
+
+# Unload the macOS on screen indicator overlay for volume change
+launchctl unload -F /System/Library/LaunchAgents/com.apple.OSDUIHelper.plist >/dev/null 2>&1 &
+
+# Setting up the general bar appearance of the bar
 bar=(
-  height=40
+  height=45
   color=$BAR_COLOR
-  border_width=1
+  border_width=2
   border_color=$BAR_BORDER_COLOR
   shadow=off
   position=top
@@ -27,12 +33,11 @@ bar=(
   y_offset=0
   margin=0
   topmost=on
-  blur_radius=20
 )
 
 sketchybar --bar "${bar[@]}"
 
-# Defaults
+# Setting up default values
 defaults=(
   updates=when_shown
   icon.font="$FONT:Bold:14.0"
@@ -53,52 +58,80 @@ defaults=(
   popup.background.border_color=$POPUP_BORDER_COLOR
   popup.background.color=$POPUP_BACKGROUND_COLOR
   popup.blur_radius=20
+  popup.background.shadow.drawing=on
   scroll_texts=on
 )
 
 sketchybar --default "${defaults[@]}"
 
 ###############################################################################
-# Left side
+#                                Left side
 ###############################################################################
+
+# Shows the apple logo, you can change it's color in "items/apple.sh"
+source "$ITEM_DIR/apple.sh"
 
 # AeroSpace workspaces
 WORKSPACES="A B D F G M O P Q R S T U V X Y Z"
-for ws in $WORKSPACES; do
-  sketchybar --add item space.$ws left \
-    --set space.$ws \
-    icon=$ws \
-    icon.font="$FONT:Bold:16.0" \
+for workspace in $WORKSPACES; do
+  sketchybar --add item space.$workspace left \
+    --set space.$workspace \
+    icon=$workspace \
+    icon.font="$FONT:Bold:14.0" \
     icon.color=$INACTIVE_COLOR \
     label.drawing=off \
-    padding_left=3 \
-    padding_right=3 \
     script="$PLUGIN_DIR/aerospace.sh" \
-    --subscribe space.$ws aerospace_workspace_change
+    click_script="/opt/homebrew/bin/aerospace focus $workspace" \
+    --subscribe space.$workspace aerospace_workspace_change
 done
 
-# Current app
+# Shows the name and icon of the app currently focused
 source "$ITEM_DIR/front_app.sh"
 
+# Shows the mic name and input volume level
+source "$ITEM_DIR/mic.sh"
+
 ###############################################################################
-# Right side
+#                                 Center
 ###############################################################################
 
-# Clock
-source "$ITEM_DIR/clock.sh"
+###############################################################################
+#                               Right side
+###############################################################################
 
-# Battery
+# Shows calendar/date - click to toggle zen mode
+source "$ITEM_DIR/calendar.sh"
+
+# Shows outdated brew packages count
+source "$ITEM_DIR/brew.sh"
+
+# DND indicator
+source "$ITEM_DIR/dnd.sh"
+
+# Shows SSID and IP address
+source "$ITEM_DIR/wifi.sh"
+
+# Battery indicator
 source "$ITEM_DIR/battery.sh"
 
-# Volume
+# Volume slider + icon
 source "$ITEM_DIR/volume.sh"
 
-# CPU
+# CPU usage indicator
 source "$ITEM_DIR/cpu.sh"
 
 ###############################################################################
 
+# Hide SketchyBar when certain apps are focused
+sketchybar --add item toggler left \
+  --set toggler drawing=off \
+  updates=on \
+  script="$PLUGIN_DIR/toggle.sh" \
+  --subscribe toggler front_app_switched
+
 sketchybar --hotload on
+
+# Forcing all item scripts to run
 sketchybar --update
 
 echo "sketchybar configuration loaded.."
