@@ -137,8 +137,8 @@ fetch_wallpaper() {
     local width=$(sips -g pixelWidth "$filename" 2>/dev/null | awk '/pixelWidth/{print $2}')
     local height=$(sips -g pixelHeight "$filename" 2>/dev/null | awk '/pixelHeight/{print $2}')
     if [[ -n "$width" ]] && [[ -n "$height" ]] && [[ "$width" -ge 1000 ]] && [[ "$height" -ge 500 ]]; then
-      local files=("$WALLPAPER_DIR"/wallpaper_*.*(.N))
-      if [[ ${#files} -gt $MAX_WALLPAPERS ]]; then
+    local files=("$WALLPAPER_DIR"/*.{jpg,jpeg,png,gif}(.N))
+    if [[ ${#files} -gt $MAX_WALLPAPERS ]]; then
         rm -f "${files[1]}"
       fi
       echo "$filename"
@@ -155,7 +155,7 @@ fetch_wallpaper() {
 }
 
 set_wallpaper() {
-  local files=("$WALLPAPER_DIR"/wallpaper_*.*(.N))
+  local files=("$WALLPAPER_DIR"/*.{jpg,jpeg,png,gif}(.N))
   local count=${#files}
 
   if [[ $count -gt 0 ]] && [[ -f "$STATE_FILE" ]]; then
@@ -178,7 +178,7 @@ set_wallpaper() {
     echo "Setting wallpaper: $(basename "$wallpaper")"
     wallpaper set "$wallpaper"
     update_workspace_map "$wallpaper"
-    local files=("$WALLPAPER_DIR"/wallpaper_*.*(.N))
+    local files=("$WALLPAPER_DIR"/*.{jpg,jpeg,png,gif}(.N))
     echo "${#files}" > "$STATE_FILE"
   else
     echo "failed"
