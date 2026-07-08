@@ -3,7 +3,7 @@
 # wallpaper.zsh
 #
 # Fetches and sets dark space/astronomy wallpapers.
-# Uses NASA APOD (Astronomy Picture of the Day) API + Unsplash for variety.
+# Sources: NASA APOD (free), JWST API (free key), Unsplash (backup).
 #
 # Usage:
 #   wallpaper.zsh                    # fetch and set next wallpaper
@@ -16,21 +16,8 @@
 WALLPAPER_DIR="$HOME/.config/wallpapers"
 STATE_FILE="$WALLPAPER_DIR/.current"
 KEY_FILE="$WALLPAPER_DIR/.unsplash-key"
+JWST_KEY_FILE="$WALLPAPER_DIR/.jwst-key"
 MAX_WALLPAPERS=30
-
-# Rotate through different queries for variety
-QUERIES=(
-  "space nebula dark"
-  "galaxy stars night"
-  "astronomy dark"
-  "milky way dark"
-  "black hole space"
-  "deep space stars"
-  "cosmos dark"
-  "planet space dark"
-  "aurora borealis night"
-  "northern lights dark"
-)
 
 mkdir -p "$WALLPAPER_DIR"
 
@@ -48,36 +35,55 @@ update_workspace_map() {
   fi
 }
 
-get_api_key() {
-  [[ -f "$KEY_FILE" ]] && cat "$KEY_FILE"
-}
-
-# Fetch from NASA APOD (Astronomy Picture of the Day) - free, no API key needed for demo
+# NASA APOD - free, no API key (DEMO_KEY has rate limits but works)
 fetch_apod() {
-  local count=${1:-1}
-  local url="https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=$count"
+  local url="https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=1"
   local response=$(curl -sL "$url" 2>/dev/null)
 
-  echo "$response" | python3 -c "
+  local image_url=$(echo "$response" | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
-if isinstance(data, list):
-    for item in data:
-        if item.get('media_type') == 'image' and item.get('hdurl'):
-            print(item['hdurl'])
-elif isinstance(data, dict) and data.get('media_type') == 'image' and data.get('hdurl'):
-    print(data['hdurl'])
-" 2>/dev/null
+if isinstance(data, list) and len(data) > 0:
+    item = data[0]
+    if item.get('media_type') == 'image':
+        print(item.get('hdurl') or item.get('url', ''))
+elif isinstance(data, dict):
+    if data.get('media_type') == 'image':
+        print(data.get('hdurl') or data.get('url', ''))
+" 2>/dev/null)
+
+  if [[ -n "$image_url" ]]; then
+    echo "$image_url"
+  fi
 }
 
-# Fetch from Unsplash with variety
-fetch_unsplash() {
-  local query="${1:-space dark}"
-  local api_key=$(get_api_key)
-
-  if [[ -z "$api_key" ]]; then
+# JWST API - requires free key from https://jwstapi.com
+fetch_jwst() {
+  if [[ ! -f "$JWST_KEY_FILE" ]]; then
     return 1
   fi
+  local key=$(cat "$JWST_KEY_FILE")
+  local response=$(curl -sL -H "API-Key: $key" "https://api.jwstapi.com/all/type/jpg?page=1&per_page=1" 2>/dev/null)
+
+  local image_url=$(echo "$response" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+body = data.get('body', [])
+if isinstance(body, list) and len(body) > 0:
+    item = body[0]
+    print(item.get('location') or item.get('url') or item.get('hdUrl', ''))
+" 2>/dev/null)
+
+  if [[ -n "$image_url" ]]; then
+    echo "$image_url"
+  fi
+}
+
+# Unsplash - backup with space/astronomy queries
+fetch_unsplash() {
+  local query="${1:-space nebula dark}"
+  local api_key=$(cat "$KEY_FILE" 2>/dev/null)
+  [[ -z "$api_key" ]] && return 1
 
   local url="https://api.unsplash.com/photos/random?query=${query// /+}&orientation=landscape&count=1"
   local response=$(curl -sL -H "Authorization: Client-ID $api_key" "$url")
@@ -99,36 +105,29 @@ elif isinstance(d, dict) and 'urls' in d:
 fetch_wallpaper() {
   local timestamp=$(date +%s)
   local filename="$WALLPAPER_DIR/wallpaper_${timestamp}.jpg"
-
-  # Alternate between NASA APOD and Unsplash
-  local hour=$(date +%H)
   local image_url=""
 
-  if [[ $(( hour % 2 )) -eq 0 ]]; then
-    # Try NASA APOD first
-    image_url=$(fetch_apod 1 | head -1)
+  # Try sources in order: JWST > APOD > Unsplash
+  image_url=$(fetch_jwst 2>/dev/null)
+
+  if [[ -z "$image_url" ]]; then
+    image_url=$(fetch_apod 2>/dev/null)
   fi
 
   if [[ -z "$image_url" ]]; then
-    # Fallback to Unsplash with rotating query
-    local query_idx=$(( timestamp % ${#QUERIES} ))
-    local query="${QUERIES[$query_idx]}"
-    image_url=$(fetch_unsplash "$query")
+    local queries=("space nebula dark" "galaxy stars night" "milky way dark" "deep space" "cosmos dark")
+    local idx=$(( timestamp % ${#queries} ))
+    image_url=$(fetch_unsplash "${queries[$idx]}")
   fi
 
   if [[ -z "$image_url" ]]; then
-    # Last resort: try APOD again
-    image_url=$(fetch_apod 1 | head -1)
-  fi
-
-  if [[ -z "$image_url" ]]; then
-    echo "Failed to fetch wallpaper"
+    echo "Failed to fetch wallpaper from all sources"
     return 1
   fi
 
   curl -sL -o "$filename" "$image_url" 2>/dev/null
 
-  if file "$filename" | grep -q "JPEG\|PNG"; then
+  if file "$filename" | grep -q "JPEG\|PNG\|GIF"; then
     local files=("$WALLPAPER_DIR"/wallpaper_*.*(.N))
     if [[ ${#files} -gt $MAX_WALLPAPERS ]]; then
       rm -f "${files[1]}"
@@ -150,7 +149,7 @@ set_wallpaper() {
     local next=$(( (current % count) + 1 ))
     echo "$next" > "$STATE_FILE"
     local wallpaper="${files[$next]}"
-    if file "$wallpaper" | grep -q "JPEG\|PNG"; then
+    if file "$wallpaper" | grep -q "JPEG\|PNG\|GIF"; then
       echo "Setting wallpaper: $(basename "$wallpaper")"
       wallpaper set "$wallpaper"
       update_workspace_map "$wallpaper"
@@ -175,10 +174,9 @@ set_wallpaper() {
 
 case "${1:-}" in
   init)
-    echo "Downloading initial wallpapers..."
-    # Mix of APOD and Unsplash
-    for i in {1..3}; do
-      printf "  [$i] APOD... "
+    echo "Downloading initial space wallpapers..."
+    for i in {1..6}; do
+      printf "  [$i] "
       local wallpaper=$(fetch_wallpaper)
       if [[ $? -eq 0 ]]; then
         echo "$(basename "$wallpaper")"
@@ -187,29 +185,9 @@ case "${1:-}" in
       fi
       sleep 1
     done
-    for i in {4..6}; do
-      printf "  [$i] Unsplash... "
-      local query_idx=$(( i % ${#QUERIES} ))
-      local url=$(fetch_unsplash "${QUERIES[$query_idx]}")
-      if [[ -n "$url" ]]; then
-        local ts=$(date +%s)
-        local fn="$WALLPAPER_DIR/wallpaper_${ts}_unsplash.jpg"
-        curl -sL -o "$fn" "$url" 2>/dev/null
-        if file "$fn" | grep -q "JPEG"; then
-          echo "$(basename "$fn")"
-        else
-          rm -f "$fn"
-          echo "FAILED"
-        fi
-      else
-        echo "FAILED"
-      fi
-      sleep 1
-    done
     set_wallpaper
     ;;
   *" "*|*)
-    # Custom query - use Unsplash
     printf "Fetching: %s... " "$1"
     local url=$(fetch_unsplash "$1")
     if [[ -n "$url" ]]; then
