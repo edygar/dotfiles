@@ -68,27 +68,32 @@ sketchybar --default "${defaults[@]}"
 #                                Left side
 ###############################################################################
 
-# Shows the apple logo, you can change it's color in "items/apple.sh"
+# Shows the apple logo
 source "$ITEM_DIR/apple.sh"
 
-# AeroSpace workspaces
+# AeroSpace workspaces - accordion style
+# Only busy workspaces show, focused workspace expands with app icons
 WORKSPACES="A B D F G M O P Q R S T U V X Y Z"
 for workspace in $WORKSPACES; do
   sketchybar --add item space.$workspace left \
     --set space.$workspace \
     icon=$workspace \
-    icon.font="$FONT:Bold:14.0" \
+    icon.font="$FONT:Bold:16.0" \
     icon.color=$INACTIVE_COLOR \
     label.drawing=off \
+    drawing=off \
     script="$PLUGIN_DIR/aerospace.sh" \
-    click_script="/opt/homebrew/bin/aerospace focus $workspace" \
+    click_script="/opt/homebrew/bin/aerospace workspace $workspace" \
     --subscribe space.$workspace aerospace_workspace_change
 done
 
-# Shows the name and icon of the app currently focused
-source "$ITEM_DIR/front_app.sh"
+# Also update on window changes (app open/close)
+sketchybar --add event aerospace_windows_changed
+for workspace in $WORKSPACES; do
+  sketchybar --subscribe space.$workspace aerospace_windows_changed
+done
 
-# Shows the mic name and input volume level
+# Mic indicator
 source "$ITEM_DIR/mic.sh"
 
 ###############################################################################
