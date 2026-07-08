@@ -67,10 +67,10 @@ return {
         listchars = { tab = "> ", trail = "·", nbsp = "·" },
         mouse = "a",
         number = true,
-        numberwidth = 4,
+        numberwidth = 6,
         pumblend = 10,
         pumheight = 10,
-        relativenumber = true,
+        relativenumber = false,
         ruler = false,
         scrolloff = 8,
         sessionoptions = { "buffers", "curdir", "tabpages", "winsize" },
@@ -235,6 +235,24 @@ return {
         ["<Leader>uv"] = {
           function() require("tiny-inline-diagnostic").toggle() end,
           desc = "Toggle virtual text",
+        },
+        ["<Leader>ul"] = {
+          function()
+            if vim.o.statuscolumn ~= "" then
+              vim.o.statuscolumn = ""
+              vim.o.relativenumber = true
+              vim.o.number = true
+              vim.o.numberwidth = 4
+              vim.notify "Line numbers: relative (current absolute)"
+            else
+              vim.o.relativenumber = false
+              vim.o.number = false
+              vim.o.numberwidth = 6
+              vim.o.statuscolumn = "%4l│%r%s"
+              vim.notify "Line numbers: both absolute and relative"
+            end
+          end,
+          desc = "Toggle line number style",
         },
         ["<Leader>ue"] = {
           function()
