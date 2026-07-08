@@ -248,7 +248,7 @@ return {
               vim.o.relativenumber = false
               vim.o.number = false
               vim.o.numberwidth = 6
-              vim.o.statuscolumn = "%4l│%r%s"
+              vim.o.statuscolumn = "%{v:lnum} %=%{abs(v:relnum)} %s"
               vim.notify "Line numbers: both absolute and relative"
             end
           end,
