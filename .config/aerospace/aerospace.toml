@@ -1,0 +1,62 @@
+after-login-command = []
+after-startup-command = []
+
+[aerospace]
+enable-normalization-flatten-containers = true
+enable-normalization-anti-directional-optimization = true
+
+[exec]
+inherit-env-vars = true
+
+[exec.env-vars]
+PATH = '/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+
+[gaps]
+inner.horizontal = 8
+inner.vertical = 8
+outer.left = 8
+outer.right = 8
+outer.top = 8
+outer.bottom = 8
+
+[mode.main_binding]
+cmd-h = []
+cmd-alt-ctrl-e = 'layout tiles horizontal vertical'
+
+alt-h = 'focus left'
+alt-l = 'focus right'
+alt-k = 'focus up'
+alt-j = 'focus down'
+
+alt-shift-h = 'move left'
+alt-shift-l = 'move right'
+alt-shift-k = 'move up'
+alt-shift-j = 'move down'
+
+alt-enter = 'fullscreen'
+
+alt-f = 'layout floating'
+alt-t = 'layout tiles'
+alt-s = 'layout accordion horizontal vertical'
+
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+
+alt-r = 'mode resize'
+
+[mode.resize-binding]
+h = 'resize width -50'
+l = 'resize width +50'
+k = 'resize height -50'
+j = 'resize height +50'
+enter = 'mode main'
+esc = 'mode main'
