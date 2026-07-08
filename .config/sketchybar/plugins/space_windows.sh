@@ -17,9 +17,15 @@ for ws in $SPACE_SIDS; do
     done <<< "$APPS"
   fi
   
+  FOCUSED=$($AEROSPACE list-workspaces --focused 2>/dev/null)
+  
   if [ -z "$icon_strip" ] || [ "$icon_strip" = " " ]; then
-    # No windows - hide the space
-    sketchybar --set space.$ws drawing=off 2>/dev/null
+    # No windows - hide unless it's the focused workspace
+    if [ "$ws" = "$FOCUSED" ]; then
+      sketchybar --set space.$ws drawing=on label="" 2>/dev/null
+    else
+      sketchybar --set space.$ws drawing=off 2>/dev/null
+    fi
   else
     sketchybar --set space.$ws drawing=on label="$icon_strip" 2>/dev/null
   fi
