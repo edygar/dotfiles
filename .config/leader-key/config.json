@@ -219,97 +219,97 @@
           "key" : "a",
           "label" : "WorkSpace A",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20A%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20A%20--fail-if-noop"
         },
         {
           "key" : "b",
           "label" : "WorkSpace B",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20B%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20B%20--fail-if-noop"
         },
         {
           "key" : "d",
           "label" : "WorkSpace D",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20D%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20D%20--fail-if-noop"
         },
         {
           "key" : "f",
           "label" : "WorkSpace F",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20F%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20F%20--fail-if-noop"
         },
         {
           "key" : "g",
           "label" : "WorkSpace G",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20G%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20G%20--fail-if-noop"
         },
         {
           "key" : "m",
           "label" : "WorkSpace M",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20M%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20M%20--fail-if-noop"
         },
         {
           "key" : "o",
           "label" : "WorkSpace O",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20O%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20O%20--fail-if-noop"
         },
         {
           "key" : "p",
           "label" : "WorkSpace P",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20P%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20P%20--fail-if-noop"
         },
         {
           "key" : "q",
           "label" : "WorkSpace Q",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20Q%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20Q%20--fail-if-noop"
         },
         {
           "key" : "r",
           "label" : "WorkSpace R",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20R%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20R%20--fail-if-noop"
         },
         {
           "key" : "s",
           "label" : "WorkSpace S",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20S%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20S%20--fail-if-noop"
         },
         {
           "key" : "t",
           "label" : "WorkSpace T",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20T%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20T%20--fail-if-noop"
         },
         {
           "key" : "u",
           "label" : "WorkSpace U",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20U%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20U%20--fail-if-noop"
         },
         {
           "key" : "v",
           "label" : "WorkSpace V",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20V%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20V%20--fail-if-noop"
         },
         {
           "key" : "x",
           "label" : "WorkSpace X",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20X%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20X%20--fail-if-noop"
         },
         {
           "key" : "z",
           "label" : "WorkSpace Z",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20workspace%20Z%20--fail-if-noop"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20Z%20--fail-if-noop"
         }
       ],
       "key" : "w",
@@ -334,49 +334,49 @@
           "key" : "r",
           "label" : "[R]eset layout",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20flatten-workspace-tree"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20flatten-workspace-tree"
         },
         {
           "key" : "f",
           "label" : "[F]loating toggle",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20layout%20floating%20tiling"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20layout%20floating%20tiling"
         },
         {
           "key" : "m",
           "label" : "[M]aximize (fullscreen)",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20fullscreen"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20fullscreen"
         },
         {
           "key" : "backspace",
           "label" : "Close all but current",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20close-all-windows-but-current"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20close-all-windows-but-current"
         },
         {
           "key" : "h",
           "label" : "Join left",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20join-with%20left"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20left"
         },
         {
           "key" : "j",
           "label" : "Join down",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20join-with%20down"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20down"
         },
         {
           "key" : "k",
           "label" : "Join up",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20join-with%20up"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20up"
         },
         {
           "key" : "l",
           "label" : "Join right",
           "type" : "url",
-          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20join-with%20right"
+          "value" : "raycast-x://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20right"
         }
       ],
       "iconPath" : "wrench.and.screwdriver",
