@@ -26,32 +26,29 @@ My personal macOS dotfiles, managed as a bare git repository with files stored a
 ### One-Shot Install (Fresh Machine)
 
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/edygar/dotfiles/main/.local/bin/bootstrap.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/edygar/dotfiles/main/.local/bin/install.sh)"
 ```
 
 This will:
 1. Clone the bare repo to `~/Code/personal/dotfiles`
 2. Check out all config files to their actual locations
-3. Run the full install script (Homebrew, defaults, fonts, etc.)
-4. Prompt for API keys and work email
+3. Install Homebrew + all packages from Brewfile
+4. Set macOS system defaults
+5. Prompt for API keys and work email
+6. Set up Leader Key, Homerow, default apps, cron jobs, and wallpapers
 
-### Manual Setup
+### Refresh Existing Setup
 
-If you prefer to do it step by step:
-
-```bash
-# Clone the bare repo
-git clone --bare git@github.com:edygar/dotfiles.git ~/Code/personal/dotfiles
-
-# Set up the alias
-alias dotfiles="git --git-dir=$HOME/Code/personal/dotfiles --work-tree=$HOME"
-
-# Checkout files
-dotfiles checkout
-
-# Run the install script
-~/.local/bin/install_dotfiles.sh
+```sh
+~/.local/bin/install.sh
 ```
+
+Re-running the same script on an existing machine will:
+- Pull latest dotfiles
+- Refresh Homebrew packages
+- Re-apply macOS defaults
+- Skip already-configured items (API keys, symlinks, cron jobs)
+- Only download wallpapers if none exist
 
 The install script handles:
 1. Homebrew + all packages from Brewfile
