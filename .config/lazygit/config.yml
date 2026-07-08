@@ -26,10 +26,20 @@ gui:
   sidePanelWidth: 0.20
   theme:
     activeLineBorderColor:
-      - default
-      - default
+      - blue
+      - bold
     selectedLineBgColor:
-      - default
+      - blue
+    selectedRangeBgColor:
+      - blue
+    cherryPickedCommitBgColor:
+      - cyan
+    cherryPickedCommitFgColor:
+      - blue
+    unstagedChangesColor:
+      - red
+    stagedChangesColor:
+      - green
 os:
   editCommand: "nvim"
   editCommandTemplate: "{{editor}} +{{line}} -- {{filename}}"
