@@ -8,7 +8,7 @@ do
              --set space.$sid                                           \
                               icon=$sid                                  \
                               icon.font="SF Pro:Bold:17.0"              \
-                              icon.color=$SPACE_ICON_COLOR               \
+                              icon.color=$WHITE                        \
                               label.font="sketchybar-app-font:Regular:17.0" \
                               label.padding_right=20                     \
                               label.y_offset=-1                          \
@@ -19,7 +19,7 @@ done
 
 sketchybar --add item space_separator left                             \
            --set space_separator icon=""                                \
-                                 icon.color=$ACCENT_COLOR               \
+                                 icon.color=$WHITE                      \
                                  icon.padding_left=4                    \
                                  label.drawing=off                      \
                                  background.drawing=off                 \
