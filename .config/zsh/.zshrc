@@ -44,6 +44,20 @@ source <(fzf --zsh)
 # mise
 eval "$(mise activate zsh)"
 
+# Auto-switch node version from .nvmrc
+autoload -Uz add-zsh-hook
+load-nvmrc() {
+  if [[ -f .nvmrc ]]; then
+    local version=$(cat .nvmrc)
+    if [[ "$version" == "lts/"* ]]; then
+      version="lts"
+    fi
+    mise shell node@$version 2>/dev/null
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
 # starship
 eval "$(starship init zsh)"
 
