@@ -2,6 +2,9 @@
 
 SPACE_SIDS=(A B D F G M O P Q R S T U V X Y Z)
 
+# Register the aerospace workspace change event
+sketchybar --add event aerospace_workspace_change
+
 for sid in "${SPACE_SIDS[@]}"
 do
   sketchybar --add item space.$sid left                                 \

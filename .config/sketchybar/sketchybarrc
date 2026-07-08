@@ -43,4 +43,8 @@ source $ITEM_DIR/battery.sh
 source $ITEM_DIR/cpu.sh
 
 ##### Finalizing Setup #####
+# Force all scripts to run the first time
 sketchybar --update
+
+# Trigger space update after init
+sketchybar --trigger aerospace_workspace_change
