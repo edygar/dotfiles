@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SPACE_SIDS=(A B D F G M O P Q R S T U V X Y Z)
+SPACE_SIDS=(A S D F Z X V Q R T)
 
 # Register the aerospace workspace change event
 sketchybar --add event aerospace_workspace_change

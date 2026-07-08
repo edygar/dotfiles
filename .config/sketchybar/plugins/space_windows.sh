@@ -3,7 +3,7 @@
 # Update all workspace labels with their app icons
 AEROSPACE=/opt/homebrew/bin/aerospace
 
-SPACE_SIDS="A B D F G M O P Q R S T U V X Y Z"
+SPACE_SIDS="A S D F Z X V Q R T"
 
 for ws in $SPACE_SIDS; do
   APPS=$($AEROSPACE list-windows --workspace $ws --format "%{app-name}%{newline}" 2>/dev/null)

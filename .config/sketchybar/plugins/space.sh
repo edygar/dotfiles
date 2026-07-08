@@ -5,7 +5,7 @@ source "$CONFIG_DIR/colors.sh"
 AEROSPACE=/opt/homebrew/bin/aerospace
 FOCUSED=$($AEROSPACE list-workspaces --focused 2>/dev/null)
 
-WORKSPACES="A B D F G M O P Q R S T U V X Y Z"
+WORKSPACES="A S D F Z X V Q R T"
 
 for ws in $WORKSPACES; do
   if [ "$ws" = "$FOCUSED" ]; then
