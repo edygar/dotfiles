@@ -45,8 +45,7 @@ key-mapping.preset = 'qwerty'
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-on-focus-changed = ['exec-and-forget $HOME/.config/sketchybar/plugins/space.sh']
-exec-on-workspace-change = ['$HOME/.config/sketchybar/plugins/space.sh']
+exec-on-workspace-change = ['/bin/sh', '-c', '$HOME/.config/sketchybar/plugins/space.sh']
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
