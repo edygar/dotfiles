@@ -19,10 +19,6 @@ brew "zsh-autosuggestions"
 brew "tree-sitter"
 brew "switchaudio-osx"
 brew "duti"
-brew "kanata"
-
-# Casks (for drivers/tools)
-cask "karabiner-elements"
 tap "felixkratz/formulae"
 brew "felixkratz/formulae/borders"
 brew "felixkratz/formulae/sketchybar"
