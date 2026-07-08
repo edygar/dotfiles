@@ -332,6 +332,20 @@
       "actions" : [
         {
           "key" : "r",
+          "label" : "[R]eload all configs",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=killall%20-SIGUSR1%20kitty%3B%20/opt/homebrew/bin/aerospace%20reload-config%3B%20killall%20-SIGUSR1%20Leader%20Key"
+        }
+      ],
+      "iconPath" : "arrow.clockwise",
+      "key" : "r",
+      "label" : "Reload",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "r",
           "label" : "[R]eset layout",
           "type" : "url",
           "value" : "raycast://script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20flatten-workspace-tree"
