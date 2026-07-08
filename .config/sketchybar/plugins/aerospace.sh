@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # AeroSpace workspace change handler
-# Highlights the active workspace in the bar
 
 WORKSPACE_NAME="$AEROSPACE_FOCUSED_WORKSPACE"
 ACTIVE_COLOR="0xff659DDA"
