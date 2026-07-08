@@ -524,6 +524,10 @@ return {
         },
       }
     end,
+    dependencies = {
+      "kyazdani42/nvim-web-devicons",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    },
   },
   {
     "dmmulroy/tsc.nvim",
