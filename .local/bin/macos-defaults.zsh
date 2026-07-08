@@ -18,6 +18,7 @@ defaults write com.apple.dock autohide-time-modifier -float 0
 # Menu bar
 echo "  Menu bar: auto-hide"
 defaults write com.apple.dock autohide-menubar -bool true
+defaults write com.apple.dock autohide-menubar-fullscreen -bool true
 
 # Finder
 echo "  Finder: show hidden files, list view, path bar"
