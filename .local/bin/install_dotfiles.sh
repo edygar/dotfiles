@@ -48,22 +48,22 @@ fi
 
 # 5. Gitconfig (personal identity is tracked, but machine-specific overrides)
 echo "[5/9] Git identity..."
-if [[ ! -f "$HOME/.gitconfig.revolut" ]]; then
-  printf "  Create .gitconfig.revolut? Enter work email (or press Enter to skip): "
+if [[ ! -f "$HOME/.gitconfig.work" ]]; then
+  printf "  Create .gitconfig.work? Enter work email (or press Enter to skip): "
   read -r work_email
   if [[ -n "$work_email" ]]; then
-    cat > "$HOME/.gitconfig.revolut" <<EOF
+    cat > "$HOME/.gitconfig.work" <<EOF
 [user]
     name = "Edygar de Lima Oliveira"
     email = "$work_email"
     username = edygar
 EOF
-    echo "  Created ~/.gitconfig.revolut"
+    echo "  Created ~/.gitconfig.work"
   else
     echo "  Skipped."
   fi
 else
-  echo "  .gitconfig.revolut already exists."
+  echo "  .gitconfig.work already exists."
 fi
 
 # 6. Leader Key config symlink

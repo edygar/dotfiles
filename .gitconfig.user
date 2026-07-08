@@ -1,7 +1,7 @@
 [user]
 	name = Edygar de Lima Oliveira
-	email = edygar@me.com
+	email = edygar@users.noreply.github.com
 	username = edygar
 
-[includeIf "gitdir:~/Code/revolut/"]
-	path = ~/.gitconfig.revolut
+[includeIf "gitdir:~/Code/work/"]
+	path = ~/.gitconfig.work

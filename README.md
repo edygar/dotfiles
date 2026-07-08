@@ -57,7 +57,7 @@ The install script handles:
 1. Homebrew + all packages from Brewfile
 2. macOS system defaults (menu bar autohide, dock, finder, keyboard, trackpad)
 3. Unsplash API key prompt (for wallpaper rotation)
-4. Git work identity (`.gitconfig.revolut`)
+4. Git work identity (`.gitconfig.work`)
 5. Leader Key config symlink
 6. Homerow config import
 7. Default app association for code files (Neovim.app)
@@ -280,9 +280,9 @@ Wallpapers are fetched from three sources (in priority order):
 ## Git Configuration
 
 - **Main config**: `~/.config/git/config` (aliases, delta pager, nvim as editor)
-- **Personal identity**: `~/.gitconfig.user` (edygar@me.com)
-- **Work identity**: `~/.gitconfig.revolut` (gitignored, prompted on install)
-- **Conditional includes**: `~/Code/revolut/` uses work identity
+- **Personal identity**: `~/.gitconfig.user` (edygar@users.noreply.github.com)
+- **Work identity**: `~/.gitconfig.work` (gitignored, prompted on install)
+- **Conditional includes**: `~/Code/work/` uses work identity
 - **Lazygit**: Custom commands (`s` sync, `S` force sync, `K` commit --no-verify, `o` edit config)
 
 ## Fonts
