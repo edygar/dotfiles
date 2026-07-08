@@ -3,8 +3,8 @@
 # Required parameters:
 # @raycast.schemaVersion 1
 # @raycast.title Next Wallpaper
-# @raycast.description Switch to the next Portugal city skyline wallpaper
+# @raycast.description Fetch and set a new dark wallpaper from Unsplash
 # @raycast.icon 🏙️
 # @raycast.mode silent
 
-~/.local/bin/portugal-wallpaper.zsh next
+~/.local/bin/wallpaper.zsh
