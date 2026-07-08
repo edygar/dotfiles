@@ -104,7 +104,7 @@
           "key" : "s",
           "label" : "Slack",
           "type" : "url",
-          "value" : "raycast://script-commands/shortcut?arguments=Slack&arguments=cmd%20k"
+          "value" : "raycast-x://extensions/raycast/script-commands/launch-app-and-shortcut?arguments=Slack.app&arguments=cmd+k"
         },
         {
           "key" : "w",
