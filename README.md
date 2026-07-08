@@ -23,7 +23,21 @@ My personal macOS dotfiles, managed as a bare git repository with files stored a
 
 ## Setup
 
-### Fresh Machine
+### One-Shot Install (Fresh Machine)
+
+```sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/edygar/dotfiles/main/.local/bin/bootstrap.sh)"
+```
+
+This will:
+1. Clone the bare repo to `~/Code/personal/dotfiles`
+2. Check out all config files to their actual locations
+3. Run the full install script (Homebrew, defaults, fonts, etc.)
+4. Prompt for API keys and work email
+
+### Manual Setup
+
+If you prefer to do it step by step:
 
 ```bash
 # Clone the bare repo
