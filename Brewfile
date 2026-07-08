@@ -16,6 +16,8 @@ brew "tree"
 brew "rust"
 brew "zsh-autosuggestions"
 brew "tree-sitter"
+tap "felixkratz/formulae"
+brew "felixkratz/formulae/borders"
 
 # Casks
 cask "kitty"
