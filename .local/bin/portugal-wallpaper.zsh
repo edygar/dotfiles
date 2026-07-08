@@ -2,7 +2,7 @@
 #
 # portugal-wallpaper.zsh
 #
-# Rotates through Portugal city skyline wallpapers every hour.
+# Rotates through dark-themed Portugal city skyline wallpapers every hour.
 # Images from Wikimedia Commons (CC licensed, stable URLs).
 #
 # Usage:
@@ -17,12 +17,12 @@ STATE_FILE="$WALLPAPER_DIR/.current"
 mkdir -p "$WALLPAPER_DIR"
 
 WALLPAPERS=(
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Lisbon_Skyline_%2845684560521%29.jpg/1280px-Lisbon_Skyline_%2845684560521%29.jpg"
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Lisbon_Skyline_%288558690509%29.jpg/1280px-Lisbon_Skyline_%288558690509%29.jpg"
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Skyline%2C_Lisbon_%2833807043844%29.jpg/1280px-Skyline%2C_Lisbon_%2833807043844%29.jpg"
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Portugal%2C_Lisbon_-_skyline_%288588522505%29.jpg/1280px-Portugal%2C_Lisbon_-_skyline_%288588522505%29.jpg"
   "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Lisbon_Skyline_from_Miradouro_de_S%C3%A3o_Pedro_de_Alc%C3%A2ntara_at_Twilight_%2854714276547%29.jpg/1280px-Lisbon_Skyline_from_Miradouro_de_S%C3%A3o_Pedro_de_Alc%C3%A2ntara_at_Twilight_%2854714276547%29.jpg"
   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Lisbon_W_Ponte_25_De_Abril_%28256368647%29.jpeg/1280px-Lisbon_W_Ponte_25_De_Abril_%28256368647%29.jpeg"
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Lisbon_Skyline_%28217154099%29.jpeg/1280px-Lisbon_Skyline_%28217154099%29.jpeg"
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Portugal%2C_Lisbon_-_skyline_%288588522505%29.jpg/1280px-Portugal%2C_Lisbon_-_skyline_%288588522505%29.jpg"
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Lisbon_Skyline_%2845684560521%29.jpg/1280px-Lisbon_Skyline_%2845684560521%29.jpg"
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Lisbon_Skyline_%288558690509%29.jpg/1280px-Lisbon_Skyline_%288558690509%29.jpg"
 )
 
 download_all() {
