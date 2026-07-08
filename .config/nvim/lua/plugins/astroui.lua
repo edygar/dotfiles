@@ -17,7 +17,7 @@ return {
         NormalFloat = { fg = "NONE", bg = "NONE" },
         Folded = { fg = "#808080", bg = "#1E1E1E" },
         FoldColumn = { bg = "NONE" },
-        CursorLine = { bg = "#1E1E1E", blend = 30 },
+        CursorLine = { bg = "#1c1c1e" },
         SignColumn = { bg = "NONE" },
         LineNr = { bg = "#1E1E1E" },
         CursorLineNr = { bg = "#262626" },
