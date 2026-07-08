@@ -207,6 +207,12 @@
           "key" : "s",
           "type" : "url",
           "value" : "raycast-x://extensions/raycast/snippets/search-snippets"
+        },
+        {
+          "key" : "r",
+          "label" : "[R]eload all configs",
+          "type" : "url",
+          "value" : "raycast://script-commands/sh?arguments=killall%20-SIGUSR1%20kitty%3B%20/opt/homebrew/bin/aerospace%20reload-config%3B%20killall%20-SIGUSR1%20Leader%20Key%3B%20killall%20-SIGHUP%20mouseless%3B%20brew%20services%20restart%20felixkratz/formulae/sketchybar"
         }
       ],
       "key" : "r",
@@ -326,20 +332,6 @@
       ],
       "key" : "c",
       "label" : "Change case",
-      "type" : "group"
-    },
-    {
-      "actions" : [
-        {
-          "key" : "r",
-          "label" : "[R]eload all configs",
-          "type" : "url",
-          "value" : "raycast://script-commands/sh?arguments=killall%20-SIGUSR1%20kitty%3B%20/opt/homebrew/bin/aerospace%20reload-config%3B%20killall%20-SIGUSR1%20Leader%20Key%3B%20killall%20-SIGHUP%20mouseless"
-        }
-      ],
-      "iconPath" : "arrow.clockwise",
-      "key" : "r",
-      "label" : "Reload",
       "type" : "group"
     },
     {
