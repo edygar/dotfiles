@@ -1,12 +1,35 @@
+customCommands:
+  - command: "git pull origin master"
+    context: "localBranches"
+    key: "s"
+    loadingText: Synchronizing branch with remote's default branch
+    output: log
+  - command: "git commit --no-verify"
+    context: "files"
+    key: "K"
+    output: terminal
+  - command: 'nvim "$HOME/Library/Application Support/lazygit/config.yml"'
+    context: "status"
+    key: "o"
+    output: terminal
+  - command: 'git pull {{index .SelectedRemote.Name }} $(LC_ALL=C git remote show {{index .SelectedRemote.Name }} | sed -n "/HEAD branch/s/.*: //p"); git push --force-with-lease'
+    context: "localBranches"
+    key: "S"
+    loadingText: Synchronizing branch with remote's default branch
+    output: log
+git:
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never
 gui:
   showIcons: true
+  sidePanelWidth: 0.20
   theme:
     activeLineBorderColor:
       - default
       - default
     selectedLineBgColor:
       - default
-git:
-  paging:
-    colorArg: always
-    pager: delta
+os:
+  editCommand: "nvim"
+  editCommandTemplate: "{{editor}} +{{line}} -- {{filename}}"
