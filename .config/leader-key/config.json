@@ -140,6 +140,13 @@
           "label" : "Desktop",
           "type" : "url",
           "value" : "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Desktop/"
+        },
+        {
+          "iconPath" : "desktopcomputer.and.arrow.down",
+          "key" : "r",
+          "label" : "Revolut Codes",
+          "type" : "url",
+          "value" : "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Code/revolut/"
         }
       ],
       "key" : "f",
@@ -319,6 +326,62 @@
       ],
       "key" : "c",
       "label" : "Change case",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "r",
+          "label" : "[R]eset layout",
+          "type" : "url",
+          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20flatten-workspace-tree"
+        },
+        {
+          "key" : "f",
+          "label" : "[F]loating toggle",
+          "type" : "url",
+          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20layout%20floating%20tiling"
+        },
+        {
+          "key" : "m",
+          "label" : "[M]aximize (fullscreen)",
+          "type" : "url",
+          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20fullscreen"
+        },
+        {
+          "key" : "backspace",
+          "label" : "Close all but current",
+          "type" : "url",
+          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20close-all-windows-but-current"
+        },
+        {
+          "key" : "h",
+          "label" : "Join left",
+          "type" : "url",
+          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20join-with%20left"
+        },
+        {
+          "key" : "j",
+          "label" : "Join down",
+          "type" : "url",
+          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20join-with%20down"
+        },
+        {
+          "key" : "k",
+          "label" : "Join up",
+          "type" : "url",
+          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20join-with%20up"
+        },
+        {
+          "key" : "l",
+          "label" : "Join right",
+          "type" : "url",
+          "value" : "raycast-x://script-commands/sh?arguments=aerospace%20join-with%20right"
+        }
+      ],
+      "iconPath" : "wrench.and.screwdriver",
+      "key" : "a",
+      "label" : "AeroSpace",
       "type" : "group"
     }
   ],
