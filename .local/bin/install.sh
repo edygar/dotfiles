@@ -26,9 +26,26 @@ if [[ ! -d "$REPO_DIR" ]]; then
   echo "[1/10] Cloning bare repo..."
   mkdir -p "$(dirname "$REPO_DIR")"
   git clone --bare "$REPO_URL" "$REPO_DIR"
+
+  # Backup any existing files that would conflict
+  BACKUP_DIR="$HOME/.dotfiles-backup-$(date +%s)"
+  CONFLICTS=$(git --git-dir="$REPO_DIR" --work-tree="$HOME" checkout 2>&1 | grep -oE '\S+' | head -20)
+  if [[ -n "$CONFLICTS" ]]; then
+    echo "  Backing up conflicting files to $BACKUP_DIR..."
+    mkdir -p "$BACKUP_DIR"
+    echo "$CONFLICTS" | while read -r f; do
+      if [[ -f "$HOME/$f" ]]; then
+        mkdir -p "$BACKUP_DIR/$(dirname "$f")"
+        mv "$HOME/$f" "$BACKUP_DIR/$f"
+      fi
+    done
+  fi
   git --git-dir="$REPO_DIR" --work-tree="$HOME" checkout 2>/dev/null || true
   git --git-dir="$REPO_DIR" --work-tree="$HOME" config --local status.showUntrackedFiles no
   echo "  Repository cloned and files checked out."
+  if [[ -n "$CONFLICTS" ]]; then
+    echo "  Conflicting files backed up to $BACKUP_DIR"
+  fi
 else
   echo "[1/10] Repository already exists, pulling latest..."
   git --git-dir="$REPO_DIR" --work-tree="$HOME" pull --rebase 2>/dev/null || true
