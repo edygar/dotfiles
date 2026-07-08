@@ -327,7 +327,7 @@ return {
     end,
   },
   {
-    "phaazon/hop.nvim",
+    "smoka7/hop.nvim",
     config = true,
     lazy = false,
     keys = {
