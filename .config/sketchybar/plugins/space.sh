@@ -8,5 +8,5 @@ if [ "$AEROSPACE_FOCUSED_WORKSPACE" = "$SPACE_NAME" ]; then
                          icon.color=$BAR_COLOR
 else
   sketchybar --set $NAME background.drawing=off \
-                         icon.color=$WHITE
+                         icon.color=$BAR_COLOR
 fi

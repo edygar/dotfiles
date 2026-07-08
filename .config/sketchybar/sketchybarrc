@@ -16,7 +16,7 @@ sketchybar --bar height=40        \
 
 ##### Changing Defaults #####
 sketchybar --default icon.font="SF Pro:Semibold:17.0"  \
-                     icon.color=$WHITE                 \
+                     icon.color=$BAR_COLOR             \
                      label.font="SF Pro:Semibold:15.0" \
                      label.color=$WHITE                \
                      background.color=$ITEM_BG_COLOR       \
