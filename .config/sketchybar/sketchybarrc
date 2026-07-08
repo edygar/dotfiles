@@ -1,142 +1,46 @@
 #!/bin/bash
 
 source "$CONFIG_DIR/colors.sh"
-source "$CONFIG_DIR/icons.sh"
 
-ITEM_DIR="$CONFIG_DIR/items"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
 
-FONT="SauceCodePro Nerd Font"
+##### Bar Appearance #####
+sketchybar --bar height=37        \
+                 blur_radius=30   \
+                 position=top     \
+                 sticky=off       \
+                 padding_left=10  \
+                 padding_right=10 \
+                 color=$BAR_COLOR
 
-PADDINGS=1
+##### Changing Defaults #####
+sketchybar --default icon.font="SF Pro:Semibold:15.0"  \
+                     icon.color=$WHITE                 \
+                     label.font="SF Pro:Semibold:15.0" \
+                     label.color=$WHITE                \
+                     background.color=$ITEM_BG_COLOR       \
+                     background.corner_radius=5            \
+                     background.height=24                  \
+                     padding_left=5                        \
+                     padding_right=5                       \
+                     label.padding_left=4                  \
+                     label.padding_right=10                \
+                     icon.padding_left=10                  \
+                     icon.padding_right=4
 
-# Setting up and starting the helper process
-HELPER=git.felix.helper
-killall helper
-(cd $CONFIG_DIR/helper && make)
-$CONFIG_DIR/helper/helper $HELPER >/dev/null 2>&1 &
+# -- Left Side Items --
+source $ITEM_DIR/spaces.sh
+source $ITEM_DIR/front_app.sh
 
-# Unload the macOS on screen indicator overlay for volume change
-launchctl unload -F /System/Library/LaunchAgents/com.apple.OSDUIHelper.plist >/dev/null 2>&1 &
+# -- Right Side Of Notch Items --
+source $ITEM_DIR/media.sh
 
-# Setting up the general bar appearance of the bar
-bar=(
-  height=38
-  color=$BAR_COLOR
-  border_width=2
-  border_color=$BAR_BORDER_COLOR
-  shadow=off
-  position=top
-  sticky=on
-  padding_right=10
-  padding_left=10
-  y_offset=0
-  margin=0
-  topmost=on
-)
+# -- Right Side Items --
+source $ITEM_DIR/calendar.sh
+source $ITEM_DIR/volume.sh
+source $ITEM_DIR/battery.sh
+source $ITEM_DIR/cpu.sh
 
-sketchybar --bar "${bar[@]}"
-
-# Setting up default values
-defaults=(
-  updates=when_shown
-  icon.font="$FONT:Bold:14.0"
-  icon.color=$ICON_COLOR
-  icon.padding_left=$PADDINGS
-  icon.padding_right=$PADDINGS
-  label.font="$FONT:Semibold:13.0"
-  label.color=$LABEL_COLOR
-  label.padding_left=$PADDINGS
-  label.padding_right=$PADDINGS
-  padding_right=$PADDINGS
-  padding_left=$PADDINGS
-  background.height=26
-  background.corner_radius=9
-  background.border_width=2
-  popup.background.border_width=2
-  popup.background.corner_radius=9
-  popup.background.border_color=$POPUP_BORDER_COLOR
-  popup.background.color=$POPUP_BACKGROUND_COLOR
-  popup.blur_radius=20
-  popup.background.shadow.drawing=on
-  scroll_texts=on
-)
-
-sketchybar --default "${defaults[@]}"
-
-###############################################################################
-#                                Left side
-###############################################################################
-
-# Shows the apple logo
-source "$ITEM_DIR/apple.sh"
-
-# AeroSpace workspaces - accordion style
-# Only busy workspaces show, focused workspace expands with app icons
-WORKSPACES="A B D F G M O P Q R S T U V X Y Z"
-for workspace in $WORKSPACES; do
-  sketchybar --add item space.$workspace left \
-    --set space.$workspace \
-    icon=$workspace \
-    icon.font="$FONT:Bold:16.0" \
-    icon.color=$INACTIVE_COLOR \
-    label.drawing=off \
-    drawing=off \
-    script="$PLUGIN_DIR/aerospace.sh" \
-    click_script="/opt/homebrew/bin/aerospace workspace $workspace" \
-    --subscribe space.$workspace aerospace_workspace_change
-done
-
-# Also update on window changes (app open/close)
-sketchybar --add event aerospace_windows_changed
-for workspace in $WORKSPACES; do
-  sketchybar --subscribe space.$workspace aerospace_windows_changed
-done
-
-# Mic indicator
-source "$ITEM_DIR/mic.sh"
-
-###############################################################################
-#                                 Center
-###############################################################################
-
-###############################################################################
-#                               Right side
-###############################################################################
-
-# Shows calendar/date - click to toggle zen mode
-source "$ITEM_DIR/calendar.sh"
-
-# Shows outdated brew packages count
-source "$ITEM_DIR/brew.sh"
-
-# DND indicator
-source "$ITEM_DIR/dnd.sh"
-
-# Shows SSID and IP address
-source "$ITEM_DIR/wifi.sh"
-
-# Battery indicator
-source "$ITEM_DIR/battery.sh"
-
-# Volume slider + icon
-source "$ITEM_DIR/volume.sh"
-
-# CPU usage indicator
-source "$ITEM_DIR/cpu.sh"
-
-###############################################################################
-
-# Hide SketchyBar when certain apps are focused
-sketchybar --add item toggler left \
-  --set toggler drawing=off \
-  updates=on \
-  script="$PLUGIN_DIR/toggle.sh" \
-  --subscribe toggler front_app_switched
-
-sketchybar --hotload on
-
-# Forcing all item scripts to run
+##### Finalizing Setup #####
 sketchybar --update
-
-echo "sketchybar configuration loaded.."

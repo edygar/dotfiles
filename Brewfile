@@ -1,4 +1,5 @@
 cask "font-sauce-code-pro-nerd-font"
+cask "font-sketchybar-app-font"
 
 # Packages
 brew "mise"

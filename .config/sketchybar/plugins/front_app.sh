@@ -1,8 +1,5 @@
 #!/bin/sh
 
-if [ -n "$INFO" ]; then
-  sketchybar --set front_app label="$INFO"
-else
-  APP=$(osascript -e 'tell application "System Events" to get name of first process whose frontmost is true' 2>/dev/null)
-  sketchybar --set front_app label="${APP:-Unknown}"
+if [ "$SENDER" = "front_app_switched" ]; then
+  sketchybar --set $NAME label="$INFO" icon="$($CONFIG_DIR/plugins/icon_map_fn.sh "$INFO")"
 fi

@@ -1,18 +1,22 @@
 #!/bin/sh
 
-BATTERY_PERCENT=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
-BATTERY_CHARGING=$(pmset -g batt | grep -q "AC Power" && echo "true" || echo "false")
+PERCENTAGE=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
+CHARGING=$(pmset -g batt | grep 'AC Power')
 
-if [ "$BATTERY_CHARGING" = "true" ]; then
-  ICON=$BATTERY_CHARGING
-elif [ "$BATTERY_PERCENT" -gt 75 ]; then
-  ICON=$BATTERY_100
-elif [ "$BATTERY_PERCENT" -gt 50 ]; then
-  ICON=$BATTERY_75
-elif [ "$BATTERY_PERCENT" -gt 25 ]; then
-  ICON=$BATTERY_50
-else
-  ICON=$BATTERY_25
+if [ "$PERCENTAGE" = "" ]; then
+  exit 0
 fi
 
-sketchybar --set battery icon="$ICON" label="${BATTERY_PERCENT}%"
+case ${PERCENTAGE} in
+  9[0-9]|100) ICON="" ;;
+  [6-8][0-9]) ICON="" ;;
+  [3-5][0-9]) ICON="" ;;
+  [1-2][0-9]) ICON="" ;;
+  *) ICON="" ;;
+esac
+
+if [ "$CHARGING" != "" ]; then
+  ICON=""
+fi
+
+sketchybar --set $NAME icon="$ICON" label="${PERCENTAGE}%"
