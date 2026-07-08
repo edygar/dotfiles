@@ -63,4 +63,7 @@ cspell.json
 .config/raycast-x/extensions/**/*.js.map
 .config/raycast-x/extensions/**/assets/compiled_raycast_rust/
 .config/raycast-x/extensions/**/assets/compiled_raycast_swift/
+.local/share/nvim/
+.config/nvim/.neoconf.json
+.config/nvim/lazy-lock.json
 
