@@ -9,7 +9,7 @@
 
 killall -SIGUSR1 kitty 2>/dev/null
 /opt/homebrew/bin/aerospace reload-config 2>/dev/null
-killall -SIGHUP mouseless 2>/dev/null
+killall mouseless 2>/dev/null; sleep 0.5; open -a Mouseless 2>/dev/null
 brew services restart felixkratz/formulae/sketchybar 2>/dev/null
 open -a "Leader Key" 2>/dev/null
 
