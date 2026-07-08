@@ -1,0 +1,76 @@
+#!/bin/sh
+
+# Sketchybar main config
+# Integrates with AeroSpace for workspace display
+
+# General
+sketchybar --bar position=top height=32 \
+  padding_left=8 \
+  padding_right=8 \
+  corner_radius=0 \
+  blur_radius=20 \
+  color=0x33000000 \
+  border_color=0x33494d64 \
+  border_width=1 \
+  topmost=on \
+  sticky=on
+
+# Default fonts
+ITEM_FONT="SauceCodePro Nerd Font:Bold:13.0"
+ICON_FONT="SauceCodePro Nerd Font:Regular:15.0"
+LABEL_FONT="SauceCodePro Nerd Font:Semibold:13.0"
+
+# Colors
+COLOR_BG=0xff1e1e1e
+COLOR_FG=0xffabb2bf
+COLOR_ACTIVE=0xff659DDA
+COLOR_INACTIVE=0xff494d64
+COLOR_WARN=0xffe0af68
+COLOR_ERROR=0xffdb4b4b
+
+# Left: AeroSpace workspaces
+WORKSPACES="A B D F G M O P Q R S T U V X Y Z"
+for ws in $WORKSPACES; do
+  sketchybar --add item space.$ws left \
+    --set space.$ws icon=$ws \
+    icon.font=$ICON_FONT \
+    icon.color=$COLOR_INACTIVE \
+    label.padding_right=4 \
+    icon.padding_left=4 \
+    label.drawing=off \
+    script="$PLUGIN_DIR/aerospace.sh" \
+    --subscribe space.$ws aerospace_workspace_change
+done
+
+# Center: active workspace windows (optional, can be expanded)
+sketchybar --add item center left \
+  --set center icon.drawing=off \
+  label.font=$LABEL_FONT \
+  label.color=$COLOR_FG
+
+# Right: clock
+sketchybar --add item clock right \
+  --set clock icon.font=$ICON_FONT \
+  label.font=$LABEL_FONT \
+  label.color=$COLOR_FG \
+  update_freq=1 \
+  script="$PLUGIN_DIR/clock.sh" \
+  --subscribe clock system_theme_change
+
+# Right: battery
+sketchybar --add item battery right \
+  --set battery icon.font=$ICON_FONT \
+  label.font=$LABEL_FONT \
+  label.color=$COLOR_FG \
+  update_freq=30 \
+  script="$PLUGIN_DIR/battery.sh"
+
+# Right: volume
+sketchybar --add item volume right \
+  --set volume icon.font=$ICON_FONT \
+  label.font=$LABEL_FONT \
+  label.color=$COLOR_FG \
+  script="$PLUGIN_DIR/volume.sh" \
+  --subscribe volume volume_change
+
+echo "sketchybar config loaded"
