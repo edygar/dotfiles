@@ -15,9 +15,9 @@ sketchybar --bar height=40        \
                  color=$BAR_COLOR
 
 ##### Changing Defaults #####
-sketchybar --default icon.font="SF Pro:Semibold:15.0"  \
+sketchybar --default icon.font="SauceCodePro Nerd Font:Bold:16.0"  \
                      icon.color=$WHITE                 \
-                     label.font="SF Pro:Semibold:15.0" \
+                     label.font="SauceCodePro Nerd Font:Semibold:14.0" \
                      label.color=$WHITE                \
                      background.color=$ITEM_BG_COLOR       \
                      background.corner_radius=5            \
