@@ -66,7 +66,7 @@ return {
         list = true,
         listchars = { tab = "> ", trail = "·", nbsp = "·" },
         mouse = "a",
-        number = true,
+        number = false,
         numberwidth = 6,
         pumblend = 10,
         pumheight = 10,
@@ -98,6 +98,7 @@ return {
         winminwidth = 5,
         wrap = false,
         writebackup = false,
+        statuscolumn = "%{v:lnum} %=%{v:relnum} %s",
       },
     },
 
@@ -248,10 +249,12 @@ return {
               vim.o.relativenumber = false
               vim.o.number = false
               vim.o.numberwidth = 6
-              vim.o.statuscolumn = "%{v:lnum} %=%{abs(v:relnum)} %s"
+              vim.o.statuscolumn = "%{v:lnum} %=%{v:relnum} %s"
               vim.notify "Line numbers: both absolute and relative"
             end
           end,
+          desc = "Toggle line number style",
+        },
           desc = "Toggle line number style",
         },
         ["<Leader>ue"] = {
