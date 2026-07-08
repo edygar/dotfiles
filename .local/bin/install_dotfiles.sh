@@ -78,15 +78,28 @@ else
 fi
 
 # 7. Homerow config import
-echo "[7/9] Homerow config import..."
+echo "[7/10] Homerow config import..."
 if defaults read com.superultra.Homerow 2>/dev/null | grep -q "search-shortcut"; then
   echo "  Homerow config already imported."
 else
   defaults import com.superultra.Homerow "$HOME/.config/homerow/config.plist" 2>/dev/null && echo "  Imported." || echo "  Skipped (Homerow not installed yet)."
 fi
 
-# 8. Cron jobs
-echo "[8/9] Setting up cron jobs..."
+# 8. Default app for code files
+echo "[8/10] Setting Neovim as default for code files..."
+APP_ID="com.edygar.neovim"
+EXTENSIONS="js jsx ts tsx json yaml yml toml md markdown lua py rs go c h cpp hpp java kt swift sh zsh bash sql html css scss sass less xml svg vue svelte graphql gql dockerfile makefile cmake gradle gitconfig gitignore env vim diff patch txt log conf cfg ini properties tf hcl nix"
+if command -v duti >/dev/null 2>&1; then
+  for ext in $EXTENSIONS; do
+    duti -s $APP_ID .$ext all 2>/dev/null
+  done
+  echo "  Done."
+else
+  echo "  Skipped (duti not installed)."
+fi
+
+# 9. Cron jobs
+echo "[9/10] Setting up cron jobs..."
 CRON=""
 if ! crontab -l 2>/dev/null | grep -q "wallpaper.zsh"; then
   CRON="${CRON}0 * * * * $HOME/.local/bin/wallpaper.zsh\n"
@@ -98,8 +111,8 @@ else
   echo "  Cron jobs already set up."
 fi
 
-# 9. Initial wallpaper
-echo "[9/9] Fetching initial wallpaper..."
+# 10. Initial wallpaper
+echo "[10/10] Fetching initial wallpaper..."
 if [[ -f "$KEY_FILE" ]] && [[ -s "$KEY_FILE" ]]; then
   "$HOME/.local/bin/wallpaper.zsh" init 2>&1
 else
