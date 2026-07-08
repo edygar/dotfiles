@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>chain-clicks</key>
+	<true/>
+	<key>launch-at-login</key>
+	<true/>
+	<key>search-shortcut</key>
+	<string>⌃⇧⌘Space</string>
+	<key>use-search-predicate</key>
+	<true/>
+</dict>
+</plist>
