@@ -1,3 +1,4 @@
+require('vim._core.ui2').enable()
 vim.opt.termguicolors = true
 
 vim.api.nvim_create_autocmd("ColorScheme", {
@@ -438,6 +439,7 @@ vim.pack.add({
 	"https://www.github.com/echasnovski/mini.nvim",
 	"https://github.com/creativenull/efmls-configs-nvim",
 	"https://github.com/LunarVim/onedarker.nvim",
+	"https://github.com/knubie/vim-kitty-navigator",
 })
 
 -- ============================================================================
