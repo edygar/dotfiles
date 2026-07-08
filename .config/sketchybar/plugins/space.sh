@@ -2,17 +2,18 @@
 
 source "$CONFIG_DIR/colors.sh"
 
-# Extract workspace name from item name (space.A -> A)
-WS_NAME=$(echo "$NAME" | sed 's/space\.//')
+AEROSPACE=/opt/homebrew/bin/aerospace
+FOCUSED=$($AEROSPACE list-workspaces --focused 2>/dev/null)
 
-# Get focused workspace from aerospace
-FOCUSED=$(/opt/homebrew/bin/aerospace list-workspaces --focused 2>/dev/null)
+WORKSPACES="A B D F G M O P Q R S T U V X Y Z"
 
-if [ "$WS_NAME" = "$FOCUSED" ]; then
-  sketchybar --set $NAME background.drawing=on \
-                         background.color=$ACCENT_COLOR \
-                         icon.color=$BAR_COLOR
-else
-  sketchybar --set $NAME background.drawing=off \
-                         icon.color=$BAR_COLOR
-fi
+for ws in $WORKSPACES; do
+  if [ "$ws" = "$FOCUSED" ]; then
+    sketchybar --set space.$ws background.drawing=on \
+                           background.color=$ACCENT_COLOR \
+                           icon.color=$BAR_COLOR
+  else
+    sketchybar --set space.$ws background.drawing=off \
+                           icon.color=$BAR_COLOR
+  fi
+done
