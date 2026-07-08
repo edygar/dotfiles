@@ -1,11 +1,11 @@
 #!/usr/bin/env zsh
 #
-# install.zsh
+# install_dotfiles.sh
 #
 # Dotfiles installation script for a fresh macOS machine.
 # Run this after cloning the bare repo.
 #
-# Usage: ~/.local/bin/install.zsh
+# Usage: ~/.local/bin/install_dotfiles.sh
 
 set -e
 
@@ -14,22 +14,22 @@ echo ""
 
 # 1. Homebrew
 if ! command -v brew >/dev/null 2>&1; then
-  echo "[1/7] Installing Homebrew..."
+  echo "[1/9] Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
-  echo "[1/7] Homebrew already installed."
+  echo "[1/9] Homebrew already installed."
 fi
 
 # 2. Brewfile
-echo "[2/7] Installing packages from Brewfile..."
+echo "[2/9] Installing packages from Brewfile..."
 brew bundle --file="$HOME/Brewfile" 2>&1 | tail -5
 
 # 3. macOS defaults
-echo "[3/7] Setting macOS defaults..."
+echo "[3/9] Setting macOS defaults..."
 "$HOME/.local/bin/macos-defaults.zsh" 2>&1
 
 # 4. Unsplash API key
-echo "[4/7] Unsplash API key..."
+echo "[4/9] Unsplash API key..."
 mkdir -p "$HOME/.config/wallpapers"
 KEY_FILE="$HOME/.config/wallpapers/.unsplash-key"
 if [[ -f "$KEY_FILE" ]] && [[ -s "$KEY_FILE" ]]; then
@@ -47,7 +47,7 @@ else
 fi
 
 # 5. Gitconfig (personal identity is tracked, but machine-specific overrides)
-echo "[5/7] Git identity..."
+echo "[5/9] Git identity..."
 if [[ ! -f "$HOME/.gitconfig.revolut" ]]; then
   printf "  Create .gitconfig.revolut? Enter work email (or press Enter to skip): "
   read -r work_email
@@ -66,8 +66,27 @@ else
   echo "  .gitconfig.revolut already exists."
 fi
 
-# 6. Cron jobs
-echo "[6/7] Setting up cron jobs..."
+# 6. Leader Key config symlink
+echo "[6/9] Leader Key config symlink..."
+LEADER_KEY_DIR="$HOME/Library/Application Support/Leader Key"
+mkdir -p "$LEADER_KEY_DIR"
+if [[ -L "$LEADER_KEY_DIR/config.json" ]]; then
+  echo "  Symlink already exists."
+else
+  ln -sf "$HOME/.config/leader-key/config.json" "$LEADER_KEY_DIR/config.json"
+  echo "  Created symlink."
+fi
+
+# 7. Homerow config import
+echo "[7/9] Homerow config import..."
+if defaults read com.superultra.Homerow 2>/dev/null | grep -q "search-shortcut"; then
+  echo "  Homerow config already imported."
+else
+  defaults import com.superultra.Homerow "$HOME/.config/homerow/config.plist" 2>/dev/null && echo "  Imported." || echo "  Skipped (Homerow not installed yet)."
+fi
+
+# 8. Cron jobs
+echo "[8/9] Setting up cron jobs..."
 CRON=""
 if ! crontab -l 2>/dev/null | grep -q "wallpaper.zsh"; then
   CRON="${CRON}0 * * * * $HOME/.local/bin/wallpaper.zsh\n"
@@ -79,8 +98,8 @@ else
   echo "  Cron jobs already set up."
 fi
 
-# 7. Initial wallpaper
-echo "[7/7] Fetching initial wallpaper..."
+# 9. Initial wallpaper
+echo "[9/9] Fetching initial wallpaper..."
 if [[ -f "$KEY_FILE" ]] && [[ -s "$KEY_FILE" ]]; then
   "$HOME/.local/bin/wallpaper.zsh" init 2>&1
 else
@@ -98,7 +117,5 @@ echo "    - Mouseless"
 echo "    - Homerow"
 echo "    - AeroSpace"
 echo "  - Configure Mouseless via GUI (mouseless://settings)"
-echo "  - Import Homerow config: defaults import com.superultra.Homerow ~/.config/homerow/config.plist"
-echo "  - Symlink Leader Key config: ln -sf ~/.config/leader-key/config.json '~/Library/Application Support/Leader Key/config.json'"
 echo "  - Add Raycast script commands from ~/.local/bin/raycast-*.zsh"
 echo "  - Rebuild neovim: ~/.local/bin/buildnvim.sh (if using local build)"
