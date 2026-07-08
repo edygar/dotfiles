@@ -1,4 +1,4 @@
-#!/bin/bin/zsh
+#!/usr/bin/env zsh
 
 # Required parameters:
 # @raycast.schemaVersion 1
