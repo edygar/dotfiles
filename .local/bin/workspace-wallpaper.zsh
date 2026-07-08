@@ -2,20 +2,19 @@
 #
 # workspace-wallpaper.zsh
 #
-# Sets a specific wallpaper when switching aerospace workspaces.
-# Uses a hash of the workspace name to pick from cached wallpapers.
-# If no wallpapers are cached, fetches a new one from Unsplash.
+# Sets a consistent wallpaper per aerospace workspace.
+# Each workspace remembers its wallpaper until explicitly changed
+# via next/previous wallpaper scripts.
 #
 # Usage:
 #   workspace-wallpaper.zsh <workspace-name>
 #
 # Add to aerospace.toml:
-#   on-workspace-changed = ['exec-and-forget ~/.local/bin/workspace-wallpaper.zsh ${AEROSPACE_WORKSPACE}']
+#   exec-on-workspace-change = ['/bin/zsh', '-c', '~/.local/bin/workspace-wallpaper.zsh $AEROSPACE_FOCUSED_WORKSPACE']
 
 WALLPAPER_DIR="$HOME/.config/wallpapers"
-STATE_FILE="$WALLPAPER_DIR/.workspace-wallpaper"
+WORKSPACE_MAP="$WALLPAPER_DIR/.workspace-map"
 KEY_FILE="$WALLPAPER_DIR/.unsplash-key"
-DEFAULT_QUERY="dark city skyline night"
 
 workspace="${1:-}"
 if [[ -z "$workspace" ]]; then
@@ -25,44 +24,42 @@ fi
 
 mkdir -p "$WALLPAPER_DIR"
 
-# Map each workspace to a specific wallpaper index
-# Using a simple hash to distribute workspaces across cached wallpapers
-case "$workspace" in
-  A) index=1 ;;
-  B) index=2 ;;
-  D) index=3 ;;
-  F) index=4 ;;
-  G) index=5 ;;
-  M) index=6 ;;
-  O) index=7 ;;
-  P) index=8 ;;
-  Q) index=9 ;;
-  R) index=10 ;;
-  S) index=11 ;;
-  T) index=12 ;;
-  U) index=13 ;;
-  V) index=14 ;;
-  X) index=15 ;;
-  Y) index=16 ;;
-  Z) index=17 ;;
-  *) index=1 ;;
-esac
+# Read the workspace-to-wallpaper map
+get_wallpaper_for_workspace() {
+  local ws="$1"
+  if [[ -f "$WORKSPACE_MAP" ]]; then
+    grep "^${ws}=" "$WORKSPACE_MAP" 2>/dev/null | cut -d'=' -f2-
+  fi
+}
 
-# Check if we have a dedicated wallpaper for this workspace
-dedicated="$WALLPAPER_DIR/workspace_${workspace}.jpg"
-if [[ -f "$dedicated" ]] && file "$dedicated" | grep -q "JPEG"; then
-  wallpaper set "$dedicated"
+set_wallpaper_for_workspace() {
+  local ws="$1"
+  local wallpaper="$2"
+  # Remove existing entry, add new one
+  if [[ -f "$WORKSPACE_MAP" ]]; then
+    grep -v "^${ws}=" "$WORKSPACE_MAP" > "$WORKSPACE_MAP.tmp" 2>/dev/null
+    mv "$WORKSPACE_MAP.tmp" "$WORKSPACE_MAP"
+  fi
+  echo "${ws}=${wallpaper}" >> "$WORKSPACE_MAP"
+}
+
+# Check if this workspace already has a wallpaper assigned
+existing=$(get_wallpaper_for_workspace "$workspace")
+
+if [[ -n "$existing" ]] && [[ -f "$existing" ]] && file "$existing" | grep -q "JPEG"; then
+  # Use the remembered wallpaper
+  wallpaper set "$existing"
   exit 0
 fi
 
-# Otherwise use the shared pool, indexed by workspace
+# No wallpaper assigned yet, pick one from the pool
 files=("$WALLPAPER_DIR"/wallpaper_*.jpg(N))
 count=${#files}
 
 if [[ $count -eq 0 ]]; then
-  # No wallpapers yet, try to fetch one
+  # No wallpapers in pool, try to fetch one
   if [[ -f "$KEY_FILE" ]] && [[ -s "$KEY_FILE" ]]; then
-    "$HOME/.local/bin/wallpaper.zsh" "$DEFAULT_QUERY" >/dev/null 2>&1
+    "$HOME/.local/bin/wallpaper.zsh" >/dev/null 2>&1
     files=("$WALLPAPER_DIR"/wallpaper_*.jpg(N))
     count=${#files}
   fi
@@ -72,6 +69,7 @@ if [[ $count -eq 0 ]]; then
   exit 1
 fi
 
-# Pick wallpaper by index (wrap around if needed)
-local_index=$(( (index - 1) % count + 1 ))
-wallpaper set "${files[$local_index]}"
+# Pick the most recently downloaded wallpaper
+wallpaper_file="${files[$count]}"
+set_wallpaper_for_workspace "$workspace" "$wallpaper_file"
+wallpaper set "$wallpaper_file"

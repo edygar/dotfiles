@@ -3,7 +3,7 @@
 # wallpaper.zsh
 #
 # Fetches and sets dark-themed wallpapers from Unsplash on demand.
-# Uses the Unsplash API to search for random images matching a query.
+# Updates the current aerospace workspace's wallpaper mapping.
 #
 # Usage:
 #   wallpaper.zsh                    # fetch and set next wallpaper (default query)
@@ -14,12 +14,26 @@
 #   0 * * * * ~/.local/bin/wallpaper.zsh
 
 WALLPAPER_DIR="$HOME/.config/wallpapers"
-STATE_FILE="$WALLPAPER_DIR/.current"
+WORKSPACE_MAP="$WALLPAPER_DIR/.workspace-map"
 KEY_FILE="$WALLPAPER_DIR/.unsplash-key"
 DEFAULT_QUERY="dark city skyline night"
 MAX_WALLPAPERS=20
 
 mkdir -p "$WALLPAPER_DIR"
+
+get_current_workspace() {
+  /opt/homebrew/bin/aerospace list-workspaces --focused 2>/dev/null
+}
+
+update_workspace_map() {
+  local wallpaper="$1"
+  local ws=$(get_current_workspace)
+  if [[ -n "$ws" ]] && [[ -f "$WORKSPACE_MAP" ]]; then
+    grep -v "^${ws}=" "$WORKSPACE_MAP" > "$WORKSPACE_MAP.tmp" 2>/dev/null
+    mv "$WORKSPACE_MAP.tmp" "$WORKSPACE_MAP"
+    echo "${ws}=${wallpaper}" >> "$WORKSPACE_MAP"
+  fi
+}
 
 get_api_key() {
   if [[ ! -f "$KEY_FILE" ]]; then
@@ -44,7 +58,6 @@ fetch_wallpaper() {
     return 1
   fi
 
-  # Append size params
   image_url="${image_url}&w=2560&q=80&fm=jpg"
 
   local timestamp=$(date +%s)
@@ -53,7 +66,6 @@ fetch_wallpaper() {
   curl -sL -o "$filename" "$image_url" 2>/dev/null
 
   if file "$filename" | grep -q "JPEG"; then
-    # Rotate: remove oldest if exceeding max
     local files=("$WALLPAPER_DIR"/wallpaper_*.jpg(N))
     if [[ ${#files} -gt $MAX_WALLPAPERS ]]; then
       rm -f "${files[1]}"
@@ -69,31 +81,31 @@ fetch_wallpaper() {
 set_wallpaper() {
   local query="${1:-$DEFAULT_QUERY}"
 
-  # Try to use an existing wallpaper first (rotate through them)
   local files=("$WALLPAPER_DIR"/wallpaper_*.jpg(N))
   local count=${#files}
 
-  if [[ $count -gt 0 ]] && [[ -f "$STATE_FILE" ]]; then
-    local current=$(cat "$STATE_FILE")
+  if [[ $count -gt 0 ]] && [[ -f "$WALLPAPER_DIR/.current" ]]; then
+    local current=$(cat "$WALLPAPER_DIR/.current")
     local next=$(( (current % count) + 1 ))
-    echo "$next" > "$STATE_FILE"
+    echo "$next" > "$WALLPAPER_DIR/.current"
     local wallpaper="${files[$next]}"
     if file "$wallpaper" | grep -q "JPEG"; then
       echo "Setting wallpaper: $(basename "$wallpaper")"
       wallpaper set "$wallpaper"
+      update_workspace_map "$wallpaper"
       return 0
     fi
   fi
 
-  # Fetch a new one
   printf "Fetching new wallpaper (query: %s)... " "$query"
   local wallpaper=$(fetch_wallpaper "$query")
   if [[ $? -eq 0 ]] && [[ -n "$wallpaper" ]]; then
     echo "done"
     echo "Setting wallpaper: $(basename "$wallpaper")"
     wallpaper set "$wallpaper"
+    update_workspace_map "$wallpaper"
     local files=("$WALLPAPER_DIR"/wallpaper_*.jpg(N))
-    echo "${#files}" > "$STATE_FILE"
+    echo "${#files}" > "$WALLPAPER_DIR/.current"
   else
     echo "failed"
     return 1
