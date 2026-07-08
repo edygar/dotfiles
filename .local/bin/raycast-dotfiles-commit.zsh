@@ -36,7 +36,7 @@ kitty @ launch --type=tab --title="Dotfiles Commit" --cwd="$HOME" zsh -c "
   git --git-dir='$GIT_DIR' --work-tree='$HOME' status --short
   echo ''
   echo '=== Full Diff ==='
-  git --git-dir='$GIT_DIR' --work-tree='$HOME' diff --color=always 2>/dev/null | less -R
+  git --git-dir='$GIT_DIR' --work-tree='$HOME' diff --color=always 2>/dev/null | delta --side-by-side --paging=never
   echo ''
   
   # Select files to stage
