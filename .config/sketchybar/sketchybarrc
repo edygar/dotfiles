@@ -6,8 +6,8 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
 ##### Bar Appearance #####
-sketchybar --bar height=37        \
-                 blur_radius=30   \
+sketchybar --bar height=40        \
+                 blur_radius=0    \
                  position=top     \
                  sticky=off       \
                  padding_left=10  \
@@ -15,13 +15,13 @@ sketchybar --bar height=37        \
                  color=$BAR_COLOR
 
 ##### Changing Defaults #####
-sketchybar --default icon.font="SF Pro:Semibold:15.0"  \
+sketchybar --default icon.font="SF Pro:Semibold:17.0"  \
                      icon.color=$WHITE                 \
                      label.font="SF Pro:Semibold:15.0" \
                      label.color=$WHITE                \
                      background.color=$ITEM_BG_COLOR       \
                      background.corner_radius=5            \
-                     background.height=24                  \
+                     background.height=26                  \
                      padding_left=5                        \
                      padding_right=5                       \
                      label.padding_left=4                  \

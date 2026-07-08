@@ -22,7 +22,7 @@ fi
 
 # 2. Brewfile
 echo "[2/9] Installing packages from Brewfile..."
-brew bundle --file="$HOME/Brewfile" 2>&1 | tail -5
+brew bundle --file="$HOME/.config/homebrew/Brewfile" 2>&1 | tail -5
 
 # 3. macOS defaults
 echo "[3/9] Setting macOS defaults..."
