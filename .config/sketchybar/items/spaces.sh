@@ -7,7 +7,7 @@ do
   sketchybar --add item space.$sid left                                 \
              --set space.$sid                                           \
                               icon=$sid                                  \
-                              icon.font="SF Pro:Black:20.0"           \
+                              icon.font="SauceCodePro Nerd Font:Bold:16.0" \
                               icon.color=$BAR_COLOR                   \
                               label.font="sketchybar-app-font:Regular:17.0" \
                               label.padding_right=20                     \
