@@ -3,8 +3,8 @@
 # Required parameters:
 # @raycast.schemaVersion 1
 # @raycast.title Next Wallpaper
-# @raycast.description Fetch and set a new dark wallpaper from Unsplash
+# @raycast.description Switch to the next wallpaper (no fetching)
 # @raycast.icon 🏙️
 # @raycast.mode silent
 
-~/.local/bin/wallpaper.zsh
+~/.local/bin/wallpaper.zsh next

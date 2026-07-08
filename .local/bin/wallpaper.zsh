@@ -192,7 +192,6 @@ case "${1:-}" in
     for i in {1..6}; do
       printf "  [$i] "
       local wallpaper=""
-      # Alternate: APOD (beautiful processed) and JWST (raw science)
       if (( i % 2 == 0 )); then
         local jwst_url=$(fetch_jwst 2>/dev/null)
         if [[ -n "$jwst_url" ]]; then
@@ -218,7 +217,49 @@ case "${1:-}" in
     done
     set_wallpaper
     ;;
+  next)
+    # Only cycle through existing wallpapers, no fetching
+    local files=("$WALLPAPER_DIR"/*.{jpg,jpeg,png,gif}(.N))
+    local count=${#files}
+    if [[ $count -eq 0 ]]; then
+      echo "No wallpapers found"
+      exit 1
+    fi
+    local current=1
+    if [[ -f "$STATE_FILE" ]]; then
+      current=$(cat "$STATE_FILE")
+    fi
+    local next=$(( (current % count) + 1 ))
+    echo "$next" > "$STATE_FILE"
+    local wallpaper="${files[$next]}"
+    echo "Setting wallpaper: $(basename "$wallpaper")"
+    wallpaper set "$wallpaper"
+    update_workspace_map "$wallpaper"
+    ;;
+  prev)
+    # Cycle backwards through existing wallpapers, no fetching
+    local files=("$WALLPAPER_DIR"/*.{jpg,jpeg,png,gif}(.N))
+    local count=${#files}
+    if [[ $count -eq 0 ]]; then
+      echo "No wallpapers found"
+      exit 1
+    fi
+    local current=1
+    if [[ -f "$STATE_FILE" ]]; then
+      current=$(cat "$STATE_FILE")
+    fi
+    local prev=$(( current - 1 ))
+    if [[ $prev -lt 1 ]]; then
+      prev=$count
+    fi
+    echo "$prev" > "$STATE_FILE"
+    local wallpaper="${files[$prev]}"
+    echo "Setting wallpaper: $(basename "$wallpaper")"
+    wallpaper set "$wallpaper"
+    update_workspace_map "$wallpaper"
+    ;;
   *" "*|*)
+    # Custom query - use Unsplash
     printf "Fetching: %s... " "$1"
     local url=$(fetch_unsplash "$1")
     if [[ -n "$url" ]]; then
@@ -238,6 +279,7 @@ case "${1:-}" in
     fi
     ;;
   "")
+    # Default: cycle existing, fetch if none available
     set_wallpaper
     ;;
 esac
