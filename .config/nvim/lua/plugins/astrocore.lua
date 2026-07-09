@@ -98,7 +98,6 @@ return {
         winminwidth = 5,
         wrap = false,
         writebackup = false,
-        statuscolumn = "%s%=%{v:relnum?v:relnum:''} │ %4{v:lnum} ",
       },
     },
 
@@ -325,6 +324,15 @@ return {
                 vim.api.nvim_command "lopen"
               end
             end
+          end,
+        },
+      },
+
+      statuscolumn = {
+        {
+          event = "BufEnter",
+          callback = function()
+            vim.o.statuscolumn = "%s%=%{v:relnum?v:relnum:''} │ %4{v:lnum} "
           end,
         },
       },
