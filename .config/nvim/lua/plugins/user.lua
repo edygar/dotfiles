@@ -321,19 +321,7 @@ return {
     "kylechui/nvim-surround",
     version = "*",
     event = "VeryLazy",
-    config = function()
-      require("nvim-surround").setup {
-        keymaps = {
-          insert_line = "<C-g>S",
-          normal = "s",
-          normal_line = "S",
-          visual = "s",
-          visual_line = "S",
-          delete = "ds",
-          change = "cs",
-        },
-      }
-    end,
+    opts = {},
   },
   {
     "smjonas/live-command.nvim",
@@ -562,6 +550,11 @@ return {
     event = "LspAttach",
     opts = {
       backend = "delta",
+      backend_opt = {
+        delta = {
+          args = { "--side-by-side", "--color-only", "--paging=never", "--features=" },
+        },
+      },
       picker = {
         "snacks",
         opts = {
