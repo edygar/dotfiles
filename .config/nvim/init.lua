@@ -560,14 +560,14 @@ require("auto-save").setup({
 
 -- Lualine
 require("lualine").setup({
-	options = { theme = "onedarker", component_separators = "|", section_separators = "" },
+	options = { theme = "onedarker", component_separators = { left = "|", right = "|" }, section_separators = { left = "", right = "" } },
 	sections = {
-		l_section_a = { "mode" },
-		l_section_b = { "branch", "diff" },
-		l_section_c = { "filename" },
-		r_section_x = { "diagnostics" },
-		r_section_y = { "filetype" },
-		r_section_z = { "location" },
+		lualine_a = { "mode" },
+		lualine_b = { "branch", "diff" },
+		lualine_c = { "filename" },
+		lualine_x = { "diagnostics" },
+		lualine_y = { "filetype" },
+		lualine_z = { "location" },
 	},
 })
 
