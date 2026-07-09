@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Custom kitty tab bar with rounded active tab
+# Custom kitty tab bar with powerline rounded tab (pill shape)
 
 from kitty.tab_bar import as_rgb
 from kitty.utils import color_as_int
@@ -18,24 +18,24 @@ def draw_tab(tab, max_tab_length):
 
     # Colors
     bg = as_rgb(color_as_int("#181818"))
-    accent_bg = as_rgb(color_as_int("#729CD5"))
-    accent_fg = as_rgb(color_as_int("#ffffff"))
+    accent = as_rgb(color_as_int("#729CD5"))
+    white = as_rgb(color_as_int("#ffffff"))
     inactive_fg = as_rgb(color_as_int("#abb2bf"))
 
     # Tab number
     num = str(tab.index + 1)
-    inner = f" {num}: {title} "
 
     if tab.is_active:
-        # Active: rounded corners on both sides, accent background filling the whole tab
-        yield ("╭", accent_bg, accent_bg)
-        yield ("─", accent_bg, accent_bg)
-        yield (inner, accent_fg, accent_bg)
-        yield ("─", accent_bg, accent_bg)
-        yield ("╮", accent_bg, accent_bg)
+        # Active:  (left half circle) + content +  (right half circle)
+        # Left rounded: fg=accent, bg=terminal_bg
+        yield ("\ue0b6", accent, bg)
+        # Content: fg=white, bg=accent
+        yield (f" {num}: {title} ", white, accent)
+        # Right rounded: fg=accent, bg=terminal_bg
+        yield ("\ue0b4", accent, bg)
     else:
         # Inactive: plain text, no background
-        yield (inner, inactive_fg, bg)
+        yield (f" {num}: {title} ", inactive_fg, bg)
 
     # Gap between tabs
     yield (" ", inactive_fg, bg)
