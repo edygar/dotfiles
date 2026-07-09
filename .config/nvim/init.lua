@@ -11,7 +11,7 @@ vim.pack.add({
 	"https://github.com/folke/snacks.nvim",
 	"https://github.com/folke/noice.nvim",
 	"https://github.com/folke/which-key.nvim",
-	"https://github.com/ nvim-lualine/lualine.nvim",
+	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/nvim-tree/nvim-web-devicons",
 
 	-- LSP
