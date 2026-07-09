@@ -238,6 +238,36 @@ map("n", "<leader>fq", function() Snacks.picker.qflist() end, { desc = "Quickfix
 map("n", "<leader>fj", function() Snacks.picker.jumps() end, { desc = "Jumplist" })
 map("n", "[j", "<C-o>", { desc = "Prev jump" })
 map("n", "]j", "<C-i>", { desc = "Next jump" })
+map("n", "<leader>fy", function()
+	local clipboard = vim.fn.getreg("+")
+	local path = vim.trim(clipboard)
+	if path == "" then return end
+	local components = {}
+	for component in string.gmatch(path, "[^/]+") do
+		table.insert(components, component)
+	end
+	if #components == 0 then return end
+	local best_search = nil
+	for i = #components, 1, -1 do
+		local search_parts = {}
+		for j = i, #components do table.insert(search_parts, components[j]) end
+		local search_term = "**/" .. table.concat(search_parts, "/")
+		local count = 0
+		local file = nil
+		local handle = io.popen(string.format("fd -tf -p -g '%s' 2>/dev/null", search_term))
+		if handle then
+			for line in handle:lines() do file = line; count = count + 1 end
+			handle:close()
+		end
+		if count == 1 then vim.cmd("e " .. file); return end
+		if count > 0 then best_search = search_term end
+	end
+	if best_search then
+		Snacks.picker.files({ pattern = best_search })
+	else
+		Snacks.picker.files({ pattern = components[#components] })
+	end
+end, { silent = true, desc = "Search clipboard file" })
 
 -- LSP
 map("n", "<leader>ln", function() vim.lsp.buf.rename() end, { desc = "Rename symbol" })
