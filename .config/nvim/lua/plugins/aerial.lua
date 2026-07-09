@@ -1,4 +1,4 @@
 return {
-  "nvimtools/none-ls.nvim",
+  "stevearc/aerial.nvim",
   enabled = false,
 }

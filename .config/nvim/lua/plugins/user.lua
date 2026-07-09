@@ -324,11 +324,6 @@ return {
     opts = {},
   },
   {
-    "smjonas/live-command.nvim",
-    main = "live-command",
-    opts = { commands = { Norm = { cmd = "norm" } } },
-  },
-  {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts_extend = { "spec", "disable.ft", "disable.bt" },
@@ -668,19 +663,6 @@ return {
       { "<leader>E", function() require("oil").open() end, mode = "n", desc = "Open parent directory" },
     },
     opts = {},
-  },
-  {
-    "ziontee113/syntax-tree-surfer",
-    lazy = false,
-    priority = 100,
-    keys = {
-      { "vv", "<Cmd>STSSelectCurrentNode<cr>", desc = "Select current Node", mode = "n", noremap = true, silent = true, nowait = true },
-      { "<C-A-k>", "<Cmd>STSSelectPrevSiblingNode<cr>", desc = "Navigate to next node", mode = "x", noremap = true, silent = true },
-      { "<C-A-j>", "<Cmd>STSSelectNextSiblingNode<cr>", desc = "Navigate to previous node", mode = "x", noremap = true, silent = true },
-      { "<C-A-l>", "<Cmd>STSSelectChildNode<cr>", desc = "Navigate to inner", mode = "x", noremap = true, silent = true },
-      { "<C-A-h>", "<Cmd>STSSelectParentNode<cr>", desc = "Navigate to outer", mode = "x", noremap = true, silent = true },
-    },
-    config = true,
   },
   {
     "AstroNvim/astrocore",
