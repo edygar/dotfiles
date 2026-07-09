@@ -295,6 +295,7 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
     opts = { indent = { enable = true } },
   },
   {
