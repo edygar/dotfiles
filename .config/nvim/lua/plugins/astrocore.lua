@@ -66,11 +66,11 @@ return {
         list = true,
         listchars = { tab = "> ", trail = "·", nbsp = "·" },
         mouse = "a",
-        number = false,
+        number = true,
         numberwidth = 4,
         pumblend = 10,
         pumheight = 10,
-        relativenumber = false,
+        relativenumber = true,
         ruler = false,
         scrolloff = 8,
         sessionoptions = { "buffers", "curdir", "tabpages", "winsize" },
@@ -324,15 +324,6 @@ return {
                 vim.api.nvim_command "lopen"
               end
             end
-          end,
-        },
-      },
-
-      statuscolumn = {
-        {
-          event = "BufEnter",
-          callback = function()
-            vim.o.statuscolumn = "%=%{v:relnum?v:relnum:''} │ %4{v:lnum} %s"
           end,
         },
       },
