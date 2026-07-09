@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Custom kitty tab bar with rounded active tab (pill shape)
+# Custom kitty tab bar with rounded active tab
 
 from kitty.tab_bar import as_rgb
 from kitty.utils import color_as_int
@@ -21,19 +21,21 @@ def draw_tab(tab, max_tab_length):
     accent_bg = as_rgb(color_as_int("#729CD5"))
     accent_fg = as_rgb(color_as_int("#ffffff"))
     inactive_fg = as_rgb(color_as_int("#abb2bf"))
-    separator_fg = as_rgb(color_as_int("#3e4451"))
 
     # Tab number
     num = str(tab.index + 1)
+    inner = f" {num}: {title} "
 
     if tab.is_active:
-        # Active: rounded pill shape with accent background
+        # Active: rounded corners on both sides, accent background filling the whole tab
         yield ("╭", accent_bg, accent_bg)
-        yield (f" {num}: {title} ", accent_fg, accent_bg)
+        yield ("─", accent_bg, accent_bg)
+        yield (inner, accent_fg, accent_bg)
+        yield ("─", accent_bg, accent_bg)
         yield ("╮", accent_bg, accent_bg)
     else:
-        # Inactive: no background, just text
-        yield (f" {num}: {title} ", inactive_fg, bg)
+        # Inactive: plain text, no background
+        yield (inner, inactive_fg, bg)
 
-    # Separator between tabs
+    # Gap between tabs
     yield (" ", inactive_fg, bg)
