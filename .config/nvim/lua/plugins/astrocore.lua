@@ -332,7 +332,7 @@ return {
         {
           event = "BufEnter",
           callback = function()
-            vim.o.statuscolumn = "%s%=%{v:relnum?v:relnum:''} │ %4{v:lnum} "
+            vim.o.statuscolumn = "%=%{v:relnum?v:relnum:''} │ %4{v:lnum} %s"
           end,
         },
       },
