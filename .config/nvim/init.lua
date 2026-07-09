@@ -194,6 +194,72 @@ map("n", "<C-l>", "<C-w>l", { desc = "Right window" })
 map("n", "<leader>sv", ":vsplit<CR>", { desc = "Vsplit" })
 map("n", "<leader>sh", ":split<CR>", { desc = "Split" })
 
+-- Write/quit
+map("n", "<leader>ww", "<cmd>w<CR>", { desc = "Write" })
+map("n", "<leader>wq", "<cmd>wq<CR>", { desc = "Write and quit" })
+map("n", "<leader>wa", "<cmd>wa<CR>", { desc = "Write all" })
+
+-- Buffer operations
+map("n", "<leader>bc", function() Snacks.bufdelete.delete() end, { desc = "Close buffer" })
+map("n", "<leader>bd", function() Snacks.bufdelete.delete() end, { desc = "Close buffer" })
+map("n", "<leader>bC", function() Snacks.bufdelete.all() end, { desc = "Close all buffers" })
+map("n", "<leader>bD", function() Snacks.bufdelete.all() end, { desc = "Close all buffers" })
+map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Close other buffers" })
+map("n", "<C-M-q>", "<cmd>bd<CR>", { silent = true, desc = "Close buffer" })
+map("i", "<C-M-q>", "<cmd>bd<CR>", { silent = true, desc = "Close buffer" })
+
+-- Tabs
+map("n", "te", "<cmd>tabedit %<CR>", { desc = "New tab" })
+map("n", "tt", "<cmd>tabnew<CR>", { desc = "New tab" })
+map("n", "tj", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
+map("n", "tk", "<cmd>tabnext<CR>", { desc = "Next tab" })
+map("n", "tc", "<cmd>tabclose<CR>", { desc = "Close tab" })
+
+-- Yank
+map("n", "ycf", function()
+	local p = vim.fn.expand("%:p")
+	if p ~= "" then vim.fn.setreg("+", p); vim.notify("Yanked: " .. p) end
+end, { desc = "Yank file path" })
+map("n", "ycr", function()
+	local p = vim.fn.expand("%")
+	if p ~= "" then vim.fn.setreg("+", p); vim.notify("Yanked: " .. p) end
+end, { desc = "Yank relative path" })
+map("n", "ycb", function()
+	local ok, b = pcall(vim.fn.system, "git branch --show-current")
+	if ok and vim.v.shell_error == 0 then vim.fn.setreg("+", vim.trim(b)) end
+end, { desc = "Yank branch" })
+
+-- Picker extras
+map("n", "<leader>fe", function() Snacks.picker.explorer() end, { desc = "Explorer" })
+map("n", "<leader>fO", function() Snacks.picker.recent() end, { desc = "Recent files" })
+map("n", "<leader>fP", function() Snacks.picker() end, { desc = "Pickers" })
+map("n", "<leader>fH", function() Snacks.picker.highlights() end, { desc = "Highlights" })
+map("n", "<leader>fq", function() Snacks.picker.qflist() end, { desc = "Quickfix" })
+map("n", "<leader>fj", function() Snacks.picker.jumps() end, { desc = "Jumplist" })
+map("n", "[j", "<C-o>", { desc = "Prev jump" })
+map("n", "]j", "<C-i>", { desc = "Next jump" })
+
+-- LSP
+map("n", "<leader>ln", function() vim.lsp.buf.rename() end, { desc = "Rename symbol" })
+
+-- Git
+map("n", "<leader>gb", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Blame" })
+map("x", "<leader>gh", "<cmd>'<,'>DiffviewFileHistory<cr>", { desc = "File history" })
+
+-- Misc
+map("n", "<leader>h", "<cmd>noh<CR>", { desc = "No highlight" })
+map("n", "<leader>ue", function()
+	local ve = vim.opt.virtualedit:get()
+	if vim.tbl_contains(ve, "block") then
+		vim.opt.virtualedit = { "all" }; vim.notify("VirtualEdit: all")
+	else
+		vim.opt.virtualedit = { "block" }; vim.notify("VirtualEdit: block")
+	end
+end, { desc = "Toggle virtualedit" })
+map("n", "<leader>to", function()
+	vim.cmd("TermOpen")
+end, { desc = "Toggle terminal (placeholder)" })
+
 -- Move lines
 map("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
 map("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
@@ -202,12 +268,6 @@ map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 map("v", "<", "<gv", { desc = "Indent left" })
 map("v", ">", ">gv", { desc = "Indent right" })
 map("n", "J", "mzJ`z", { desc = "Join lines" })
-
--- Yank file path
-map("n", "<leader>pa", function()
-	local path = vim.fn.expand("%:p")
-	if path ~= "" then vim.fn.setreg("+", path); vim.notify("Yanked: " .. path) end
-end, { desc = "Copy file path" })
 
 -- Snacks picker
 map("n", "<leader>ff", function() Snacks.picker.files() end, { desc = "Find Files" })
