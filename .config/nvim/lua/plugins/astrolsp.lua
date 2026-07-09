@@ -5,7 +5,7 @@ return {
     ---@type AstroLSPOpts
     opts = {
       features = {
-        codelens = true,
+        codelens = false,
         semantic_tokens = true,
       },
       formatting = {
@@ -71,20 +71,7 @@ return {
         },
       },
       handlers = {},
-      autocmds = {
-        lsp_codelens_refresh = {
-          cond = "textDocument/codeLens",
-          {
-            event = { "InsertLeave", "BufEnter" },
-            callback = function(args)
-              if require("astrolsp").config.features.codelens then
-                pcall(vim.lsp.codelens.refresh, { bufnr = args.buf })
-              end
-            end,
-            desc = "Refresh codelens (buffer)",
-          },
-        },
-      },
+      autocmds = {},
       mappings = {
         n = {
           gD = {
