@@ -1,42 +1,54 @@
 #!/usr/bin/env python3
-from kitty.tab_bar import as_rgb, draw_title
+# Custom kitty tab bar with powerline rounded capsule tabs
+# Based on https://github.com/kovidgoyal/kitty/discussions/4447#discussioncomment-12324426
+
+from kitty.fast_data_types import Screen
+from kitty.tab_bar import DrawData, ExtraData, TabBarData, draw_title, as_rgb
 from kitty.utils import color_as_int
 
 
-def draw_tab(draw_data, screen, tab, before, max_tab_length, index, is_last, extra_data):
-    bg = as_rgb(color_as_int("#181818"))
-    accent = as_rgb(color_as_int("#729CD5"))
-    white = as_rgb(color_as_int("#ffffff"))
-    inactive_fg = as_rgb(color_as_int("#abb2bf"))
+def draw_tab(
+    draw_data: DrawData,
+    screen: Screen,
+    tab: TabBarData,
+    before: int,
+    max_tab_length: int,
+    index: int,
+    is_last: bool,
+    extra_data: ExtraData,
+) -> int:
+    orig_fg = screen.cursor.fg
+    orig_bg = screen.cursor.bg
+    left_sep, right_sep = ('\ue0b6', '\ue0b4')
 
-    title = tab.title
-    if len(title) > max_tab_length:
-        title = title[:max_tab_length - 1] + '…'
-    num = str(index + 1)
-    inner = f"{num}: {title}"
+    def draw_sep(which: str) -> None:
+        screen.cursor.bg = as_rgb(color_as_int(draw_data.default_bg))
+        screen.cursor.fg = orig_bg
+        screen.draw(which)
+        screen.cursor.bg = orig_bg
+        screen.cursor.fg = orig_fg
 
-    if tab.is_active:
-        # Left rounded: fg=accent, bg=terminal
-        screen.cursor.fg = accent
-        screen.cursor.bg = bg
-        screen.draw("\ue0b6")
-        # Content: fg=white, bg=accent
-        screen.cursor.fg = white
-        screen.cursor.bg = accent
-        screen.draw(f" {inner} ")
-        # Right rounded: fg=accent, bg=terminal
-        screen.cursor.fg = accent
-        screen.cursor.bg = bg
-        screen.draw("\ue0b4")
+    if max_tab_length <= 1:
+        screen.draw('…')
+    elif max_tab_length == 2:
+        screen.draw('…|')
+    elif max_tab_length < 6:
+        draw_sep(left_sep)
+        screen.draw((' ' if max_tab_length == 5 else '') + '…' + (' ' if max_tab_length >= 4 else ''))
+        draw_sep(right_sep)
     else:
-        # Inactive: plain text
-        screen.cursor.fg = inactive_fg
-        screen.cursor.bg = bg
-        screen.draw(f" {inner} ")
-
-    # Gap
-    screen.cursor.fg = inactive_fg
-    screen.cursor.bg = bg
-    screen.draw(" ")
+        draw_sep(left_sep)
+        screen.draw(' ')
+        draw_title(draw_data, screen, tab, index)
+        extra = screen.cursor.x - before - max_tab_length
+        if extra >= 0:
+            screen.cursor.x -= extra + 3
+            screen.draw('…')
+        elif extra == -1:
+            screen.cursor.x -= 2
+            screen.draw('…')
+        screen.draw(' ')
+        draw_sep(right_sep)
+        draw_sep(' ')
 
     return screen.cursor.x
