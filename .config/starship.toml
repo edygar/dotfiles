@@ -1,21 +1,22 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
+[╭─](fg:245) \
 $directory\
 $fill\
 $git_branch\
 $git_status\
 $cmd_duration\
 $time\
-\n$character"""
+\n[╰─](fg:245) $character"""
 
 [fill]
 symbol = ' '
 style = 'fg:240'
 
 [directory]
-style = 'fg:#729CD5'
-format = '[$path]($style) '
+style = 'fg:39'
+format = '[ $path ]($style)'
 truncate_to_repo = false
 truncation_length = 100
 truncation_symbol = '…/'
@@ -30,12 +31,12 @@ home_symbol = '~'
 "Code" = "󰲋 "
 
 [git_branch]
-symbol = ''
-style = 'fg:#abb2bf'
+symbol = ' '
+style = 'fg:37'
 format = '[$symbol$branch]($style) '
 
 [git_status]
-style = 'fg:#db4b4b'
+style = 'fg:196'
 format = '[$all_status$ahead_behind]($style) '
 conflicted = '≠'
 ahead = '⇡${count}'
@@ -51,24 +52,24 @@ deleted = '✘'
 
 [cmd_duration]
 disabled = false
-style = 'fg:#494d64'
+style = 'fg:240'
 format = '[$duration]($style) '
 min_time = 2000
 show_milliseconds = false
 
 [time]
 disabled = false
-style = 'fg:#494d64'
+style = 'fg:37'
 format = '[$time]($style) '
 time_format = '%H:%M:%S'
 
 [character]
-success_symbol = '[❯](fg:#729CD5)'
-error_symbol = '[❯](fg:#db4b4b)'
-vimcmd_symbol = '[❮](fg:#729CD5)'
-vimcmd_replace_one_symbol = '[❮](fg:#c678dd)'
-vimcmd_replace_symbol = '[❮](fg:#c678dd)'
-vimcmd_visual_symbol = '[❮](fg:#e0af68)'
+success_symbol = '[❯](fg:39)'
+error_symbol = '[❯](fg:196)'
+vimcmd_symbol = '[❮](fg:39)'
+vimcmd_replace_one_symbol = '[❮](fg:purple)'
+vimcmd_replace_symbol = '[❮](fg:purple)'
+vimcmd_visual_symbol = '[❮](fg:yellow)'
 
 [line_break]
 disabled = false
