@@ -30,6 +30,7 @@ vim.pack.add({
 		build = ":TSUpdate",
 	},
 	"https://github.com/nvim-treesitter/nvim-treesitter-context",
+	"https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
 
 	-- Git
 	"https://github.com/lewis6991/gitsigns.nvim",
@@ -47,7 +48,6 @@ vim.pack.add({
 	-- Navigation
 	"https://github.com/Bekaboo/dropbar.nvim",
 	"https://github.com/kevinhwang91/nvim-bqf",
-	"https://github.com/ziontee113/syntax-tree-surfer",
 
 	-- Diagnostics
 	"https://github.com/folke/trouble.nvim",
@@ -241,12 +241,74 @@ map("n", "<leader>U", "<cmd>UndotreeToggle<CR>", { desc = "Undo tree" })
 -- Dropbar
 map("n", "<leader>j", "<cmd>lua require('dropbar.api').pick()<CR>", { desc = "Breadcrumbs" })
 
--- Syntax tree surfer
-map("n", "vv", "<cmd>STSSelectCurrentNode<cr>", { desc = "Select node", noremap = true, silent = true, nowait = true })
-map("x", "<C-M-Left>", "<cmd>STSSelectPrevSiblingNode<cr>", { desc = "Prev sibling", noremap = true, silent = true })
-map("x", "<C-M-Right>", "<cmd>STSSelectNextSiblingNode<cr>", { desc = "Next sibling", noremap = true, silent = true })
-map("x", "<C-M-Up>", "<cmd>STSSelectParentNode<cr>", { desc = "Parent", noremap = true, silent = true })
-map("x", "<C-M-Down>", "<cmd>STSSelectChildNode<cr>", { desc = "Child", noremap = true, silent = true })
+-- Treesitter node selection (replaces syntax-tree-surfer)
+map("n", "vv", function()
+	local ts = vim.treesitter
+	local buf = vim.api.nvim_get_current_buf()
+	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+	local node = ts.get_node({ bufnr = buf, pos = { row - 1, col } })
+	if not node then return end
+	local sr, sc, er, ec = node:range()
+	vim.api.nvim_buf_set_mark(buf, "<", sr + 1, sc, {})
+	vim.api.nvim_buf_set_mark(buf, ">", er + 1, ec - 1, {})
+	vim.cmd("normal! gv")
+end, { desc = "Select treesitter node", silent = true })
+
+map("x", "<C-M-Left>", function()
+	local ts = vim.treesitter
+	local node = ts.get_node()
+	if node and node:parent() then
+		node = node:prev_sibling() or node
+	end
+	if node then
+		local sr, sc, er, ec = node:range()
+		vim.api.nvim_win_set_cursor(0, { sr + 1, sc })
+		vim.cmd("normal! v")
+		vim.api.nvim_win_set_cursor(0, { er + 1, math.max(0, ec - 1) })
+	end
+end, { desc = "Prev sibling node", silent = true })
+
+map("x", "<C-M-Right>", function()
+	local ts = vim.treesitter
+	local node = ts.get_node()
+	if node and node:parent() then
+		node = node:next_sibling() or node
+	end
+	if node then
+		local sr, sc, er, ec = node:range()
+		vim.api.nvim_win_set_cursor(0, { sr + 1, sc })
+		vim.cmd("normal! v")
+		vim.api.nvim_win_set_cursor(0, { er + 1, math.max(0, ec - 1) })
+	end
+end, { desc = "Next sibling node", silent = true })
+
+map("x", "<C-M-Up>", function()
+	local ts = vim.treesitter
+	local node = ts.get_node()
+	if node and node:parent() then
+		node = node:parent()
+		local sr, sc, er, ec = node:range()
+		vim.api.nvim_win_set_cursor(0, { sr + 1, sc })
+		vim.cmd("normal! v")
+		vim.api.nvim_win_set_cursor(0, { er + 1, math.max(0, ec - 1) })
+	end
+end, { desc = "Parent node", silent = true })
+
+map("x", "<C-M-Down>", function()
+	local ts = vim.treesitter
+	local node = ts.get_node()
+	if node then
+		for child in node:iter_children() do
+			if child then
+				local sr, sc, er, ec = child:range()
+				vim.api.nvim_win_set_cursor(0, { sr + 1, sc })
+				vim.cmd("normal! v")
+				vim.api.nvim_win_set_cursor(0, { er + 1, math.max(0, ec - 1) })
+				return
+			end
+		end
+	end
+end, { desc = "Child node", silent = true })
 
 -- Resize
 map("n", "<C-S-l>", "<cmd>vertical resize +5<CR>", { desc = "Wider" })
@@ -574,9 +636,6 @@ require("lualine").setup({
 -- undotree
 vim.g.undotree_WindowLayout = 4
 vim.g.undotree_SetFocusWhenToggle = 1
-
--- Syntax tree surfer
-require("syntax-tree-surfer").setup({})
 
 -- Float terminal
 vim.api.nvim_create_autocmd("TermClose", {
