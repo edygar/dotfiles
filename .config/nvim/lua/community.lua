@@ -6,4 +6,5 @@ return {
   { import = "astrocommunity.utility.noice-nvim" },
   { import = "astrocommunity.test.neotest" },
   { import = "astrocommunity.pack.typescript" },
+  { import = "astrocommunity.pack.eslint" },
 }
