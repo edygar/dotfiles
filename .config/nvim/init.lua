@@ -231,6 +231,7 @@ end, { desc = "Yank branch" })
 
 -- Picker extras
 map("n", "<leader>fe", function() Snacks.picker.explorer() end, { desc = "Explorer" })
+map("n", "<leader>fo", function() Snacks.picker.recent({ filter = { cwd = true } }) end, { desc = "Recent (cwd)" })
 map("n", "<leader>fO", function() Snacks.picker.recent() end, { desc = "Recent files" })
 map("n", "<leader>fP", function() Snacks.picker() end, { desc = "Pickers" })
 map("n", "<leader>fH", function() Snacks.picker.highlights() end, { desc = "Highlights" })
@@ -272,10 +273,29 @@ end, { silent = true, desc = "Search clipboard file" })
 
 -- LSP
 map("n", "<leader>ln", function() vim.lsp.buf.rename() end, { desc = "Rename symbol" })
+map("n", "gD", function() vim.lsp.buf.declaration() end, { desc = "Declaration" })
+map("n", "<leader>uY", function()
+	if vim.lsp.semantic_tokens then
+		local buf = vim.api.nvim_get_current_buf()
+		vim.lsp.semantic_tokens[vim.b.semantic_tokens_enabled and "stop" or "start"](buf, 0)
+		vim.b.semantic_tokens_enabled = not vim.b.semantic_tokens_enabled
+	end
+end, { desc = "Toggle semantic tokens" })
+map("n", "gra", function() require("tiny-code-action").code_action() end, { desc = "Code action" })
+map("n", "<leader>la", function() require("tiny-code-action").code_action() end, { desc = "Code action" })
+map("x", "gra", function() require("tiny-code-action").code_action() end, { desc = "Code action" })
+map("x", "<leader>la", function() require("tiny-code-action").code_action() end, { desc = "Code action" })
+map("n", "<leader>uts", "<cmd>ASToggle<CR>", { desc = "Toggle auto save" })
 
 -- Git
 map("n", "<leader>gb", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Blame" })
 map("x", "<leader>gh", "<cmd>'<,'>DiffviewFileHistory<cr>", { desc = "File history" })
+
+-- Treesitter context
+map("n", "<leader>utc", "<cmd>TSContext toggle<cr>", { desc = "Toggle TS context" })
+
+-- TSC
+map("n", "<leader>X", "<cmd>TSC<cr>", { desc = "TSC" })
 
 -- Misc
 map("n", "<leader>h", "<cmd>noh<CR>", { desc = "No highlight" })
@@ -306,7 +326,16 @@ map("n", "<leader>fg", function() Snacks.picker.grep() end, { desc = "Live Grep"
 map("n", "<leader>fb", function() Snacks.picker.buffers() end, { desc = "Buffers" })
 map("n", "<leader>fh", function() Snacks.picker.help() end, { desc = "Help" })
 map("n", "<leader>fo", function() Snacks.picker.recent() end, { desc = "Recent files" })
-map("n", "<leader>e", function() Snacks.picker.explorer() end, { desc = "Explorer" })
+map("n", "<leader>e", function()
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local buf = vim.api.nvim_win_get_buf(win)
+		if vim.api.nvim_get_option_value("filetype", { buf = buf }) == "snacks_picker_list" then
+			vim.api.nvim_set_current_win(win)
+			return
+		end
+	end
+	Snacks.picker.explorer()
+end, { desc = "Explorer" })
 map("n", "<leader>fw", function() Snacks.picker.worktrees() end, { desc = "Worktrees" })
 
 -- Git
