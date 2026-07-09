@@ -665,6 +665,18 @@ return {
     opts = {},
   },
   {
+    "ziontee113/syntax-tree-surfer",
+    lazy = false,
+    keys = {
+      { "vv", "<Cmd>STSSelectCurrentNode<cr>", desc = "Select current node", mode = "n", noremap = true, silent = true, nowait = true },
+      { "<C-M-Left>", "<Cmd>STSSelectPrevSiblingNode<cr>", desc = "Previous sibling node", mode = "x", noremap = true, silent = true },
+      { "<C-M-Right>", "<Cmd>STSSelectNextSiblingNode<cr>", desc = "Next sibling node", mode = "x", noremap = true, silent = true },
+      { "<C-M-Up>", "<Cmd>STSSelectParentNode<cr>", desc = "Parent node", mode = "x", noremap = true, silent = true },
+      { "<C-M-Down>", "<Cmd>STSSelectChildNode<cr>", desc = "Child node", mode = "x", noremap = true, silent = true },
+    },
+    config = true,
+  },
+  {
     "AstroNvim/astrocore",
     opts = function(_, opts)
       opts.diagnostics = opts.diagnostics or {}
