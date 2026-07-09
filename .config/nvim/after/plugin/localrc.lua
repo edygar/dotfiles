@@ -39,11 +39,6 @@ vim.api.nvim_create_autocmd({
 
     vim.cmd('silent !kitty @ set-window-title "' .. title .. '"')
 
-    if vim.fn.filereadable(file) == 1 then
-      local ok, err = pcall(dofile, file)
-      if not ok then
-        vim.notify("Error loading .localrc.lua: " .. tostring(err), vim.log.levels.WARN)
-      end
-    end
+    if vim.fn.filereadable(file) == 1 then dofile(file) end
   end,
 })
