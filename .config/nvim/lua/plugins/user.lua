@@ -229,7 +229,7 @@ return {
       },
     },
   },
-  {
+  ksb_disable {
     "kevinhwang91/nvim-bqf",
     ft = "qf",
     dependencies = { "junegunn/fzf.vim" },
@@ -237,7 +237,7 @@ return {
       return { preview = { winblend = 30 } }
     end,
   },
-  {
+  ksb_disable {
     "Juksuu/worktrees.nvim",
     lazy = false,
     keys = {
@@ -263,7 +263,7 @@ return {
     },
     opts = { switch_file_command = "Oil" },
   },
-  {
+  ksb_disable {
     "rebelot/heirline.nvim",
     opts = function(_, opts)
       local status = require "astroui.status"
@@ -318,11 +318,11 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     enabled = false,
   },
-  {
+  ksb_disable {
     "olrtg/nvim-emmet",
     config = function() vim.keymap.set({ "n", "v" }, "<leader>xe", require("nvim-emmet").wrap_with_abbreviation) end,
   },
-  {
+  ksb_disable {
     "kylechui/nvim-surround",
     version = "*",
     event = "VeryLazy",
@@ -376,7 +376,7 @@ return {
       })
     end,
   },
-  { "arthurxavierx/vim-caser" },
+  ksb_disable { "arthurxavierx/vim-caser" },
   ksb_disable {
     "Bekaboo/dropbar.nvim",
     keys = {
@@ -539,7 +539,7 @@ return {
       },
     },
   },
-  {
+  ksb_disable {
     "ruifm/gitlinker.nvim",
     keys = {
       { "<leader>gy", nil, mode = "n", desc = "Get repository link to current line" },
@@ -547,7 +547,7 @@ return {
     },
     opts = {},
   },
-  {
+  ksb_disable {
     "rachartier/tiny-code-action.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "folke/snacks.nvim" },
     event = "LspAttach",
@@ -649,7 +649,7 @@ return {
       { "<Leader>sc", function() require("grug-far").open { prefills = { paths = vim.fn.expand "%" } } end, mode = "n" },
     },
   },
-  { "knubie/vim-kitty-navigator" },
+  ksb_disable { "knubie/vim-kitty-navigator" },
   {
     "mikesmithgh/kitty-scrollback.nvim",
     lazy = true,
@@ -688,7 +688,7 @@ return {
       },
     },
   },
-  {
+  ksb_disable {
     "stevearc/oil.nvim",
     cmd = "Oil",
     keys = {
