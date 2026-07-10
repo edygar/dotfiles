@@ -663,7 +663,7 @@ return {
         callbacks = {
           after_setup = function()
             vim.g.ksb_nvim_start = vim.loop.hrtime()
-            os.execute("kitty @ set-option cursor_trail 0 2>/dev/null")
+            os.execute("kitty @ load-config --override cursor_trail=0 --no-response 2>/dev/null")
           end,
           after_launch = function()
             local elapsed = (vim.loop.hrtime() - (vim.g.ksb_start_time or 0)) / 1e9
@@ -673,7 +673,7 @@ return {
             IS_KITTY_SCROLLBACK = true
           end,
           after_ready = function()
-            os.execute("kitty @ set-option cursor_trail 1 2>/dev/null")
+            os.execute("kitty @ load-config --override cursor_trail=1 --no-response 2>/dev/null")
             local elapsed = (vim.loop.hrtime() - (vim.g.ksb_nvim_start or vim.g.ksb_start_time or 0)) / 1e9
             local msg = string.format("kitty-scrollback total: %.2fs", elapsed)
             vim.defer_fn(function()
