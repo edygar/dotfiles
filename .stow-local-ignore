@@ -7,3 +7,6 @@ README\.md
 
 # Raycast extensions directory is managed by Raycast
 \.config/raycast-x/extensions
+
+# macOS junk
+\.DS_Store
