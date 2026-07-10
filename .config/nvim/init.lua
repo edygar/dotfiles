@@ -28,5 +28,9 @@ if not pcall(require, "lazy") then
   vim.cmd.quit()
 end
 
-require "lazy_setup"
-require "polish"
+if vim.env.KITTY_SCROLLBACK_NVIM == "true" then
+  os.execute("kitty @ load-config --override cursor_trail=0 --no-response 2>/dev/null")
+else
+  require "lazy_setup"
+  require "polish"
+end
