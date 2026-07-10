@@ -663,6 +663,10 @@ return {
           yank_register_enabled = true,
         },
         scrollback_columns = 1000,
+        status_window = {
+          enabled = false,
+        },
+        restore_options = false,
       },
     },
   },
