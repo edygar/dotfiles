@@ -1,0 +1,19 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "kitty-move-tab",
+  "title": "Move Kitty Tab to Window",
+  "description": "List all kitty OS windows and move the current tab to the selected one",
+  "icon": "icon.png",
+  "author": "edygar",
+  "platforms": ["macOS"],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "Move Tab to Kitty Window",
+      "description": "Move the current kitty tab to another OS window",
+      "mode": "view"
+    }
+  ],
+  "dependencies": []
+}
