@@ -30,6 +30,11 @@ end
 
 if vim.env.KITTY_SCROLLBACK_NVIM == "true" then
   os.execute("kitty @ load-config --override cursor_trail=0 --no-response 2>/dev/null")
+  vim.api.nvim_create_autocmd("VimLeave", {
+    callback = function()
+      os.execute("kitty @ load-config --override cursor_trail=1 --no-response 2>/dev/null")
+    end,
+  })
 else
   require "lazy_setup"
   require "polish"
