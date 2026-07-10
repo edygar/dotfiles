@@ -39,6 +39,8 @@ vim.api.nvim_create_autocmd({
 
     vim.cmd('silent !kitty @ set-window-title "' .. title .. '"')
 
+    if vim.env.KITTY_SCROLLBACK_NVIM == "true" then return end
+
     if vim.fn.filereadable(file) == 1 then dofile(file) end
   end,
 })
