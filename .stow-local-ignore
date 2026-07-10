@@ -1,0 +1,5 @@
+# Stow should ignore these
+\.git
+\.gitignore
+README\.md
+\.stow-local-ignore

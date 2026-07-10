@@ -75,5 +75,5 @@ fi
 [[ -f "$ZDOTDIR/aliases.zsh" ]] && source "$ZDOTDIR/aliases.zsh"
 [[ -f "$ZDOTDIR/key-bindings.zsh" ]] && source "$ZDOTDIR/key-bindings.zsh"
 
-# dotfiles bare repo
-alias dotfiles="git --git-dir=$HOME/Code/personal/dotfiles --work-tree=$HOME"
+# dotfiles repo (managed with GNU Stow)
+alias dotfiles="git -C $HOME/Code/personal/dotfiles"
