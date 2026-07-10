@@ -34,6 +34,12 @@ if vim.env.KITTY_SCROLLBACK_NVIM == "true" then
       vim.fn.setreg("+", vim.fn.getreg('"'))
     end,
   })
+  local hoppath = vim.fn.stdpath "data" .. "/lazy/hop.nvim"
+  if (vim.uv or vim.loop).fs_stat(hoppath) then
+    vim.opt.runtimepath:prepend(hoppath)
+    require("hop").setup()
+    vim.keymap.set("n", "<leader><leader>", function() require("hop").hint_words() end, { desc = "Hop" })
+  end
 else
   require "lazy_setup"
   require "polish"
