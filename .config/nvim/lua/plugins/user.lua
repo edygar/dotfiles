@@ -1,4 +1,7 @@
 local IS_KITTY_SCROLLBACK = vim.env.KITTY_SCROLLBACK_NVIM == "true"
+if IS_KITTY_SCROLLBACK then
+  vim.g.ksb_nvim_start = vim.loop.hrtime()
+end
 
 local function ksb_disable(spec)
   spec.enabled = not IS_KITTY_SCROLLBACK
@@ -673,8 +676,8 @@ return {
             IS_KITTY_SCROLLBACK = true
           end,
           after_ready = function()
-            local elapsed = (vim.loop.hrtime() - (vim.g.ksb_start_time or 0)) / 1e9
-            local msg = string.format("kitty-scrollback loaded in %.2fs", elapsed)
+            local elapsed = (vim.loop.hrtime() - (vim.g.ksb_nvim_start or vim.g.ksb_start_time or 0)) / 1e9
+            local msg = string.format("kitty-scrollback total: %.2fs", elapsed)
             vim.defer_fn(function()
               vim.cmd('echom "' .. msg .. '"')
             end, 100)
