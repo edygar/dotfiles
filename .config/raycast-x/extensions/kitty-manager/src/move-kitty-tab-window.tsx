@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
+import React from "react";
 import { List, Action, ActionPanel, Icon, showToast, Toast } from "@raycast/api";
-import { useState, useEffect } from "react";
 
 interface KittyWindow {
   id: number;
@@ -68,10 +68,10 @@ function moveCurrentTabToWindow(targetWindowId: number) {
 }
 
 export default function Command() {
-  const [windows, setWindows] = useState<KittyWindow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [windows, setWindows] = React.useState<KittyWindow[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
-  useEffect(() => {
+  React.useEffect(() => {
     try {
       const wins = getOsWindows();
       const current = getCurrentTab();
