@@ -1,1 +1,1 @@
- -o allow_remote_control=yes -1 --listen-on unix:/tmp/mykitty
+ -o allow_remote_control=socket-only --listen-on unix:/tmp/kitty-socket-{kitty_pid}
