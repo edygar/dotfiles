@@ -666,7 +666,7 @@ return {
         paste_window = {
           yank_register_enabled = true,
         },
-        scrollback_columns = 1000,
+        scrollback_columns = 500,
         status_window = {
           enabled = false,
         },
