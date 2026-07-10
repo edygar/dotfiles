@@ -666,7 +666,10 @@ return {
           end,
           after_ready = function()
             local elapsed = (vim.loop.hrtime() - (vim.g.ksb_start_time or 0)) / 1e9
-            vim.api.nvim_echo({ { string.format("kitty-scrollback loaded in %.2fs", elapsed), "MoreMsg" } }, true, {})
+            local msg = string.format("kitty-scrollback loaded in %.2fs", elapsed)
+            vim.defer_fn(function()
+              vim.cmd('echom "' .. msg .. '"')
+            end, 100)
           end,
         },
         keymaps_enabled = true,
