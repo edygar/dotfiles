@@ -1,6 +1,7 @@
 local IS_KITTY_SCROLLBACK = vim.env.KITTY_SCROLLBACK_NVIM == "true"
 if IS_KITTY_SCROLLBACK then
   vim.g.ksb_nvim_start = vim.loop.hrtime()
+  os.execute("kitty @ load-config --override cursor_trail=0 --no-response 2>/dev/null")
 end
 
 local function ksb_disable(spec)
@@ -662,8 +663,6 @@ return {
       {
         callbacks = {
           after_setup = function()
-            vim.g.ksb_nvim_start = vim.loop.hrtime()
-            os.execute("kitty @ load-config --override cursor_trail=0 --no-response 2>/dev/null")
           end,
           after_launch = function()
             local elapsed = (vim.loop.hrtime() - (vim.g.ksb_start_time or 0)) / 1e9
