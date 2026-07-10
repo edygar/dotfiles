@@ -658,8 +658,15 @@ return {
     opts = {
       {
         callbacks = {
+          after_setup = function()
+            vim.g.ksb_start_time = vim.loop.hrtime()
+          end,
           after_launch = function()
             IS_KITTY_SCROLLBACK = true
+          end,
+          after_ready = function()
+            local elapsed = (vim.loop.hrtime() - (vim.g.ksb_start_time or 0)) / 1e9
+            print(string.format("kitty-scrollback loaded in %.2fs", elapsed))
           end,
         },
         keymaps_enabled = true,
