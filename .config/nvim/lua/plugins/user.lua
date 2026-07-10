@@ -696,7 +696,7 @@ return {
     },
     opts = {},
   },
-  {
+  ksb_disable {
     "ziontee113/syntax-tree-surfer",
     lazy = false,
     keys = {
