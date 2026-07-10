@@ -660,6 +660,10 @@ return {
         callbacks = {
           after_setup = function()
             vim.g.ksb_start_time = vim.loop.hrtime()
+            vim.defer_fn(function()
+              local elapsed = (vim.loop.hrtime() - (vim.g.ksb_start_time or 0)) / 1e9
+              vim.cmd('echom "kitty-scrollback setup in ' .. string.format("%.2fs", elapsed) .. '"')
+            end, 100)
           end,
           after_launch = function()
             local elapsed = (vim.loop.hrtime() - (vim.g.ksb_start_time or 0)) / 1e9
