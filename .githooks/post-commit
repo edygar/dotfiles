@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+# Auto-stow after commit so new files get symlinked to $HOME
+exec stow --restow . --target="$HOME"

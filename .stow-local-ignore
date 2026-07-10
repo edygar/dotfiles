@@ -1,5 +1,9 @@
 # Stow should ignore these
 \.git
 \.gitignore
+\.githooks
 README\.md
 \.stow-local-ignore
+
+# Raycast extensions directory is managed by Raycast
+\.config/raycast-x/extensions

@@ -23,7 +23,7 @@ echo ""
 # ─── 1. Clone (fresh machine) or verify (existing) ───────────────────────────
 
 if [[ ! -d "$REPO_DIR" ]]; then
-  echo "[1/10] Cloning bare repo..."
+  echo "[1/12] Cloning bare repo..."
   mkdir -p "$(dirname "$REPO_DIR")"
   git clone --bare "$REPO_URL" "$REPO_DIR"
 
@@ -47,32 +47,32 @@ if [[ ! -d "$REPO_DIR" ]]; then
     echo "  Conflicting files backed up to $BACKUP_DIR"
   fi
 else
-  echo "[1/10] Repository already exists, pulling latest..."
+  echo "[1/12] Repository already exists, pulling latest..."
   git --git-dir="$REPO_DIR" --work-tree="$HOME" pull --rebase 2>/dev/null || true
 fi
 
 # ─── 2. Homebrew ──────────────────────────────────────────────────────────────
 
 if ! command -v brew >/dev/null 2>&1; then
-  echo "[2/10] Installing Homebrew..."
+  echo "[2/12] Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
-  echo "[2/10] Homebrew already installed."
+  echo "[2/12] Homebrew already installed."
 fi
 
 # ─── 3. Brewfile ──────────────────────────────────────────────────────────────
 
-echo "[3/10] Installing packages from Brewfile..."
+echo "[3/12] Installing packages from Brewfile..."
 brew bundle --file="$HOME/.config/homebrew/Brewfile" 2>&1 | tail -5
 
 # ─── 4. macOS defaults ────────────────────────────────────────────────────────
 
-echo "[4/10] Setting macOS defaults..."
+echo "[4/12] Setting macOS defaults..."
 "$HOME/.local/bin/macos-defaults.zsh" 2>&1
 
 # ─── 5. Unsplash API key ─────────────────────────────────────────────────────
 
-echo "[5/10] Unsplash API key..."
+echo "[5/12] Unsplash API key..."
 mkdir -p "$HOME/.config/wallpapers"
 KEY_FILE="$HOME/.config/wallpapers/.unsplash-key"
 if [[ -f "$KEY_FILE" ]] && [[ -s "$KEY_FILE" ]]; then
@@ -91,7 +91,7 @@ fi
 
 # ─── 6. Git work identity ────────────────────────────────────────────────────
 
-echo "[6/10] Git work identity..."
+echo "[6/12] Git work identity..."
 WORK_GITCONFIG="$HOME/.gitconfig.work"
 if [[ -f "$WORK_GITCONFIG" ]]; then
   echo "  Work identity already exists."
@@ -113,7 +113,7 @@ fi
 
 # ─── 7. Leader Key config symlink ────────────────────────────────────────────
 
-echo "[7/10] Leader Key config symlink..."
+echo "[7/12] Leader Key config symlink..."
 LEADER_KEY_DIR="$HOME/Library/Application Support/Leader Key"
 mkdir -p "$LEADER_KEY_DIR"
 if [[ -L "$LEADER_KEY_DIR/config.json" ]]; then
@@ -123,9 +123,36 @@ else
   echo "  Created symlink."
 fi
 
-# ─── 8. Homerow config import ────────────────────────────────────────────────
+# ─── 8. Raycast extension symlink ─────────────────────────────────────────────
 
-echo "[8/10] Homerow config..."
+echo "[8/12] Raycast extension symlink..."
+RAYCAST_EXT_DIR="$HOME/.config/raycast-x/extensions"
+RAYCAST_EXT_SRC="$HOME/.config/raycast-x/kitty-manager"
+if [[ -d "$RAYCAST_EXT_SRC" ]]; then
+  mkdir -p "$RAYCAST_EXT_DIR"
+  if [[ -L "$RAYCAST_EXT_DIR/kitty-manager" ]]; then
+    echo "  Symlink already exists."
+  else
+    ln -sf ../kitty-manager "$RAYCAST_EXT_DIR/kitty-manager"
+    echo "  Created symlink."
+  fi
+else
+  echo "  Skipped (kitty-manager extension not found)."
+fi
+
+# ─── 8b. Build Kitty Raycast extension ───────────────────────────────────────
+
+echo "[8b/12] Building Kitty Raycast extension..."
+KITTY_EXT_DIR="$HOME/.config/raycast-x/extensions/kitty"
+if [[ -f "$KITTY_EXT_DIR/install.sh" ]]; then
+  "$KITTY_EXT_DIR/install.sh"
+else
+  echo "  Skipped (kitty extension not found)."
+fi
+
+# ─── 9. Homerow config import ────────────────────────────────────────────────
+
+echo "[9/12] Homerow config..."
 if defaults read com.superultra.Homerow 2>/dev/null | grep -q "search-shortcut"; then
   echo "  Config already imported."
 else
@@ -134,7 +161,7 @@ fi
 
 # ─── 9. Default app for code files ───────────────────────────────────────────
 
-echo "[9/10] Setting Neovim as default for code files..."
+echo "[10/12] Setting Neovim as default for code files..."
 APP_ID="com.edygar.neovim"
 EXTENSIONS="js jsx ts tsx json yaml yml toml md markdown lua py rs go c h cpp hpp java kt swift sh zsh bash sql html css scss sass less xml svg vue svelte graphql gql dockerfile makefile cmake gradle gitconfig gitignore env vim diff patch txt log conf cfg ini properties tf hcl nix"
 if command -v duti >/dev/null 2>&1; then
@@ -148,7 +175,7 @@ fi
 
 # ─── 10. Cron jobs + initial wallpaper ───────────────────────────────────────
 
-echo "[10/10] Cron jobs and wallpaper..."
+echo "[11/12] Cron jobs and wallpaper..."
 CRON=""
 if ! crontab -l 2>/dev/null | grep -q "wallpaper.zsh"; then
   CRON="${CRON}0 * * * * $HOME/.local/bin/wallpaper.zsh\n"
