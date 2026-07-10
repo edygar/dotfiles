@@ -2,6 +2,7 @@ local ns = vim.api.nvim_create_namespace "right_line_numbers"
 
 local function update(buf)
   if not vim.api.nvim_buf_is_loaded(buf) then return end
+  if vim.env.KITTY_SCROLLBACK_NVIM == "true" then return end
   if vim.bo[buf].buftype ~= "" then
     vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
     return

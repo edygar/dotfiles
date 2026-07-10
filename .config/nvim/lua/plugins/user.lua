@@ -323,6 +323,9 @@ return {
     version = "*",
     event = "VeryLazy",
     opts = {},
+    keys = {
+      { "s", "<Plug>(nvim-surround-visual)", mode = "x", desc = "Surround visual selection" },
+    },
   },
   {
     "folke/which-key.nvim",
