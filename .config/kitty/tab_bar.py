@@ -22,9 +22,12 @@ def draw_tab(
     left_sep, right_sep = ('\ue0b6', '\ue0b4')
 
     def draw_sep(which: str) -> None:
-        screen.cursor.bg = as_rgb(color_as_int(draw_data.default_bg))
-        screen.cursor.fg = orig_bg
-        screen.draw(which)
+        if tab.is_active:
+            screen.cursor.bg = as_rgb(color_as_int(draw_data.default_bg))
+            screen.cursor.fg = orig_bg
+            screen.draw(which)
+        else:
+            screen.draw(' ')
         screen.cursor.bg = orig_bg
         screen.cursor.fg = orig_fg
 

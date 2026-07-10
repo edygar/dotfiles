@@ -1,4 +1,4 @@
-local IS_KITTY_SCROLLBACK = false
+local IS_KITTY_SCROLLBACK = vim.env.KITTY_SCROLLBACK_NVIM == "true"
 
 local function chars_to_right_of_word()
   local cursor = vim.api.nvim_win_get_cursor(0)
@@ -643,6 +643,25 @@ return {
     },
   },
   { "knubie/vim-kitty-navigator" },
+  {
+    "mikesmithgh/kitty-scrollback.nvim",
+    lazy = true,
+    cmd = { "KittyScrollbackGenerateKittens", "KittyScrollbackCheckHealth" },
+    event = { "User KittyScrollbackLaunch" },
+    opts = {
+      {
+        callbacks = {
+          after_launch = function()
+            IS_KITTY_SCROLLBACK = true
+          end,
+        },
+        keymaps_enabled = true,
+        paste_window = {
+          yank_register_enabled = true,
+        },
+      },
+    },
+  },
   {
     "okuuva/auto-save.nvim",
     keys = { { "<leader>uts", "<cmd>ASToggle<CR>", mode = "n", desc = "Toggle auto save" } },
