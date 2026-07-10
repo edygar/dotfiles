@@ -662,7 +662,7 @@ return {
         paste_window = {
           yank_register_enabled = true,
         },
-        scrollback_columns = 10000,
+        scrollback_columns = 2000,
       },
     },
   },
