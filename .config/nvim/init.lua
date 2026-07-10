@@ -29,7 +29,11 @@ if not pcall(require, "lazy") then
 end
 
 if vim.env.KITTY_SCROLLBACK_NVIM == "true" then
-  -- skip plugin loading for faster kitty-scrollback startup
+  vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function()
+      vim.fn.setreg("+", vim.fn.getreg('"'))
+    end,
+  })
 else
   require "lazy_setup"
   require "polish"
