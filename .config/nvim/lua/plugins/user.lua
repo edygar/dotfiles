@@ -1,5 +1,10 @@
 local IS_KITTY_SCROLLBACK = vim.env.KITTY_SCROLLBACK_NVIM == "true"
 
+local function ksb_disable(spec)
+  spec.enabled = not IS_KITTY_SCROLLBACK
+  return spec
+end
+
 local function chars_to_right_of_word()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local row, col = cursor[1], cursor[2]
@@ -18,7 +23,7 @@ end
 
 ---@type LazySpec
 return {
-  {
+  ksb_disable {
     "folke/snacks.nvim",
     opts = function(_, opts)
       return vim.tbl_extend("force", opts, {
@@ -204,8 +209,7 @@ return {
       })
     end,
   },
-  {
-    "mbbill/undotree",
+  ksb_disable { "mbbill/undotree",
     keys = { { "<leader>U", "<Cmd>UndotreeToggle<CR>", mode = "n", desc = "Toggles Undo Tree" } },
     config = function()
       vim.g.undotree_WindowLayout = 4
@@ -293,18 +297,18 @@ return {
       }
     end,
   },
-  {
+  ksb_disable {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
     opts = { indent = { enable = true } },
   },
-  {
+  ksb_disable {
     "nvim-treesitter/nvim-treesitter-context",
     event = "VeryLazy",
     config = true,
     keys = { { "<leader>utc", "<Cmd>TSContext toggle<cr>", mode = "n", desc = "Toggle Treesitter Context" } },
   },
-  {
+  ksb_disable {
     "yioneko/nvim-vtsls",
     init = function()
       require("lspconfig.configs").vtsls = require("vtsls").lspconfig
@@ -327,7 +331,7 @@ return {
       { "s", "<Plug>(nvim-surround-visual)", mode = "x", desc = "Surround visual selection" },
     },
   },
-  {
+  ksb_disable {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts_extend = { "spec", "disable.ft", "disable.bt" },
@@ -351,7 +355,7 @@ return {
       opts.icons.separator = "-"
     end,
   },
-  {
+  ksb_disable {
     "echasnovski/mini.indentscope",
     main = "mini.indentscope",
     opts = function()
@@ -373,7 +377,7 @@ return {
     end,
   },
   { "arthurxavierx/vim-caser" },
-  {
+  ksb_disable {
     "Bekaboo/dropbar.nvim",
     keys = {
       { "<leader>j", "<Cmd>lua require('dropbar.api').pick()<CR>" },
@@ -517,12 +521,12 @@ return {
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
   },
-  {
+  ksb_disable {
     "dmmulroy/tsc.nvim",
     keys = { { "<leader>X", "<cmd>TSC<cr>", desc = "TSC" } },
     opts = { use_trouble_qflist = true, use_diagnostics = true, auto_start_watch_mode = true },
   },
-  {
+  ksb_disable {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
@@ -583,7 +587,7 @@ return {
       },
     },
   },
-  {
+  ksb_disable {
     "rachartier/tiny-inline-diagnostic.nvim",
     event = "VeryLazy",
     priority = 1000,
@@ -601,7 +605,7 @@ return {
       vim.diagnostic.config { virtual_text = false }
     end,
   },
-  {
+  ksb_disable {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     keys = {
@@ -637,7 +641,7 @@ return {
       }
     end,
   },
-  {
+  ksb_disable {
     "MagicDuck/grug-far.nvim",
     keys = {
       { "<Leader>ss", function() require("grug-far").open() end, mode = "n" },
@@ -670,7 +674,7 @@ return {
       },
     },
   },
-  {
+  ksb_disable {
     "okuuva/auto-save.nvim",
     keys = { { "<leader>uts", "<cmd>ASToggle<CR>", mode = "n", desc = "Toggle auto save" } },
     lazy = false,
