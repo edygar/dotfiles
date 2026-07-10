@@ -1,5 +1,10 @@
 -- This file simply bootstraps the installation of Lazy.nvim and then calls other files for execution
--- This file doesn't necessarily need to be touched, BE CAUTIOUS editing this file and proceed at your own risk.
+-- This file doesn't necessarily need to be touched, BE CAUTIOUS editing this file and proceed at your own risk
+
+if vim.env.KITTY_SCROLLBACK_NVIM == "true" then
+  os.execute("kitty @ load-config --override cursor_trail=0 --no-response 2>/dev/null")
+end
+
 local lazypath = vim.env.LAZY or vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
 if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then
