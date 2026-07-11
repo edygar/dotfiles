@@ -29,6 +29,7 @@ if not pcall(require, "lazy") then
 end
 
 if vim.env.KITTY_SCROLLBACK_NVIM == "true" then
+  vim.g.mapleader = " "
   vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
       vim.fn.setreg("+", vim.fn.getreg('"'))

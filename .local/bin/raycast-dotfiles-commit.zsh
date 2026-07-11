@@ -7,7 +7,11 @@
 # @raycast.icon 
 # @raycast.mode silent
 
-export KITTY_LISTEN_ON="unix:/tmp/mykitty"
+KITTY_SOCKETS=( /tmp/kitty-socket-*(N) )
+for SOCKET in "${KITTY_SOCKETS[@]}"; do
+  export KITTY_LISTEN_ON="unix:$SOCKET"
+  kitty @ ls &>/dev/null && break
+done
 
 DOTFILES_DIR="$HOME"
 GIT_DIR="$HOME/Code/personal/dotfiles"

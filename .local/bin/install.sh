@@ -163,10 +163,21 @@ fi
 
 echo "[10/12] Setting Neovim as default for code files..."
 APP_ID="com.edygar.neovim"
-EXTENSIONS="js jsx ts tsx json yaml yml toml md markdown lua py rs go c h cpp hpp java kt swift sh zsh bash sql html css scss sass less xml svg vue svelte graphql gql dockerfile makefile cmake gradle gitconfig gitignore env vim diff patch txt log conf cfg ini properties tf hcl nix"
+EXTENSIONS="js jsx ts tsx mjs cjs json json5 yaml yml toml md markdown lua py rs go c h cpp hpp cc cxx java kt kts swift sh zsh bash fish sql html htm css scss sass less xml svg vue svelte astro graphql gql proto dockerfile makefile cmake gradle gitconfig gitignore env vim viml diff patch txt log conf cfg ini properties tf hcl nix dockerignore npmrc eslintrc prettierrc babelrc editorconfig"
+# System UTIs that need to be set by UTI (not extension)
+SYSTEM_UTIS="public.typescript public.javascript public.shell-script public.zsh-script public.bash-script public.html public.css public.xml public.svg-image public.patch-file public.plain-text com.apple.log net.daringfireball.markdown"
+# Custom UTIs for extensions with dynamic UTIs
+CUSTOM_UTIS="com.edygar.neovim.toml com.edygar.neovim.rust com.edygar.neovim.go com.edygar.neovim.fish com.edygar.neovim.sql com.edygar.neovim.viml com.edygar.neovim.dockerignore com.edygar.neovim.npmrc com.edygar.neovim.eslintrc com.edygar.neovim.prettierrc com.edygar.neovim.babelrc com.edygar.neovim.lua com.edygar.neovim.jsx com.edygar.neovim.tsx com.edygar.neovim.mjs com.edygar.neovim.cjs com.edygar.neovim.json5 com.edygar.neovim.kotlin com.edygar.neovim.kotlin-script com.edygar.neovim.scss com.edygar.neovim.sass com.edygar.neovim.less com.edygar.neovim.vue com.edygar.neovim.svelte com.edygar.neovim.astro com.edygar.neovim.graphql com.edygar.neovim.gql com.edygar.neovim.proto com.edygar.neovim.dockerfile com.edygar.neovim.makefile com.edygar.neovim.cmake com.edygar.neovim.gradle com.edygar.neovim.gitconfig com.edygar.neovim.gitignore com.edygar.neovim.env com.edygar.neovim.vim com.edygar.neovim.diff com.edygar.neovim.patch com.edygar.neovim.conf com.edygar.neovim.cfg com.edygar.neovim.ini com.edygar.neovim.properties com.edygar.neovim.terraform com.edygar.neovim.hcl com.edygar.neovim.nix com.edygar.neovim.log com.edygar.neovim.editorconfig"
 if command -v duti >/dev/null 2>&1; then
   for ext in $EXTENSIONS; do
-    duti -s $APP_ID .$ext all 2>/dev/null
+    duti -s $APP_ID .$ext editor 2>/dev/null
+    duti -s $APP_ID .$ext viewer 2>/dev/null
+    duti -s $APP_ID .$ext shell 2>/dev/null
+  done
+  for uti in $SYSTEM_UTIS $CUSTOM_UTIS; do
+    duti -s $APP_ID $uti editor 2>/dev/null
+    duti -s $APP_ID $uti viewer 2>/dev/null
+    duti -s $APP_ID $uti shell 2>/dev/null
   done
   echo "  Done."
 else
