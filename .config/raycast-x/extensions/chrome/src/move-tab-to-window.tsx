@@ -135,93 +135,100 @@ export default function Command() {
           description="Open another Chrome window first"
         />
       ) : (
-        <List.Section title="Target Windows">
-          {currentTab && (
-            <List.Item
-              key="new-window"
-              title="New Window"
-              subtitle="Move tab into a new Chrome window"
-              icon={Icon.Plus}
-              actions={
-                <ActionPanel>
-                  <Action
-                    title="Move Tab to New Window"
-                    icon={Icon.Plus}
-                    onAction={async () => {
-                      if (!currentTab) return;
-                      try {
-                        moveTabToNewWindow();
-                        await popToRoot();
-                        activateChrome();
-                        await showToast({
-                          style: Toast.Style.Success,
-                          title: "Tab moved to new window",
-                        });
-                      } catch (error) {
-                        await showToast({
-                          style: Toast.Style.Failure,
-                          title: "Failed to move tab",
-                          message: String(error),
-                        });
-                      }
-                    }}
-                  />
-                </ActionPanel>
-              }
-            />
-          )}
-          {windows.map((win) => (
-            <List.Item
-              key={win.winId}
-              title={win.activeTab.title}
-              subtitle={win.activeTab.url}
-              accessories={[
-                ...(win.workspace ? [{ text: `Space ${win.workspace}` }] : []),
-                { text: `${win.tabCount} tab${win.tabCount > 1 ? "s" : ""}` },
-                ...(win.incognito
-                  ? [{ icon: Icon.EyeDisabled, tooltip: "Incognito" }]
-                  : []),
-                ...(win.isFrontmost
-                  ? [{ icon: Icon.Eye, tooltip: "Frontmost" }]
-                  : []),
-              ]}
-              icon={Icon.Window}
-              actions={
-                <ActionPanel>
-                  <Action
-                    title="Move Tab to This Window"
-                    icon={Icon.ArrowRight}
-                    onAction={async () => {
-                      if (!currentTab) return;
-                      try {
-                        moveTabToWindow(win.winId);
-                        await popToRoot();
-                        activateChrome();
-                        await showToast({
-                          style: Toast.Style.Success,
-                          title: "Tab moved",
-                          message: `Moved to "${win.activeTab.title.slice(0, 40)}"`,
-                        });
-                      } catch (error) {
-                        await showToast({
-                          style: Toast.Style.Failure,
-                          title: "Failed to move tab",
-                          message: String(error),
-                        });
-                      }
-                    }}
-                  />
-                  <Action
-                    title="Refresh"
-                    icon={Icon.ArrowClockwise}
-                    shortcut={Keyboard.Shortcut.Common.Refresh}
-                    onAction={loadWindows}
-                  />
-                </ActionPanel>
-              }
-            />
-          ))}
-        </List.Section>
+        <>
+          <List.Section title="Target Windows">
+            {currentTab && (
+              <List.Item
+                key="new-window"
+                title="New Window"
+                subtitle="Move tab into a new Chrome window"
+                icon={Icon.Plus}
+                actions={
+                  <ActionPanel>
+                    <Action
+                      title="Move Tab to New Window"
+                      icon={Icon.Plus}
+                      onAction={async () => {
+                        if (!currentTab) return;
+                        try {
+                          moveTabToNewWindow();
+                          await popToRoot();
+                          activateChrome();
+                          await showToast({
+                            style: Toast.Style.Success,
+                            title: "Tab moved to new window",
+                          });
+                        } catch (error) {
+                          await showToast({
+                            style: Toast.Style.Failure,
+                            title: "Failed to move tab",
+                            message: String(error),
+                          });
+                        }
+                      }}
+                    />
+                  </ActionPanel>
+                }
+              />
+            )}
+            {windows.map((win) => (
+              <List.Item
+                key={win.winId}
+                title={win.activeTab.title}
+                subtitle={win.activeTab.url}
+                accessories={[
+                  ...(win.workspace
+                    ? [{ text: `Space ${win.workspace}` }]
+                    : []),
+                  { text: `${win.tabCount} tab${win.tabCount > 1 ? "s" : ""}` },
+                  ...(win.incognito
+                    ? [{ icon: Icon.EyeDisabled, tooltip: "Incognito" }]
+                    : []),
+                  ...(win.isFrontmost
+                    ? [{ icon: Icon.Eye, tooltip: "Frontmost" }]
+                    : []),
+                ]}
+                icon={Icon.Window}
+                actions={
+                  <ActionPanel>
+                    <Action
+                      title="Move Tab to This Window"
+                      icon={Icon.ArrowRight}
+                      onAction={async () => {
+                        if (!currentTab) return;
+                        try {
+                          moveTabToWindow(
+                            currentTab.winId,
+                            win.activeTab.title,
+                          );
+                          await popToRoot();
+                          activateChrome();
+                          await showToast({
+                            style: Toast.Style.Success,
+                            title: "Tab moved",
+                            message: `Moved to "${win.activeTab.title.slice(0, 40)}"`,
+                          });
+                        } catch (error) {
+                          await showToast({
+                            style: Toast.Style.Failure,
+                            title: "Failed to move tab",
+                            message: String(error),
+                          });
+                        }
+                      }}
+                    />
+                    <Action
+                      title="Refresh"
+                      icon={Icon.ArrowClockwise}
+                      shortcut={Keyboard.Shortcut.Common.Refresh}
+                      onAction={loadWindows}
+                    />
+                  </ActionPanel>
+                }
+              />
+            ))}
+          </List.Section>
+        </>
       )}
     </List>
   );
