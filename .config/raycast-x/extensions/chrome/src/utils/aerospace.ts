@@ -101,6 +101,13 @@ function getSystemEventsChromeTitles(): Map<number, string> {
   }
 }
 
+export function focusWorkspace(workspace: string): void {
+  execFileSync("aerospace", ["workspace", workspace], {
+    encoding: "utf-8",
+    timeout: TIMEOUT,
+  });
+}
+
 export function getChromeWindowWorkspaceMap(
   chromeWindows: { id: number; name: string }[],
 ): Map<number, string> {

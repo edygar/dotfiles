@@ -17,7 +17,7 @@ import {
   activateChrome,
   classifyError,
 } from "./utils/chrome-remote";
-import { getChromeWindowWorkspaceMap } from "./utils/aerospace";
+import { getChromeWindowWorkspaceMap, focusWorkspace } from "./utils/aerospace";
 import type { ChromeWindow, ChromeTab } from "./utils/types";
 
 interface TargetWindow {
@@ -174,12 +174,9 @@ export default function Command() {
             {windows.map((win) => (
               <List.Item
                 key={win.winId}
-                title={win.activeTab.title}
-                subtitle={win.activeTab.url}
+                title={win.workspace ? `Space ${win.workspace}` : "Window"}
+                subtitle={win.activeTab.title}
                 accessories={[
-                  ...(win.workspace
-                    ? [{ text: `Space ${win.workspace}` }]
-                    : []),
                   { text: `${win.tabCount} tab${win.tabCount > 1 ? "s" : ""}` },
                   ...(win.incognito
                     ? [{ icon: Icon.EyeDisabled, tooltip: "Incognito" }]
@@ -197,11 +194,15 @@ export default function Command() {
                       onAction={async () => {
                         if (!currentTab) return;
                         try {
-                          moveTabToWindow(
-                            currentTab.winId,
-                            win.activeTab.title,
-                          );
+                          moveTabToWindow(currentTab.winId, win.winId);
                           await popToRoot();
+                          if (win.workspace) {
+                            try {
+                              focusWorkspace(win.workspace);
+                            } catch {
+                              // workspace focus is best-effort
+                            }
+                          }
                           activateChrome();
                           await showToast({
                             style: Toast.Style.Success,
@@ -228,6 +229,20 @@ export default function Command() {
               />
             ))}
           </List.Section>
+          {currentTab && (
+            <List.Section title="Current Tab">
+              <List.Item
+                key="current-tab"
+                title={
+                  currentTab.workspace
+                    ? `Space ${currentTab.workspace}`
+                    : "\u2014"
+                }
+                subtitle={currentTab.tab.title}
+                icon={Icon.ArrowDown}
+              />
+            </List.Section>
+          )}
         </>
       )}
     </List>
