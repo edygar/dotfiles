@@ -142,7 +142,7 @@ fi
 
 # ─── 8b. Build Kitty Raycast extension ───────────────────────────────────────
 
-echo "[8b/12] Building Kitty Raycast extension..."
+echo "[8b/13] Building Kitty Raycast extension..."
 KITTY_EXT_DIR="$HOME/.config/raycast-x/extensions/kitty"
 if [[ -f "$KITTY_EXT_DIR/install.sh" ]]; then
   "$KITTY_EXT_DIR/install.sh"
@@ -150,9 +150,28 @@ else
   echo "  Skipped (kitty extension not found)."
 fi
 
+# ─── 8c. Hammerspoon config symlink ──────────────────────────────────────────
+
+echo "[8c/13] Hammerspoon config..."
+HAMMERSPOON_DIR="$HOME/.hammerspoon"
+mkdir -p "$HAMMERSPOON_DIR/modules"
+if [[ ! -L "$HAMMERSPOON_DIR/init.lua" ]]; then
+  ln -sf "$REPO_DIR/.hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua" 2>/dev/null || true
+  ln -sf "$REPO_DIR/.hammerspoon/modules/chrome-move-tab.lua" "$HAMMERSPOON_DIR/modules/chrome-move-tab.lua" 2>/dev/null || true
+  ln -sf "$REPO_DIR/.hammerspoon/modules/menubar-cover.lua" "$HAMMERSPOON_DIR/modules/menubar-cover.lua" 2>/dev/null || true
+  echo "  Created symlinks."
+else
+  echo "  Symlinks already exist."
+fi
+if pgrep -x Hammerspoon >/dev/null 2>&1; then
+  hs -c 'hs.reload(); return "ok"' 2>/dev/null && echo "  Hammerspoon reloaded." || echo "  Reload skipped (CLI not available)."
+else
+  open -a Hammerspoon 2>/dev/null && echo "  Hammerspoon launched." || echo "  Skipped (Hammerspoon not installed)."
+fi
+
 # ─── 9. Homerow config import ────────────────────────────────────────────────
 
-echo "[9/12] Homerow config..."
+echo "[9/13] Homerow config..."
 if defaults read com.superultra.Homerow 2>/dev/null | grep -q "search-shortcut"; then
   echo "  Config already imported."
 else
@@ -161,7 +180,7 @@ fi
 
 # ─── 9. Default app for code files ───────────────────────────────────────────
 
-echo "[10/12] Setting Neovim as default for code files..."
+echo "[10/13] Setting Neovim as default for code files..."
 APP_ID="com.edygar.neovim"
 EXTENSIONS="js jsx ts tsx mjs cjs json json5 yaml yml toml md markdown lua py rs go c h cpp hpp cc cxx java kt kts swift sh zsh bash fish sql html htm css scss sass less xml svg vue svelte astro graphql gql proto dockerfile makefile cmake gradle gitconfig gitignore env vim viml diff patch txt log conf cfg ini properties tf hcl nix dockerignore npmrc eslintrc prettierrc babelrc editorconfig"
 # System UTIs that need to be set by UTI (not extension)
@@ -186,7 +205,7 @@ fi
 
 # ─── 10. Cron jobs + initial wallpaper ───────────────────────────────────────
 
-echo "[11/12] Cron jobs and wallpaper..."
+echo "[11/13] Cron jobs and wallpaper..."
 CRON=""
 if ! crontab -l 2>/dev/null | grep -q "wallpaper.zsh"; then
   CRON="${CRON}0 * * * * $HOME/.local/bin/wallpaper.zsh\n"
