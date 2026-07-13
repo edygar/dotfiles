@@ -1,8 +1,24 @@
 import { execFileSync } from "child_process";
+import { appendFileSync } from "fs";
 import type { ChromeWindow } from "./types";
 
 const TIMEOUT = 10000;
 const APP_NAME = "Google Chrome";
+const LOG_PATH = "/tmp/raycast-chrome-move-tab.log";
+
+function logFailure(action: string, error: unknown): void {
+  const err = error as { stdout?: Buffer; stderr?: Buffer; message?: string };
+  appendFileSync(
+    LOG_PATH,
+    [
+      `[${new Date().toISOString()}] ${action}`,
+      err.message || String(error),
+      err.stdout ? `stdout: ${err.stdout.toString()}` : "",
+      err.stderr ? `stderr: ${err.stderr.toString()}` : "",
+      "",
+    ].join("\n"),
+  );
+}
 
 function runJXA(script: string): string {
   return execFileSync("osascript", ["-l", "JavaScript", "-e", script], {
@@ -63,23 +79,41 @@ export function listWindows(): ChromeWindow[] {
 export function moveTabToWindow(
   sourceWinId: number,
   targetWinId: number,
+  targetTitle: string,
+  targetFullTitle: string,
+  targetTabCount: number,
 ): void {
-  execFileSync(
-    "/opt/homebrew/bin/hs",
-    [
-      "-c",
-      `require("chrome-move-tab").doMoveToWindow(${sourceWinId}, ${targetWinId})`,
-    ],
-    { timeout: TIMEOUT },
-  );
+  const luaTargetTitle = JSON.stringify(targetTitle);
+  const luaTargetFullTitle = JSON.stringify(targetFullTitle);
+  try {
+    execFileSync(
+      "/opt/homebrew/bin/hs",
+      [
+        "-c",
+        `package.loaded["chrome-move-tab"] = nil; require("chrome-move-tab").doMoveToWindow(${sourceWinId}, ${targetWinId}, ${luaTargetTitle}, ${luaTargetFullTitle}, ${targetTabCount})`,
+      ],
+      { timeout: TIMEOUT },
+    );
+  } catch (error) {
+    logFailure(`moveTabToWindow ${sourceWinId} -> ${targetWinId} (${targetTitle} / ${targetFullTitle} / ${targetTabCount})`, error);
+    throw error;
+  }
 }
 
 export function moveTabToNewWindow(): void {
-  execFileSync(
-    "/opt/homebrew/bin/hs",
-    ["-c", `require("chrome-move-tab").doMoveToNewWindow()`],
-    { timeout: TIMEOUT },
-  );
+  try {
+    execFileSync(
+      "/opt/homebrew/bin/hs",
+      [
+        "-c",
+        `package.loaded["chrome-move-tab"] = nil; require("chrome-move-tab").doMoveToNewWindow()`,
+      ],
+      { timeout: TIMEOUT },
+    );
+  } catch (error) {
+    logFailure("moveTabToNewWindow", error);
+    throw error;
+  }
 }
 
 export type ChromeError = "not_running" | "no_windows" | "unknown";

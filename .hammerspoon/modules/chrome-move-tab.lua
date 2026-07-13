@@ -3,19 +3,9 @@
 -- Move the active Chrome tab to another window.
 -- Executed by Hammerspoon (called from Raycast UI via `hs -c`).
 --
--- IMPORTANT: All functions are SYNCHRONOUS so that `hs -c` blocks
--- until the entire operation completes.
---
--- Strategy:
---   1. Open a temporary tab with a unique title in the TARGET window.
---      This "names" the target window with a string we control.
---   2. Right-click the active tab in the SOURCE window (using AX for
---      exact tab position — no hardcoded offsets).
---   3. Navigate the context menu via the Accessibility API (no keyboard
---      typing) to "Move Tab to Another Window" > our unique title.
---   4. Close the temporary tab.
+-- Uses Chrome's own tab context menu so the live tab is moved without creating
+-- a replacement tab or reloading the page.
 
-local APP_NAME = "Google Chrome"
 local usleep = hs.timer.usleep
 local ax = require("hs.axuielement")
 
@@ -26,7 +16,7 @@ local function rightClick(x, y)
   hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.rightMouseDown, pt):post()
   usleep(50000)
   hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.rightMouseUp, pt):post()
-  usleep(500000)
+  usleep(300000)
 end
 
 local function escape()
@@ -35,20 +25,13 @@ local function escape()
 end
 
 local function findElement(elem, predicate, depth)
-  if depth > 12 then return nil end
+  if not elem or depth > 12 then return nil end
   if predicate(elem) then return elem end
-  local children = elem.AXChildren or {}
-  for _, c in ipairs(children) do
-    local found = findElement(c, predicate, depth + 1)
+  for _, child in ipairs(elem.AXChildren or {}) do
+    local found = findElement(child, predicate, depth + 1)
     if found then return found end
   end
   return nil
-end
-
-local function findTabGroup(win)
-  return findElement(win, function(e)
-    return tostring(e.AXRole) == "AXTabGroup"
-  end, 0)
 end
 
 local function isContextMenu(elem)
@@ -59,15 +42,11 @@ local function isContextMenu(elem)
   return true
 end
 
-local function findContextMenu(app)
-  return findElement(app, isContextMenu, 0)
-end
-
 local function waitForContextMenu(app, maxMs)
-  local step = 100000
   local elapsed = 0
+  local step = 100000
   while elapsed < maxMs do
-    local menu = findContextMenu(app)
+    local menu = findElement(app, isContextMenu, 0)
     if menu then return menu end
     usleep(step)
     elapsed = elapsed + step
@@ -84,122 +63,148 @@ local function findSelectedTab(tabGroup)
   return nil
 end
 
-local function cleanupTempTab(uniqueId)
-  hs.applescript(string.format([[
+local function focusChromeWindow(windowId)
+  local ok, err = hs.applescript(string.format([[
     tell application "Google Chrome"
+      set windowIdStr to "%s" as string
       repeat with w in windows
-        repeat with t in tabs of w
-          if URL of t contains "%s" then
-            close t
-            exit repeat
-          end if
-        end repeat
+        if ((id of w) as string) is windowIdStr then
+          set index of w to 1
+          activate
+          return
+        end if
       end repeat
+      error "Chrome window not found"
     end tell
-  ]], uniqueId))
+  ]], tostring(windowId)))
+
+  if not ok then
+    error(err or "Chrome window not found")
+  end
 end
 
-function M.doMoveToWindow(sourceWinId, targetWinId)
-  local uniqueId = "mt" .. tostring(hs.timer.us() % 1000000)
-  local tmpUrl = "data:text/html,<title>" .. uniqueId .. "</title>"
+local function openMoveSubmenu(menu)
+  local moveItem = findElement(menu, function(elem)
+    return tostring(elem.AXRole) == "AXMenuItem" and
+           tostring(elem.AXTitle) == "Move Tab to Another Window"
+  end, 0)
 
-  hs.applescript(string.format([[
-    tell application "Google Chrome"
-      set sourceWinIdStr to "%s" as string
-      repeat with w in windows
-        set winIdStr to (id of w) as string
-        if winIdStr is sourceWinIdStr then
-          set index of w to 1
-          exit repeat
-        end if
-      end repeat
-      activate
-    end tell
-  ]], tostring(sourceWinId)))
+  if not moveItem then return nil end
+
+  local submenu = findElement(moveItem, function(elem)
+    return tostring(elem.AXRole) == "AXMenu"
+  end, 0)
+  if submenu then return submenu end
+
+  moveItem:doAXPress()
   usleep(300000)
 
-  hs.applescript(string.format([[
-    tell application "Google Chrome"
-      set targetWinIdStr to "%s" as string
-      repeat with w in windows
-        set winIdStr to (id of w) as string
-        if winIdStr is targetWinIdStr then
-          make new tab at end of tabs of w with properties {URL:"%s"}
-          set active tab index of w to (count of tabs of w)
-          exit repeat
-        end if
-      end repeat
-    end tell
-  ]], tostring(targetWinId), tmpUrl))
-  usleep(1000000)
-
-  local menu = nil
-  for _ = 1, 3 do
-    local chrome = hs.application.get("Google Chrome")
-    if not chrome then break end
-    local app = ax.applicationElement(chrome)
-    local win = app.AXFocusedWindow or app.AXWindows[1]
-    if not win then break end
-    local tabGroup = findTabGroup(win)
-    if not tabGroup then break end
-    local tab = findSelectedTab(tabGroup)
-    if not tab then break end
-    local pos = tab.AXPosition
-    local sz = tab.AXSize
-    if not pos or not sz then break end
-    local cx = math.floor(pos.x + sz.w / 2)
-    local cy = math.floor(pos.y + sz.h / 2)
-
-    rightClick(cx, cy)
-    menu = waitForContextMenu(app, 2000000)
-    if menu then break end
-  end
-  if not menu then
-    cleanupTempTab(uniqueId)
-    return
-  end
-
-  local moveItem = findElement(menu, function(e)
-    return tostring(e.AXRole) == "AXMenuItem" and
-           tostring(e.AXTitle) == "Move Tab to Another Window"
+  return findElement(moveItem, function(elem)
+    return tostring(elem.AXRole) == "AXMenu"
   end, 0)
-  if not moveItem then
-    escape()
-    cleanupTempTab(uniqueId)
-    return
+end
+
+local function stripTrailingEllipsis(value)
+  return tostring(value or ""):gsub("%s*…$", "")
+end
+
+local function stripOtherTabsSuffix(value)
+  return tostring(value or ""):gsub("%s+and%s+%d+%s+Other%s+Tabs?$", "")
+end
+
+local function isPrefixOfTarget(prefix, targetTitle, targetFullTitle)
+  if prefix == "" then return false end
+  return string.sub(targetTitle or "", 1, #prefix) == prefix or
+         string.sub(targetFullTitle or "", 1, #prefix) == prefix
+end
+
+local function pluralizedOtherTabs(tabCount)
+  local otherTabs = tonumber(tabCount or 0) - 1
+  if otherTabs <= 0 then return nil end
+  local suffix = otherTabs == 1 and "Other Tab" or "Other Tabs"
+  return " and " .. tostring(otherTabs) .. " " .. suffix
+end
+
+local function titlesMatch(menuTitle, targetTitle, targetFullTitle, targetTabCount)
+  if menuTitle == targetTitle or menuTitle == targetFullTitle then return true end
+
+  local otherTabsSuffix = pluralizedOtherTabs(targetTabCount)
+  if otherTabsSuffix then
+    if menuTitle == tostring(targetTitle or "") .. otherTabsSuffix then return true end
+    if menuTitle == tostring(targetFullTitle or "") .. otherTabsSuffix then return true end
   end
 
-  local submenu = findElement(moveItem, function(e)
-    return tostring(e.AXRole) == "AXMenu"
+  local menuPrefix = stripTrailingEllipsis(menuTitle)
+  if isPrefixOfTarget(menuPrefix, targetTitle, targetFullTitle) then return true end
+
+  local menuTitleWithoutTabCount = stripOtherTabsSuffix(menuTitle)
+  local menuPrefixWithoutTabCount = stripTrailingEllipsis(menuTitleWithoutTabCount)
+  return isPrefixOfTarget(menuPrefixWithoutTabCount, targetTitle, targetFullTitle)
+end
+
+function M.doMoveToWindow(sourceWinId, targetWinId, targetTitle, targetFullTitle, targetTabCount)
+  if not targetTitle or targetTitle == "" then
+    error("Target Chrome window title is required")
+  end
+
+  focusChromeWindow(sourceWinId)
+  usleep(300000)
+
+  local chrome = hs.application.get("Google Chrome")
+  if not chrome then error("Google Chrome is not running") end
+
+  local app = ax.applicationElement(chrome)
+  local win = app.AXFocusedWindow or (app.AXWindows or {})[1]
+  if not win then error("Focused Chrome window not found") end
+
+  local tabGroup = findElement(win, function(elem)
+    return tostring(elem.AXRole) == "AXTabGroup"
   end, 0)
+  if not tabGroup then error("Chrome tab group not found") end
+
+  local tab = findSelectedTab(tabGroup)
+  if not tab then error("Selected Chrome tab not found") end
+
+  local pos = tab.AXPosition
+  local size = tab.AXSize
+  if not pos or not size then error("Selected Chrome tab position not found") end
+
+  rightClick(math.floor(pos.x + size.w / 2), math.floor(pos.y + size.h / 2))
+
+  local menu = waitForContextMenu(app, 2000000)
+  if not menu then error("Chrome tab context menu not found") end
+
+  local submenu = openMoveSubmenu(menu)
   if not submenu then
     escape()
-    cleanupTempTab(uniqueId)
-    return
+    error("Move Tab to Another Window menu not found")
   end
 
   local targetItem = nil
+  local availableTitles = {}
   for _, item in ipairs(submenu.AXChildren or {}) do
-    if tostring(item.AXRole) == "AXMenuItem" and
-       tostring(item.AXTitle) == uniqueId then
-      targetItem = item
-      break
+    if tostring(item.AXRole) == "AXMenuItem" then
+      local title = tostring(item.AXTitle)
+      availableTitles[#availableTitles + 1] = title
+      if titlesMatch(title, targetTitle, targetFullTitle, targetTabCount) then
+        targetItem = item
+        break
+      end
     end
   end
 
   if not targetItem then
     escape()
-    cleanupTempTab(uniqueId)
-    return
+    error("Target Chrome window menu item not found: " .. targetTitle .. "; full title: " .. tostring(targetFullTitle) .. "; tab count: " .. tostring(targetTabCount) .. "; available: " .. table.concat(availableTitles, " | "))
   end
 
   targetItem:doAXPress()
-  usleep(500000)
-  cleanupTempTab(uniqueId)
+  usleep(300000)
+  focusChromeWindow(targetWinId)
 end
 
 function M.doMoveToNewWindow()
-  hs.applescript([[
+  local ok, err = hs.applescript([[
     tell application "Google Chrome" to activate
     delay 0.15
     tell application "System Events"
@@ -208,6 +213,10 @@ function M.doMoveToNewWindow()
       end tell
     end tell
   ]])
+
+  if not ok then
+    error(err or "Failed to move Chrome tab to new window")
+  end
 end
 
 return M

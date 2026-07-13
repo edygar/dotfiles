@@ -5,7 +5,7 @@ import {
   List,
   showToast,
   Toast,
-  popToRoot,
+  closeMainWindow,
   Keyboard,
 } from "@raycast/api";
 import { useState, useEffect } from "react";
@@ -22,6 +22,7 @@ import type { ChromeWindow, ChromeTab } from "./utils/types";
 
 interface TargetWindow {
   winId: number;
+  title: string;
   activeTab: ChromeTab;
   tabCount: number;
   isFrontmost: boolean;
@@ -45,6 +46,7 @@ function getOtherWindows(
       const workspace = workspaceMap.get(w.id);
       return {
         winId: w.id,
+        title: w.name,
         activeTab,
         tabCount: w.tabs.length,
         isFrontmost: w.isFrontmost,
@@ -152,7 +154,7 @@ export default function Command() {
                         if (!currentTab) return;
                         try {
                           moveTabToNewWindow();
-                          await popToRoot();
+                          await closeMainWindow({ clearRootSearch: true });
                           activateChrome();
                           await showToast({
                             style: Toast.Style.Success,
@@ -194,8 +196,14 @@ export default function Command() {
                       onAction={async () => {
                         if (!currentTab) return;
                         try {
-                          moveTabToWindow(currentTab.winId, win.winId);
-                          await popToRoot();
+                          moveTabToWindow(
+                            currentTab.winId,
+                            win.winId,
+                            win.title,
+                            win.activeTab.title,
+                            win.tabCount,
+                          );
+                          await closeMainWindow({ clearRootSearch: true });
                           if (win.workspace) {
                             try {
                               focusWorkspace(win.workspace);
