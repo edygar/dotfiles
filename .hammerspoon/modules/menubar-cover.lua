@@ -17,7 +17,9 @@ local restoreTimer = nil
 local hideFinishTimer = nil
 local hidden = false
 local SKETCHYBAR = "/opt/homebrew/bin/sketchybar"
+local SPACE_WINDOWS_PLUGIN = os.getenv("HOME") .. "/.config/sketchybar/plugins/space_windows.sh"
 local originalColors = {}
+local originalDrawing = {}
 
 local fallbackItems = {
   "space.A", "space.S", "space.D", "space.F", "space.Z",
@@ -58,6 +60,21 @@ local function cacheOriginalColors()
   end
 end
 
+local function cacheOriginalDrawing()
+  originalDrawing = {}
+  for _, item in ipairs(getItems()) do
+    local raw = hs.execute(SKETCHYBAR .. " --query " .. item .. " 2>/dev/null", false)
+    local ok, data = pcall(hs.json.decode, raw or "")
+    if ok and data then
+      originalDrawing[item] = data.geometry and data.geometry.drawing or nil
+    end
+  end
+end
+
+local function refreshSpaces()
+  hs.execute("/bin/sh " .. string.format("%q", SPACE_WINDOWS_PLUGIN) .. " 2>/dev/null", false)
+end
+
 local function buildColorArgs(on)
   local args = {}
   for _, item in ipairs(getItems()) do
@@ -80,9 +97,12 @@ local function buildColorArgs(on)
 end
 
 local function setItemsDrawing(on)
-  local drawing = on and "on" or "off"
   local args = {}
   for _, item in ipairs(getItems()) do
+    local drawing = "off"
+    if on then
+      drawing = originalDrawing[item] or "on"
+    end
     args[#args + 1] = "--set " .. item .. " drawing=" .. drawing
   end
   if #args > 0 then
@@ -116,6 +136,7 @@ local function hideItems()
   cancelRestore()
   cancelHideFinish()
   if hidden then return end
+  cacheOriginalDrawing()
   animateItems(false)
   hideFinishTimer = hs.timer.doAfter(ANIMATION_DURATION / 60 + 0.05, function()
     if hidden then
@@ -133,6 +154,7 @@ local function scheduleRestore()
     if hs.mouse.absolutePosition().y > menuBarHeight then
       cancelHideFinish()
       setItemsDrawing(true)
+      refreshSpaces()
       animateItems(true)
       hidden = false
     end
@@ -154,7 +176,7 @@ end
 
 function M.start()
   cacheOriginalColors()
-  setItemsDrawing(true)
+  refreshSpaces()
   animateItems(true)
   hidden = false
   startPolling()
@@ -169,6 +191,7 @@ function M.stop()
   cancelHideFinish()
   if hidden then
     setItemsDrawing(true)
+    refreshSpaces()
     animateItems(true)
     hidden = false
   end
