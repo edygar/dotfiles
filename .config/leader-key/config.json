@@ -34,35 +34,35 @@
           "value" : "raycast-x://extensions/raycast/raycast-notes/raycast-notes"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/google-meet.png",
+          "iconPath" : "video.fill",
           "key" : "m",
           "label" : "Google [M]eet",
           "type" : "url",
           "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmeet.google.com%2F&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/youtube.png",
+          "iconPath" : "play.rectangle.fill",
           "key" : "y",
           "label" : "YouTube",
           "type" : "url",
           "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=youtube&arguments=yes"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/gmail.png",
+          "iconPath" : "envelope.fill",
           "key" : "g",
           "label" : "Gmail (Profile 0)",
           "type" : "url",
           "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/gmail.png",
+          "iconPath" : "envelope.fill",
           "key" : "G",
           "label" : "Gmail (Profile 1)",
           "type" : "url",
           "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F1&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/google-calendar.png",
+          "iconPath" : "calendar",
           "key" : "c",
           "label" : "Calendar",
           "type" : "url",
@@ -83,21 +83,21 @@
           "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A8000&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/bitbucket.png",
+          "iconPath" : "arrow.triangle.pull",
           "key" : "p",
           "label" : "My pull requests",
           "type" : "url",
           "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fbitbucket.org%2Frevolut%2Fbackoffice-frontend%2Fpull-requests%2F%3Fstate%3DOPEN%26author%3D%257B879a259e-1653-46b3-a363-1610175ef44f%257D&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/slack.png",
+          "iconPath" : "bubble.left.and.bubble.right.fill",
           "key" : "P",
           "label" : "Others' pull requests",
           "type" : "url",
           "value" : "https://team-revolut.slack.com/archives/C06GD40TW3F"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/jira.png",
+          "iconPath" : "checklist",
           "key" : "j",
           "label" : "JIRA",
           "type" : "url",
