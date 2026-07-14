@@ -3,13 +3,23 @@
   "username": "edygar",
   "agent": {
     "build": {
-      "color": "#729CD5"
+      "color": "#729CD5",
     },
     "general": {
-      "color": "#729CD5"
+      "color": "#729CD5",
     },
     "explore": {
-      "color": "#e0af68"
-    }
-  }
+      "color": "#e0af68",
+    },
+  },
+  "lsp": true,
+  "mcp": {
+    "atlassian": {
+      "type": "remote",
+      "url": "https://mcp.atlassian.com/v1/sse",
+      "enabled": true,
+      "oauth": {},
+      "timeout": 30000,
+    },
+  },
 }
