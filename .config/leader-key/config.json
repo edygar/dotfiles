@@ -15,12 +15,6 @@
           "value" : "/Applications/Slack.app"
         },
         {
-          "key" : "w",
-          "label" : "[W]hatsApp",
-          "type" : "application",
-          "value" : "/Users/edygar.oliveira/Applications/WhatsApp.app"
-        },
-        {
           "key" : "t",
           "label" : "[T]erminal Kitty",
           "type" : "application",
@@ -131,12 +125,6 @@
           "label" : "Slack",
           "type" : "url",
           "value" : "raycast-x://extensions/raycast/script-commands/launch-app-and-shortcut?arguments=Slack.app&arguments=cmd+k"
-        },
-        {
-          "key" : "w",
-          "label" : "WhatsApp",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/shortcut?arguments=WhatsApp&arguments=cmd%20k"
         }
       ],
       "iconPath" : "magnifyingglass",
@@ -175,6 +163,7 @@
           "value" : "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Code/revolut/"
         }
       ],
+      "iconPath" : "folder.fill.badge.gearshape",
       "key" : "f",
       "label" : "Browse folder",
       "type" : "group"
@@ -203,6 +192,7 @@
           "value" : "/Users/edygar.oliveira/Downloads"
         }
       ],
+      "iconPath" : "folder.fill",
       "key" : "F",
       "label" : "Open folder",
       "type" : "group"
@@ -235,6 +225,7 @@
           "value" : "raycast-x://extensions/raycast/snippets/search-snippets"
         }
       ],
+      "iconPath" : "sparkles",
       "key" : "r",
       "label" : "Raycast",
       "type" : "group"
@@ -338,6 +329,7 @@
           "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20Z%20--fail-if-noop"
         }
       ],
+      "iconPath" : "/Applications/AeroSpace.app",
       "key" : "w",
       "label" : "Workspace",
       "type" : "group"
@@ -350,6 +342,7 @@
           "value" : "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Constant%20Case%22%7D"
         }
       ],
+      "iconPath" : "textformat",
       "key" : "c",
       "label" : "Change case",
       "type" : "group"
