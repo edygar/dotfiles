@@ -39,6 +39,31 @@ end
 
 vim.keymap.set("n", "<leader>xeq", qf_editor.quickfix_from_paste_prompt)
 
+local function open_indented_blank_line(command)
+  local marker = "__nvim_indent_marker__"
+  vim.cmd.normal { command .. marker, bang = true }
+
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  local line = vim.api.nvim_get_current_line()
+  local indent = line:match "^%s*"
+  if indent == "" then
+    local reference_row = command == "O" and row + 1 or row - 1
+    indent = string.rep(" ", math.max(vim.fn.indent(reference_row), 0))
+  end
+
+  vim.api.nvim_set_current_line(indent or "")
+  if indent ~= "" then
+    vim.api.nvim_win_set_cursor(0, { row, #indent - 1 })
+    vim.cmd.startinsert { bang = true }
+  else
+    vim.api.nvim_win_set_cursor(0, { row, 0 })
+    vim.cmd.startinsert()
+  end
+end
+
+vim.keymap.set("n", "o", function() open_indented_blank_line "o" end, { desc = "Open line below with indent" })
+vim.keymap.set("n", "O", function() open_indented_blank_line "O" end, { desc = "Open line above with indent" })
+
 -- Create an autocommand group
 
 vim.api.nvim_create_autocmd("FileType", {
