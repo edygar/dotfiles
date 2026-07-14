@@ -27,53 +27,39 @@ if loaded["menubar-cover"] and loaded["menubar-cover"].start then
   loaded["menubar-cover"].start()
 end
 
--- App-specific cmd+shift+m bindings
-local KEY_MODS = { "cmd", "shift" }
-local KEY_KEY = "m"
+local okGridTile = pcall(hs.loadSpoon, "GridTile")
+if okGridTile and spoon.GridTile then
+  hs.hotkey.bind({ "cmd", "alt", "shift", "ctrl" }, "r", function()
+    spoon.GridTile:start()
+  end)
+end
 
-local appHotkeys = {}
 local appURLs = {
-  ["Google Chrome"] = "raycast://extensions/jerome_soyer/chrome/move-tab-to-window",
-  ["kitty"] = "raycast://extensions/jerome_soyer/kitty/move-tab-to-window",
+  ["Google Chrome"] = "raycast-x://extensions/jerome_soyer/chrome/move-tab-to-window",
+  ["kitty"] = "raycast-x://extensions/jerome_soyer/kitty/move-tab-to-window",
 }
 
-local function bindForApp(appName)
-  local url = appURLs[appName]
-  if not url then return end
-  if appHotkeys[appName] then
-    appHotkeys[appName]:enable()
-  else
-    appHotkeys[appName] = hs.hotkey.new(KEY_MODS, KEY_KEY, function()
-      hs.execute('open -g "' .. url .. '"', false)
-    end)
-    appHotkeys[appName]:enable()
+if _G.moveTabToWindowEventtap then
+  _G.moveTabToWindowEventtap:stop()
+end
+
+_G.moveTabToWindowEventtap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
+  if event:getKeyCode() ~= hs.keycodes.map.m then
+    return false
   end
-end
 
-local function unbindForApp(appName)
-  if appHotkeys[appName] then
-    appHotkeys[appName]:disable()
+  local flags = event:getFlags()
+  if not (flags.cmd and flags.shift) or flags.ctrl or flags.alt then
+    return false
   end
-end
 
-local function onAppEvent(appName, eventType)
-  if eventType == hs.application.watcher.activated then
-    for name, _ in pairs(appURLs) do
-      if name == appName then
-        bindForApp(name)
-      else
-        unbindForApp(name)
-      end
-    end
-  elseif eventType == hs.application.watcher.deactivated then
-    unbindForApp(appName)
+  local app = hs.application.frontmostApplication()
+  local url = app and appURLs[app:name()] or nil
+  if not url then
+    return false
   end
-end
 
-local appWatcher = hs.application.watcher.new(onAppEvent)
-appWatcher:start()
-
-local frontApp = hs.application.frontmostApplication():name()
-if appURLs[frontApp] then
-  bindForApp(frontApp)
-end
+  hs.execute('open -g "' .. url .. '"', false)
+  return true
+end)
+_G.moveTabToWindowEventtap:start()

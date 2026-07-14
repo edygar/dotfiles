@@ -1,0 +1,94 @@
+diff --git i/GridTile.spoon/init.lua w/GridTile.spoon/init.lua
+index 21579f5..dcdecf7 100644
+--- i/GridTile.spoon/init.lua
++++ w/GridTile.spoon/init.lua
+@@ -4,6 +4,8 @@ obj.active = false
+ 
+ local canvas = nil
+ local menuBarHeight = nil
++local topMargin = 48
++local gridOrigin = { x = 0, y = 0 }
+ 
+ obj.gridMode = hs.hotkey.modal.new()
+ 
+@@ -55,6 +57,17 @@ local function getRect(a, b)
+     }
+ end
+ 
++local function focusedAerospaceLayout()
++    local raw = hs.execute("/opt/homebrew/bin/aerospace list-windows --focused --format '%{window-layout}' 2>/dev/null", false)
++    if not raw then return nil end
++    return raw:gsub("%s+$", "")
++end
++
++local function resizeWithAerospace(rect)
++    hs.execute("/opt/homebrew/bin/aerospace resize width " .. math.floor(rect.w) .. " 2>/dev/null", false)
++    hs.execute("/opt/homebrew/bin/aerospace resize height " .. math.floor(rect.h) .. " 2>/dev/null", false)
++end
++
+ local function exitGridTile()
+     if not obj.active then return end
+ 
+@@ -80,9 +93,15 @@ local function handleSelection(startCell, endCell)
+         return
+     end
+ 
++    if focusedAerospaceLayout() ~= "floating" then
++        resizeWithAerospace(rect)
++        exitGridTile()
++        return
++    end
++
+     win:setFrame({
+-        x = rect.x1,
+-        y = rect.y1 + menuBarHeight,
++        x = gridOrigin.x + rect.x1,
++        y = gridOrigin.y + rect.y1,
+         w = rect.w,
+         h = rect.h
+     })
+@@ -119,6 +138,9 @@ function obj:start()
+ 
+     -- Draw a canvas on the screen
+     local frame = screen:frame()
++    frame.y = frame.y + topMargin
++    frame.h = frame.h - topMargin
++    gridOrigin = { x = frame.x, y = frame.y }
+     canvas = hs.canvas.new(frame)
+     canvas:show()
+ 
+@@ -127,16 +149,16 @@ function obj:start()
+     -- USER CONFIGURATION START
+     -- ====================================================================================================
+ 
+-    local columnWeights = {1, 2, 3, 3, 3, 3, 2, 1}
+-    local rowWeights = {1, 2, 3, 2, 1}
++    local columnWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
++    local rowWeights = {1, 1, 1, 1, 1}
+ 
+     -- lua-format off
+     local letters = {
+-      "1", "2", "3", "4", "7", "8", "9", "0", 
+-      "q", "w", "e", "r", "u", "i", "o", "p", 
+-      "Q", "W", "E", "R", "U", "I", "I", "P", 
+-      "a", "s", "d", "f", "j", "k", "l", ";", 
+-      "z", "x", "c", "v", "n", "m", ",", "."
++      "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
++      "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
++      "a", "s", "d", "f", "g", "h", "j", "k", "l", "'",
++      "A", "S", "D", "F", "G", "H", "J", "K", "L", "\"",
++      "z", "x", "c", "v", "b", "n", "m", ",", ".", "/"
+     }
+     -- lua-format on
+ 
+@@ -248,7 +270,9 @@ function obj:start()
+                 end
+             end
+ 
+-            if key:match("%u") then
++            if key == "\"" then
++                obj.gridMode:bind({"shift"}, "'", fn)
++            elseif key:match("%u") then
+                 obj.gridMode:bind({"shift"}, key:lower(), fn)
+             else
+                 obj.gridMode:bind({}, key, fn)

@@ -1,0 +1,4 @@
+[submodule ".hammerspoon/Spoons/GridTile"]
+	path = .hammerspoon/Spoons/GridTile
+	url = https://github.com/ujwalnk/GridTile.git
+	ignore = dirty

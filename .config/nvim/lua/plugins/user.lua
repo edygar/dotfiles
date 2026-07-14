@@ -209,6 +209,7 @@ return {
             },
           },
         },
+        image = {},
         preview = {},
       })
     end,

@@ -5,6 +5,8 @@ if vim.env.KITTY_SCROLLBACK_NVIM == "true" then
   os.execute("kitty @ load-config --override cursor_trail=0 --no-response 2>/dev/null")
 end
 
+require("vim._core.ui2").enable({})
+
 local lazypath = vim.env.LAZY or vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
 if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then

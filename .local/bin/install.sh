@@ -155,13 +155,30 @@ fi
 echo "[8c/13] Hammerspoon config..."
 HAMMERSPOON_DIR="$HOME/.hammerspoon"
 mkdir -p "$HAMMERSPOON_DIR/modules"
+mkdir -p "$HAMMERSPOON_DIR/Spoons"
 if [[ ! -L "$HAMMERSPOON_DIR/init.lua" ]]; then
   ln -sf "$REPO_DIR/.hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua" 2>/dev/null || true
-  ln -sf "$REPO_DIR/.hammerspoon/modules/chrome-move-tab.lua" "$HAMMERSPOON_DIR/modules/chrome-move-tab.lua" 2>/dev/null || true
-  ln -sf "$REPO_DIR/.hammerspoon/modules/menubar-cover.lua" "$HAMMERSPOON_DIR/modules/menubar-cover.lua" 2>/dev/null || true
-  echo "  Created symlinks."
+  echo "  Created init symlink."
 else
-  echo "  Symlinks already exist."
+  echo "  Init symlink already exists."
+fi
+ln -sf "$REPO_DIR/.hammerspoon/modules/chrome-move-tab.lua" "$HAMMERSPOON_DIR/modules/chrome-move-tab.lua" 2>/dev/null || true
+ln -sf "$REPO_DIR/.hammerspoon/modules/menubar-cover.lua" "$HAMMERSPOON_DIR/modules/menubar-cover.lua" 2>/dev/null || true
+echo "  Module symlinks updated."
+if [[ -d "$REPO_DIR/.hammerspoon/Spoons/GridTile" ]]; then
+  git -C "$REPO_DIR" submodule update --init --recursive .hammerspoon/Spoons/GridTile >/dev/null 2>&1 || true
+  if [[ -f "$REPO_DIR/.hammerspoon/Spoons/GridTile-custom.patch" ]]; then
+    git -C "$REPO_DIR/.hammerspoon/Spoons/GridTile" apply --check --ignore-space-change "$REPO_DIR/.hammerspoon/Spoons/GridTile-custom.patch" >/dev/null 2>&1 && \
+      git -C "$REPO_DIR/.hammerspoon/Spoons/GridTile" apply --ignore-space-change "$REPO_DIR/.hammerspoon/Spoons/GridTile-custom.patch" >/dev/null 2>&1 || true
+  fi
+  if [[ -e "$HAMMERSPOON_DIR/Spoons/GridTile.spoon" && ! -L "$HAMMERSPOON_DIR/Spoons/GridTile.spoon" ]]; then
+    echo "  GridTile.spoon path already exists."
+  else
+    ln -sf "$REPO_DIR/.hammerspoon/Spoons/GridTile.spoon" "$HAMMERSPOON_DIR/Spoons/GridTile.spoon" 2>/dev/null || true
+    echo "  GridTile.spoon symlink updated."
+  fi
+else
+  echo "  GridTile.spoon submodule not found."
 fi
 if pgrep -x Hammerspoon >/dev/null 2>&1; then
   hs -c 'hs.reload(); return "ok"' 2>/dev/null && echo "  Hammerspoon reloaded." || echo "  Reload skipped (CLI not available)."
