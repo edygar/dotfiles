@@ -104,6 +104,47 @@ local function openMoveSubmenu(menu)
   end, 0)
 end
 
+local function openMenuBarMoveSubmenu(app)
+  local menuBar = findElement(app, function(elem)
+    return tostring(elem.AXRole) == "AXMenuBar"
+  end, 0)
+  if not menuBar then return nil end
+
+  local tabMenuItem = nil
+  for _, child in ipairs(menuBar.AXChildren or {}) do
+    if tostring(child.AXRole) == "AXMenuBarItem" and tostring(child.AXTitle) == "Tab" then
+      tabMenuItem = child
+      break
+    end
+  end
+  if not tabMenuItem then return nil end
+
+  tabMenuItem:doAXPress()
+  usleep(200000)
+
+  local tabMenu = findElement(tabMenuItem, function(elem)
+    return tostring(elem.AXRole) == "AXMenu"
+  end, 0)
+  if not tabMenu then return nil end
+
+  local moveItem = findElement(tabMenu, function(elem)
+    return tostring(elem.AXRole) == "AXMenuItem" and tostring(elem.AXTitle) == "Move Tab to Another Window"
+  end, 0)
+  if not moveItem then return nil end
+
+  local submenu = findElement(moveItem, function(elem)
+    return tostring(elem.AXRole) == "AXMenu"
+  end, 0)
+  if submenu then return submenu end
+
+  moveItem:doAXPress()
+  usleep(300000)
+
+  return findElement(moveItem, function(elem)
+    return tostring(elem.AXRole) == "AXMenu"
+  end, 0)
+end
+
 local function stripTrailingEllipsis(value)
   return tostring(value or ""):gsub("%s*…$", "")
 end
@@ -157,24 +198,27 @@ function M.doMoveToWindow(sourceWinId, targetWinId, targetTitle, targetFullTitle
   local win = app.AXFocusedWindow or (app.AXWindows or {})[1]
   if not win then error("Focused Chrome window not found") end
 
-  local tabGroup = findElement(win, function(elem)
-    return tostring(elem.AXRole) == "AXTabGroup"
-  end, 0)
-  if not tabGroup then error("Chrome tab group not found") end
+  local submenu = openMenuBarMoveSubmenu(app)
+  if not submenu then
+    local tabGroup = findElement(win, function(elem)
+      return tostring(elem.AXRole) == "AXTabGroup"
+    end, 0)
+    if not tabGroup then error("Chrome tab group not found") end
 
-  local tab = findSelectedTab(tabGroup)
-  if not tab then error("Selected Chrome tab not found") end
+    local tab = findSelectedTab(tabGroup)
+    if not tab then error("Selected Chrome tab not found") end
 
-  local pos = tab.AXPosition
-  local size = tab.AXSize
-  if not pos or not size then error("Selected Chrome tab position not found") end
+    local pos = tab.AXPosition
+    local size = tab.AXSize
+    if not pos or not size then error("Selected Chrome tab position not found") end
 
-  rightClick(math.floor(pos.x + size.w / 2), math.floor(pos.y + size.h / 2))
+    rightClick(math.floor(pos.x + size.w / 2), math.floor(pos.y + size.h / 2))
 
-  local menu = waitForContextMenu(app, 2000000)
-  if not menu then error("Chrome tab context menu not found") end
+    local menu = waitForContextMenu(app, 2000000)
+    if not menu then error("Chrome tab context menu not found") end
 
-  local submenu = openMoveSubmenu(menu)
+    submenu = openMoveSubmenu(menu)
+  end
   if not submenu then
     escape()
     error("Move Tab to Another Window menu not found")

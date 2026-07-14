@@ -2,6 +2,11 @@
 bindkey -v
 export KEYTIMEOUT=1
 
+# Edit the current command line in $VISUAL/$EDITOR with `vv` from vi command mode.
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'vv' edit-command-line
+
 # Accept Autosuggestions
 bindkey '^N' autosuggest-accept
 

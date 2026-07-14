@@ -1,415 +1,422 @@
 {
-  "actions" : [
+  "actions": [
     {
-      "actions" : [
+      "actions": [
         {
-          "key" : "b",
-          "label" : "[B]rowser",
-          "type" : "application",
-          "value" : "/Applications/Google Chrome.app"
+          "key": "b",
+          "label": "[B]rowser",
+          "type": "application",
+          "value": "/Applications/Google Chrome.app"
         },
         {
-          "key" : "s",
-          "label" : "[S]lack",
-          "type" : "application",
-          "value" : "/Applications/Slack.app"
+          "key": "s",
+          "label": "[S]lack",
+          "type": "application",
+          "value": "/Applications/Slack.app"
         },
         {
-          "key" : "t",
-          "label" : "[T]erminal Kitty",
-          "type" : "application",
-          "value" : "/Applications/kitty.app"
+          "key": "t",
+          "label": "[T]erminal Kitty",
+          "type": "application",
+          "value": "/Applications/kitty.app"
         },
         {
-          "iconPath" : "/System/Applications/Notes.app",
-          "key" : "n",
-          "label" : "[N]otes",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/raycast-notes/raycast-notes"
+          "iconPath": "/System/Applications/Notes.app",
+          "key": "n",
+          "label": "[N]otes",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/raycast-notes/raycast-notes"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Google Meet.app",
-          "key" : "m",
-          "label" : "Google [M]eet",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmeet.google.com%2F&arguments=no"
+          "iconPath": "~/.config/leader-key/icons/apps/Google Meet.app",
+          "key": "m",
+          "label": "Google [M]eet",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmeet.google.com%2F&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/YouTube.app",
-          "key" : "y",
-          "label" : "YouTube",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=youtube&arguments=yes"
+          "iconPath": "~/.config/leader-key/icons/apps/YouTube.app",
+          "key": "y",
+          "label": "YouTube",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=youtube&arguments=yes"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Gmail.app",
-          "key" : "g",
-          "label" : "Gmail (Profile 0)",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0&arguments=no"
+          "iconPath": "~/.config/leader-key/icons/apps/Gmail.app",
+          "key": "g",
+          "label": "Gmail (Profile 0)",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Gmail.app",
-          "key" : "G",
-          "label" : "Gmail (Profile 1)",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F1&arguments=no"
+          "iconPath": "~/.config/leader-key/icons/apps/Gmail.app",
+          "key": "G",
+          "label": "Gmail (Profile 1)",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F1&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Google Calendar.app",
-          "key" : "c",
-          "label" : "Calendar",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fu%2F0%2Fr&arguments=no"
+          "iconPath": "~/.config/leader-key/icons/apps/Google Calendar.app",
+          "key": "c",
+          "label": "Calendar",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fu%2F0%2Fr&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Local Env.app",
-          "key" : "l",
-          "label" : "Local Env",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A3817&arguments=no"
+          "iconPath": "~/.config/leader-key/icons/apps/Local Env.app",
+          "key": "l",
+          "label": "Local Env",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A3817&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Swagger.app",
-          "key" : "d",
-          "label" : "Swagger",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A8000&arguments=no"
+          "iconPath": "~/.config/leader-key/icons/apps/Swagger.app",
+          "key": "d",
+          "label": "Swagger",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A8000&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Bitbucket.app",
-          "key" : "p",
-          "label" : "My pull requests",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fbitbucket.org%2Frevolut%2Fbackoffice-frontend%2Fpull-requests%2F%3Fstate%3DOPEN%26author%3D%257B879a259e-1653-46b3-a363-1610175ef44f%257D&arguments=no"
+          "iconPath": "~/.config/leader-key/icons/apps/Bitbucket.app",
+          "key": "p",
+          "label": "My pull requests",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fbitbucket.org%2Frevolut%2Fbackoffice-frontend%2Fpull-requests%2F%3Fstate%3DOPEN%26author%3D%257B879a259e-1653-46b3-a363-1610175ef44f%257D&arguments=no"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Slack.app",
-          "key" : "P",
-          "label" : "Others' pull requests",
-          "type" : "url",
-          "value" : "https://team-revolut.slack.com/archives/C06GD40TW3F"
+          "iconPath": "~/.config/leader-key/icons/apps/Slack.app",
+          "key": "P",
+          "label": "Others' pull requests",
+          "type": "url",
+          "value": "https://team-revolut.slack.com/archives/C06GD40TW3F"
         },
         {
-          "iconPath" : "/Users/edygar.oliveira/.config/leader-key/icons/apps/Jira.app",
-          "key" : "j",
-          "label" : "JIRA",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Frevolut.atlassian.net%2Fjira%2Fsoftware%2Fc%2Fprojects%2FPCRDC%2Fboards%2F9187%3Fassignee%3D6422e8a5407493675d482a49&arguments=no"
+          "iconPath": "~/.config/leader-key/icons/apps/Jira.app",
+          "key": "j",
+          "label": "JIRA",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Frevolut.atlassian.net%2Fjira%2Fsoftware%2Fc%2Fprojects%2FPCRDC%2Fboards%2F9187%3Fassignee%3D6422e8a5407493675d482a49&arguments=no"
         }
       ],
-      "iconPath" : "rectangle.portrait.and.arrow.right",
-      "key" : "g",
-      "label" : "Go to...",
-      "type" : "group"
+      "iconPath": "rectangle.portrait.and.arrow.right",
+      "key": "g",
+      "label": "Go to...",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "iconPath" : "/Applications/Google Chrome.app",
-          "key" : "b",
-          "label" : "Browser tabs",
-          "type" : "url",
-          "value" : "raycast-x://extensions/Codely/google-chrome/search-tab"
+          "iconPath": "/Applications/Google Chrome.app",
+          "key": "b",
+          "label": "Browser tabs",
+          "type": "url",
+          "value": "raycast-x://extensions/Codely/google-chrome/search-tab"
         },
         {
-          "iconPath" : "/System/Library/CoreServices/Finder.app",
-          "key" : "f",
-          "label" : "Files",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/file-search/search-files"
+          "iconPath": "/System/Library/CoreServices/Finder.app",
+          "key": "f",
+          "label": "Files",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/file-search/search-files"
         },
         {
-          "iconPath" : "/Applications/Slack.app",
-          "key" : "s",
-          "label" : "Slack",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/launch-app-and-shortcut?arguments=Slack.app&arguments=cmd+k"
+          "iconPath": "/Applications/Slack.app",
+          "key": "s",
+          "label": "Slack",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/launch-app-and-shortcut?arguments=Slack.app&arguments=cmd+k"
         }
       ],
-      "iconPath" : "magnifyingglass",
-      "key" : "s",
-      "label" : "Search",
-      "type" : "group"
+      "iconPath": "magnifyingglass",
+      "key": "s",
+      "label": "Search",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "iconPath" : "house.fill",
-          "key" : "h",
-          "label" : "Home",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/"
+          "iconPath": "house.fill",
+          "key": "h",
+          "label": "Home",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/"
         },
         {
-          "iconPath" : "square.and.arrow.down.fill",
-          "key" : "n",
-          "label" : "Downloads",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Downloads/"
+          "iconPath": "square.and.arrow.down.fill",
+          "key": "n",
+          "label": "Downloads",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Downloads/"
         },
         {
-          "iconPath" : "desktopcomputer.and.arrow.down",
-          "key" : "d",
-          "label" : "Desktop",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Desktop/"
+          "iconPath": "desktopcomputer.and.arrow.down",
+          "key": "d",
+          "label": "Desktop",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Desktop/"
         },
         {
-          "iconPath" : "desktopcomputer.and.arrow.down",
-          "key" : "r",
-          "label" : "Revolut Codes",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Code/revolut/"
+          "iconPath": "desktopcomputer.and.arrow.down",
+          "key": "r",
+          "label": "Work Codebase",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/file-search/search-files?fallbackText=~/Code/work/"
         }
       ],
-      "iconPath" : "folder.fill.badge.gearshape",
-      "key" : "f",
-      "label" : "Browse folder",
-      "type" : "group"
+      "iconPath": "folder.fill.badge.gearshape",
+      "key": "f",
+      "label": "Browse folder",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "iconPath" : "house.fill",
-          "key" : "h",
-          "label" : "Home",
-          "type" : "folder",
-          "value" : "/Users/edygar.oliveira"
+          "iconPath": "house.fill",
+          "key": "h",
+          "label": "Home",
+          "type": "folder",
+          "value": "~"
         },
         {
-          "iconPath" : "desktopcomputer.and.arrow.down",
-          "key" : "d",
-          "label" : "Desktop",
-          "type" : "folder",
-          "value" : "/Users/edygar.oliveira/Desktop"
+          "iconPath": "desktopcomputer.and.arrow.down",
+          "key": "d",
+          "label": "Desktop",
+          "type": "folder",
+          "value": "~/Desktop"
         },
         {
-          "iconPath" : "square.and.arrow.down.fill",
-          "key" : "n",
-          "label" : "Downloads",
-          "type" : "folder",
-          "value" : "/Users/edygar.oliveira/Downloads"
+          "iconPath": "square.and.arrow.down.fill",
+          "key": "n",
+          "label": "Downloads",
+          "type": "folder",
+          "value": "~/Downloads"
+        },
+        {
+          "iconPath": "desktopcomputer.and.arrow.down",
+          "key": "w",
+          "label": "Work Codebase",
+          "type": "url",
+          "value": "~/Code/work/"
         }
       ],
-      "iconPath" : "folder.fill",
-      "key" : "F",
-      "label" : "Open folder",
-      "type" : "group"
+      "iconPath": "folder.fill",
+      "key": "F",
+      "label": "Open folder",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "iconPath" : "camera.on.rectangle.fill",
-          "key" : "c",
-          "label" : "Screenshots",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/screenshots/search-screenshots"
+          "iconPath": "camera.on.rectangle.fill",
+          "key": "c",
+          "label": "Screenshots",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/screenshots/search-screenshots"
         },
         {
-          "key" : "n",
-          "label" : "Notes",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/raycast-notes/raycast-notes"
+          "key": "n",
+          "label": "Notes",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/raycast-notes/raycast-notes"
         },
         {
-          "key" : "t",
-          "label" : "Ticket",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/get-ticket?arguments={selection}&arguments={clipboard}"
+          "key": "t",
+          "label": "Ticket",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/get-ticket?arguments={selection}&arguments={clipboard}"
         },
         {
-          "iconPath" : "wallet.pass",
-          "key" : "s",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/snippets/search-snippets"
+          "iconPath": "wallet.pass",
+          "key": "s",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/snippets/search-snippets"
         }
       ],
-      "iconPath" : "sparkles",
-      "key" : "r",
-      "label" : "Raycast",
-      "type" : "group"
+      "iconPath": "sparkles",
+      "key": "r",
+      "label": "Raycast",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "key" : "a",
-          "label" : "WorkSpace A",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20A%20--fail-if-noop"
+          "key": "a",
+          "label": "WorkSpace A",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20A%20--fail-if-noop"
         },
         {
-          "key" : "b",
-          "label" : "WorkSpace B",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20B%20--fail-if-noop"
+          "key": "b",
+          "label": "WorkSpace B",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20B%20--fail-if-noop"
         },
         {
-          "key" : "d",
-          "label" : "WorkSpace D",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20D%20--fail-if-noop"
+          "key": "d",
+          "label": "WorkSpace D",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20D%20--fail-if-noop"
         },
         {
-          "key" : "f",
-          "label" : "WorkSpace F",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20F%20--fail-if-noop"
+          "key": "f",
+          "label": "WorkSpace F",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20F%20--fail-if-noop"
         },
         {
-          "key" : "g",
-          "label" : "WorkSpace G",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20G%20--fail-if-noop"
+          "key": "g",
+          "label": "WorkSpace G",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20G%20--fail-if-noop"
         },
         {
-          "key" : "m",
-          "label" : "WorkSpace M",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20M%20--fail-if-noop"
+          "key": "m",
+          "label": "WorkSpace M",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20M%20--fail-if-noop"
         },
         {
-          "key" : "o",
-          "label" : "WorkSpace O",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20O%20--fail-if-noop"
+          "key": "o",
+          "label": "WorkSpace O",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20O%20--fail-if-noop"
         },
         {
-          "key" : "p",
-          "label" : "WorkSpace P",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20P%20--fail-if-noop"
+          "key": "p",
+          "label": "WorkSpace P",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20P%20--fail-if-noop"
         },
         {
-          "key" : "q",
-          "label" : "WorkSpace Q",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20Q%20--fail-if-noop"
+          "key": "q",
+          "label": "WorkSpace Q",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20Q%20--fail-if-noop"
         },
         {
-          "key" : "r",
-          "label" : "WorkSpace R",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20R%20--fail-if-noop"
+          "key": "r",
+          "label": "WorkSpace R",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20R%20--fail-if-noop"
         },
         {
-          "key" : "s",
-          "label" : "WorkSpace S",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20S%20--fail-if-noop"
+          "key": "s",
+          "label": "WorkSpace S",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20S%20--fail-if-noop"
         },
         {
-          "key" : "t",
-          "label" : "WorkSpace T",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20T%20--fail-if-noop"
+          "key": "t",
+          "label": "WorkSpace T",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20T%20--fail-if-noop"
         },
         {
-          "key" : "u",
-          "label" : "WorkSpace U",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20U%20--fail-if-noop"
+          "key": "u",
+          "label": "WorkSpace U",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20U%20--fail-if-noop"
         },
         {
-          "key" : "v",
-          "label" : "WorkSpace V",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20V%20--fail-if-noop"
+          "key": "v",
+          "label": "WorkSpace V",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20V%20--fail-if-noop"
         },
         {
-          "key" : "x",
-          "label" : "WorkSpace X",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20X%20--fail-if-noop"
+          "key": "x",
+          "label": "WorkSpace X",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20X%20--fail-if-noop"
         },
         {
-          "key" : "z",
-          "label" : "WorkSpace Z",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20Z%20--fail-if-noop"
+          "key": "z",
+          "label": "WorkSpace Z",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20workspace%20Z%20--fail-if-noop"
         }
       ],
-      "iconPath" : "/Applications/AeroSpace.app",
-      "key" : "w",
-      "label" : "Workspace",
-      "type" : "group"
+      "iconPath": "/Applications/AeroSpace.app",
+      "key": "w",
+      "label": "Workspace",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "key" : "C",
-          "type" : "url",
-          "value" : "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Constant%20Case%22%7D"
+          "key": "C",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Constant%20Case%22%7D"
         }
       ],
-      "iconPath" : "textformat",
-      "key" : "c",
-      "label" : "Change case",
-      "type" : "group"
+      "iconPath": "textformat",
+      "key": "c",
+      "label": "Change case",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "key" : "r",
-          "label" : "[R]eset layout",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20flatten-workspace-tree"
+          "key": "r",
+          "label": "[R]eset layout",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20flatten-workspace-tree"
         },
         {
-          "key" : "f",
-          "label" : "[F]loating toggle",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20layout%20floating%20tiling"
+          "key": "f",
+          "label": "[F]loating toggle",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20layout%20floating%20tiling"
         },
         {
-          "key" : "m",
-          "label" : "[M]aximize (fullscreen)",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20fullscreen"
+          "key": "m",
+          "label": "[M]aximize (fullscreen)",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20fullscreen"
         },
         {
-          "key" : "C",
-          "label" : "Close all but current",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20close-all-windows-but-current"
+          "key": "C",
+          "label": "Close all but current",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20close-all-windows-but-current"
         },
         {
-          "key" : "h",
-          "label" : "Join left",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20left"
+          "key": "h",
+          "label": "Join left",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20left"
         },
         {
-          "key" : "j",
-          "label" : "Join down",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20down"
+          "key": "j",
+          "label": "Join down",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20down"
         },
         {
-          "key" : "k",
-          "label" : "Join up",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20up"
+          "key": "k",
+          "label": "Join up",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20up"
         },
         {
-          "key" : "l",
-          "label" : "Join right",
-          "type" : "url",
-          "value" : "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20right"
+          "key": "l",
+          "label": "Join right",
+          "type": "url",
+          "value": "raycast-x://extensions/raycast/script-commands/sh?arguments=/opt/homebrew/bin/aerospace%20join-with%20right"
         }
       ],
-      "iconPath" : "wrench.and.screwdriver",
-      "key" : "a",
-      "label" : "AeroSpace",
-      "type" : "group"
+      "iconPath": "wrench.and.screwdriver",
+      "key": "a",
+      "label": "AeroSpace",
+      "type": "group"
     },
     {
-      "iconPath" : "arrow.trianglehead.counterclockwise",
-      "key" : "R",
-      "label" : "Reload all configs!",
-      "type" : "url",
-      "value" : "raycast-x://extensions/raycast/script-commands/reload-configs"
+      "iconPath": "arrow.trianglehead.counterclockwise",
+      "key": "R",
+      "label": "Reload all configs!",
+      "type": "url",
+      "value": "raycast-x://extensions/raycast/script-commands/reload-configs"
     }
   ],
-  "type" : "group"
+  "type": "group"
 }
