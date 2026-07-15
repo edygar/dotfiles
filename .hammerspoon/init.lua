@@ -34,6 +34,14 @@ if okGridTile and spoon.GridTile then
   end)
 end
 
+local okScreenshotTile = pcall(hs.loadSpoon, "ScreenshotTile")
+if okScreenshotTile and spoon.ScreenshotTile then
+  spoon.ScreenshotTile:bindHotkeys({
+    save = { { "cmd", "shift" }, "2" },
+    clipboard = { { "cmd", "ctrl", "shift" }, "2" },
+  })
+end
+
 local appURLs = {
   ["Google Chrome"] = "raycast-x://extensions/jerome_soyer/chrome/move-tab-to-window",
   ["kitty"] = "raycast-x://extensions/jerome_soyer/kitty/move-tab-to-window",

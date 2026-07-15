@@ -60,8 +60,8 @@ cspell.json
 .config/opencode/package-lock.json
 .config/raycast-x/extensions/kitty/node_modules/
 .config/raycast-x/extensions/kitty/package-lock.json
+.config/raycast-x/extensions/qr-code/node_modules/
 .local/share/nvim/
 .config/nvim/.neoconf.json
 .config/nvim/lazy-lock.json
 .config/wallpapers/
-

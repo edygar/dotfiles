@@ -28,70 +28,70 @@
           "value": "raycast-x://extensions/raycast/raycast-notes/raycast-notes"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Google Meet.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Google Meet.app/Contents/Resources/AppIcon.icns",
           "key": "m",
           "label": "Google [M]eet",
           "type": "url",
           "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmeet.google.com%2F&arguments=no"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/YouTube.app",
+          "iconPath": "/Users/Shared/leader-key-icons/YouTube.app/Contents/Resources/AppIcon.icns",
           "key": "y",
           "label": "YouTube",
           "type": "url",
           "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=youtube&arguments=yes"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Gmail.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Gmail.app/Contents/Resources/AppIcon.icns",
           "key": "g",
           "label": "Gmail (Profile 0)",
           "type": "url",
           "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0&arguments=no"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Gmail.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Gmail.app/Contents/Resources/AppIcon.icns",
           "key": "G",
           "label": "Gmail (Profile 1)",
           "type": "url",
           "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F1&arguments=no"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Google Calendar.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Google Calendar.app/Contents/Resources/AppIcon.icns",
           "key": "c",
           "label": "Calendar",
           "type": "url",
           "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fu%2F0%2Fr&arguments=no"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Local Env.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Local Env.app/Contents/Resources/AppIcon.icns",
           "key": "l",
           "label": "Local Env",
           "type": "url",
           "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A3817&arguments=no"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Swagger.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Swagger.app/Contents/Resources/AppIcon.icns",
           "key": "d",
           "label": "Swagger",
           "type": "url",
           "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=http%3A%2F%2Flocalhost%3A8000&arguments=no"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Bitbucket.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Bitbucket.app/Contents/Resources/AppIcon.icns",
           "key": "p",
           "label": "My pull requests",
           "type": "url",
           "value": "raycast-x://extensions/raycast/script-commands/focus-tab?arguments=https%3A%2F%2Fbitbucket.org%2Frevolut%2Fbackoffice-frontend%2Fpull-requests%2F%3Fstate%3DOPEN%26author%3D%257B879a259e-1653-46b3-a363-1610175ef44f%257D&arguments=no"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Slack.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Slack.app/Contents/Resources/AppIcon.icns",
           "key": "P",
           "label": "Others' pull requests",
           "type": "url",
           "value": "https://team-revolut.slack.com/archives/C06GD40TW3F"
         },
         {
-          "iconPath": "~/.config/leader-key/icons/apps/Jira.app",
+          "iconPath": "/Users/Shared/leader-key-icons/Jira.app/Contents/Resources/AppIcon.icns",
           "key": "j",
           "label": "JIRA",
           "type": "url",
@@ -344,9 +344,130 @@
     {
       "actions": [
         {
-          "key": "C",
+          "key": "c",
+          "label": "Camel Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Camel%20Case%22%7D"
+        },
+        {
+          "key": "a",
+          "label": "Capital Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Capital%20Case%22%7D"
+        },
+        {
+          "key": "u",
+          "label": "Constant Case",
           "type": "url",
           "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Constant%20Case%22%7D"
+        },
+        {
+          "key": ".",
+          "label": "Dot Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Dot%20Case%22%7D"
+        },
+        {
+          "key": "K",
+          "label": "Header Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Header%20Case%22%7D"
+        },
+        {
+          "key": "l",
+          "label": "Lower Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Lower%20Case%22%7D"
+        },
+        {
+          "key": "f",
+          "label": "Lower First",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Lower%20First%22%7D"
+        },
+        {
+          "key": " ",
+          "label": "No Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22No%20Case%22%7D"
+        },
+        {
+          "key": "k",
+          "label": "Kebab Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Kebab%20Case%22%7D"
+        },
+        {
+          "key": "-",
+          "label": "Kebab Upper Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Kebab%20Upper%20Case%22%7D"
+        },
+        {
+          "key": "p",
+          "label": "Pascal Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Pascal%20Case%22%7D"
+        },
+        {
+          "key": "P",
+          "label": "Pascal Snake Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Pascal%20Snake%20Case%22%7D"
+        },
+        {
+          "key": "/",
+          "label": "Path Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Path%20Case%22%7D"
+        },
+        {
+          "key": "A",
+          "label": "Alternating Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Alternating%20Case%22%7D"
+        },
+        {
+          "key": "r",
+          "label": "Random Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Random%20Case%22%7D"
+        },
+        {
+          "key": "s",
+          "label": "Sentence Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Sentence%20Case%22%7D"
+        },
+        {
+          "key": "_",
+          "label": "Snake Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Snake%20Case%22%7D"
+        },
+        {
+          "key": "S",
+          "label": "Swap Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Swap%20Case%22%7D"
+        },
+        {
+          "key": "t",
+          "label": "Title Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Title%20Case%22%7D"
+        },
+        {
+          "key": "U",
+          "label": "Upper Case",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Upper%20Case%22%7D"
+        },
+        {
+          "key": "F",
+          "label": "Upper First",
+          "type": "url",
+          "value": "raycast-x://extensions/erics118/change-case/change-case?context=%7B%22case%22%3A%22Upper%20First%22%7D"
         }
       ],
       "iconPath": "textformat",

@@ -191,7 +191,9 @@ The install script handles:
 
 ### Leader Key (`~/.config/leader-key/`)
 
-Config symlinked from `~/.config/leader-key/config.json` to `~/Library/Application Support/Leader Key/config.json`.
+Uses the maintained `kevintraver/LeaderKey` fork, installed from source by `~/.local/bin/install-leader-key.zsh` when full Xcode is available.
+
+Config symlinked from `~/.config/leader-key/config.json` to `~/Library/Application Support/Leader Key/config.json`. Custom icons use `/Users/Shared/leader-key-icons`, a symlink to `~/.config/leader-key/icons/apps`, and point directly at image files. This requires the fork because upstream treats non-`.app` `iconPath` values as SF Symbols.
 
 | Key | Group |
 |---|---|

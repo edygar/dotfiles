@@ -113,13 +113,18 @@ fi
 
 # ─── 7. Leader Key config symlink ────────────────────────────────────────────
 
-echo "[7/12] Leader Key config symlink..."
+echo "[7/12] Leader Key fork and config symlink..."
+if [[ -f "$HOME/.local/bin/install-leader-key.zsh" ]]; then
+  "$HOME/.local/bin/install-leader-key.zsh"
+fi
 LEADER_KEY_DIR="$HOME/Library/Application Support/Leader Key"
+LEADER_KEY_CONFIG="$LEADER_KEY_DIR/config.json"
 mkdir -p "$LEADER_KEY_DIR"
-if [[ -L "$LEADER_KEY_DIR/config.json" ]]; then
+ln -sfn "$HOME/.config/leader-key/icons/apps" "/Users/Shared/leader-key-icons"
+if [[ -L "$LEADER_KEY_CONFIG" ]]; then
   echo "  Symlink already exists."
 else
-  ln -sf "$HOME/.config/leader-key/config.json" "$LEADER_KEY_DIR/config.json"
+  ln -sf "$HOME/.config/leader-key/config.json" "$LEADER_KEY_CONFIG"
   echo "  Created symlink."
 fi
 
@@ -150,9 +155,19 @@ else
   echo "  Skipped (kitty extension not found)."
 fi
 
-# ─── 8c. Hammerspoon config symlink ──────────────────────────────────────────
+# ─── 8c. Build QR Code Raycast extension ─────────────────────────────────────
 
-echo "[8c/13] Hammerspoon config..."
+echo "[8c/13] Building QR Code Raycast extension..."
+QR_CODE_EXT_DIR="$HOME/.config/raycast-x/extensions/qr-code"
+if [[ -f "$QR_CODE_EXT_DIR/install.sh" ]]; then
+  "$QR_CODE_EXT_DIR/install.sh"
+else
+  echo "  Skipped (qr-code extension not found)."
+fi
+
+# ─── 8d. Hammerspoon config symlink ──────────────────────────────────────────
+
+echo "[8d/13] Hammerspoon config..."
 HAMMERSPOON_DIR="$HOME/.hammerspoon"
 mkdir -p "$HAMMERSPOON_DIR/modules"
 mkdir -p "$HAMMERSPOON_DIR/Spoons"
@@ -165,6 +180,12 @@ fi
 ln -sf "$REPO_DIR/.hammerspoon/modules/chrome-move-tab.lua" "$HAMMERSPOON_DIR/modules/chrome-move-tab.lua" 2>/dev/null || true
 ln -sf "$REPO_DIR/.hammerspoon/modules/menubar-cover.lua" "$HAMMERSPOON_DIR/modules/menubar-cover.lua" 2>/dev/null || true
 echo "  Module symlinks updated."
+if [[ -e "$HAMMERSPOON_DIR/Spoons/ScreenshotTile.spoon" && ! -L "$HAMMERSPOON_DIR/Spoons/ScreenshotTile.spoon" ]]; then
+  echo "  ScreenshotTile.spoon path already exists."
+else
+  ln -sf "$REPO_DIR/.hammerspoon/Spoons/ScreenshotTile.spoon" "$HAMMERSPOON_DIR/Spoons/ScreenshotTile.spoon" 2>/dev/null || true
+  echo "  ScreenshotTile.spoon symlink updated."
+fi
 if [[ -d "$REPO_DIR/.hammerspoon/Spoons/GridTile" ]]; then
   git -C "$REPO_DIR" submodule update --init --recursive .hammerspoon/Spoons/GridTile >/dev/null 2>&1 || true
   if [[ -f "$REPO_DIR/.hammerspoon/Spoons/GridTile-custom.patch" ]]; then

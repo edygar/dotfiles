@@ -35,6 +35,20 @@ if vim.fn.has "nvim-0.12" == 1 then
       metadata["injection.language"] = configured or vim.split(value, "/", {})[#vim.split(value, "/", {})]
     end, { force = true })
   end
+
+  local tsrange_ok, tsrange = pcall(require, "nvim-treesitter.tsrange")
+  if tsrange_ok and not tsrange.TSRange._dotfiles_from_nodes_patched then
+    local from_nodes = tsrange.TSRange.from_nodes
+    local function range_node(node, fallback)
+      if type(node) == "table" then return node[fallback and #node or 1] end
+      return node
+    end
+
+    tsrange.TSRange.from_nodes = function(bufnr, start_node, end_node)
+      return from_nodes(bufnr, range_node(start_node), range_node(end_node, true))
+    end
+    tsrange.TSRange._dotfiles_from_nodes_patched = true
+  end
 end
 
 vim.keymap.set("n", "<leader>xeq", qf_editor.quickfix_from_paste_prompt)
