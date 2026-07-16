@@ -1,20 +1,70 @@
 diff --git i/GridTile.spoon/init.lua w/GridTile.spoon/init.lua
-index 21579f5..dcdecf7 100644
+index 21579f5..4651984 100644
 --- i/GridTile.spoon/init.lua
 +++ w/GridTile.spoon/init.lua
-@@ -4,6 +4,8 @@ obj.active = false
- 
- local canvas = nil
- local menuBarHeight = nil
+@@ -2,8 +2,10 @@ local obj = {}
+ obj.__index = obj
+ obj.active = false
+
+-local canvas = nil
+-local menuBarHeight = nil
++local canvas = nil
++local menuBarHeight = nil
 +local topMargin = 48
 +local gridOrigin = { x = 0, y = 0 }
- 
+
  obj.gridMode = hs.hotkey.modal.new()
- 
-@@ -55,6 +57,17 @@ local function getRect(a, b)
-     }
+
+@@ -39,7 +41,7 @@ local function hasNoNilValues(t)
+     return true
  end
- 
+
+-local function getRect(a, b)
++local function getRect(a, b)
+     local minX = math.min(a.x1, b.x1)
+     local minY = math.min(a.y1, b.y1)
+     local maxX = math.max(a.x2, b.x2)
+@@ -52,8 +54,51 @@ local function getRect(a, b)
+         y2 = maxY,
+         w = maxX - minX,
+         h = maxY - minY
+-    }
+-end
++    }
++end
++
++local function highlightCell(cell)
++    if not canvas then return end
++
++    canvas:appendElements({
++        type = "rectangle",
++        action = "strokeAndFill",
++        strokeColor = {
++            red = 0.2,
++            green = 0.55,
++            blue = 1,
++            alpha = 0.95
++        },
++        fillColor = {
++            red = 0.2,
++            green = 0.55,
++            blue = 1,
++            alpha = 0.35
++        },
++        roundedRectRadii = {
++            xRadius = 10,
++            yRadius = 10
++        },
++        strokeWidth = 2,
++        frame = {
++            x = cell.x1,
++            y = cell.y1,
++            w = cell.x2 - cell.x1,
++            h = cell.y2 - cell.y1
++        }
++    })
++end
++
 +local function focusedAerospaceLayout()
 +    local raw = hs.execute("/opt/homebrew/bin/aerospace list-windows --focused --format '%{window-layout}' 2>/dev/null", false)
 +    if not raw then return nil end
@@ -25,70 +75,130 @@ index 21579f5..dcdecf7 100644
 +    hs.execute("/opt/homebrew/bin/aerospace resize width " .. math.floor(rect.w) .. " 2>/dev/null", false)
 +    hs.execute("/opt/homebrew/bin/aerospace resize height " .. math.floor(rect.h) .. " 2>/dev/null", false)
 +end
-+
+
  local function exitGridTile()
      if not obj.active then return end
- 
-@@ -80,9 +93,15 @@ local function handleSelection(startCell, endCell)
-         return
-     end
- 
+@@ -72,20 +117,26 @@ local function exitGridTile()
+     obj.active = false
+ end
+
+-local function handleSelection(startCell, endCell)
+-    local rect = getRect(startCell, endCell)
+-
+-    local win = hs.window.focusedWindow()
+-    if not win then
+-        return
+-    end
+-
+-    win:setFrame({
+-        x = rect.x1,
+-        y = rect.y1 + menuBarHeight,
+-        w = rect.w,
+-        h = rect.h
+-    })
++local function handleSelection(startCell, endCell)
++    local rect = getRect(startCell, endCell)
++
++    local win = hs.window.focusedWindow()
++    if not win then
++        return
++    end
++
 +    if focusedAerospaceLayout() ~= "floating" then
 +        resizeWithAerospace(rect)
 +        exitGridTile()
 +        return
 +    end
 +
-     win:setFrame({
--        x = rect.x1,
--        y = rect.y1 + menuBarHeight,
++    win:setFrame({
 +        x = gridOrigin.x + rect.x1,
 +        y = gridOrigin.y + rect.y1,
-         w = rect.w,
-         h = rect.h
-     })
-@@ -119,6 +138,9 @@ function obj:start()
- 
++        w = rect.w,
++        h = rect.h
++    })
+
+     -- Close the GridTile Extension
+     exitGridTile()
+@@ -118,8 +169,11 @@ function obj:start()
+     local screen = win and win:screen() or hs.screen.mainScreen()
+
      -- Draw a canvas on the screen
-     local frame = screen:frame()
+-    local frame = screen:frame()
+-    canvas = hs.canvas.new(frame)
++    local frame = screen:frame()
 +    frame.y = frame.y + topMargin
 +    frame.h = frame.h - topMargin
 +    gridOrigin = { x = frame.x, y = frame.y }
-     canvas = hs.canvas.new(frame)
++    canvas = hs.canvas.new(frame)
      canvas:show()
- 
-@@ -127,16 +149,16 @@ function obj:start()
+
+     -- Define the grid weights
+@@ -127,17 +181,17 @@ function obj:start()
      -- USER CONFIGURATION START
      -- ====================================================================================================
- 
+
 -    local columnWeights = {1, 2, 3, 3, 3, 3, 2, 1}
 -    local rowWeights = {1, 2, 3, 2, 1}
 +    local columnWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 +    local rowWeights = {1, 1, 1, 1, 1}
- 
+
      -- lua-format off
-     local letters = {
--      "1", "2", "3", "4", "7", "8", "9", "0", 
--      "q", "w", "e", "r", "u", "i", "o", "p", 
--      "Q", "W", "E", "R", "U", "I", "I", "P", 
--      "a", "s", "d", "f", "j", "k", "l", ";", 
+-    local letters = {
+-      "1", "2", "3", "4", "7", "8", "9", "0",
+-      "q", "w", "e", "r", "u", "i", "o", "p",
+-      "Q", "W", "E", "R", "U", "I", "I", "P",
+-      "a", "s", "d", "f", "j", "k", "l", ";",
 -      "z", "x", "c", "v", "n", "m", ",", "."
+-    }
++    local letters = {
 +      "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
 +      "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
 +      "a", "s", "d", "f", "g", "h", "j", "k", "l", "'",
 +      "A", "S", "D", "F", "G", "H", "J", "K", "L", "\"",
 +      "z", "x", "c", "v", "b", "n", "m", ",", ".", "/"
-     }
++    }
      -- lua-format on
- 
-@@ -248,7 +270,9 @@ function obj:start()
+
+     -- Padding between grid cells
+@@ -227,16 +281,17 @@ function obj:start()
+
+             local fn = function()
+                 if not selectionStart.isSet then
+-                    selectionStart = {
+-                        x1 = cellX1,
+-                        x2 = cellX2,
+-                        y1 = cellY1,
+-                        y2 = cellY2,
+-                        isSet = true
+-                    }
+-                    -- hs.alert.show("Start: " .. key .. " @ x=" .. cellX1, 1)
+-
+-                else
++                    selectionStart = {
++                        x1 = cellX1,
++                        x2 = cellX2,
++                        y1 = cellY1,
++                        y2 = cellY2,
++                        isSet = true
++                    }
++                    highlightCell(selectionStart)
++                    -- hs.alert.show("Start: " .. key .. " @ x=" .. cellX1, 1)
++
++                else
+                     -- hs.alert.show("End: " .. key .. " @ x=" .. cellX1, 1)
+                     selectionEnd = {
+                         x1 = cellX1,
+@@ -248,9 +303,11 @@ function obj:start()
                  end
              end
- 
+
 -            if key:match("%u") then
+-                obj.gridMode:bind({"shift"}, key:lower(), fn)
+-            else
 +            if key == "\"" then
 +                obj.gridMode:bind({"shift"}, "'", fn)
 +            elseif key:match("%u") then
-                 obj.gridMode:bind({"shift"}, key:lower(), fn)
-             else
++                obj.gridMode:bind({"shift"}, key:lower(), fn)
++            else
                  obj.gridMode:bind({}, key, fn)
+             end

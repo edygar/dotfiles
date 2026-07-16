@@ -9,7 +9,11 @@ local cellsByLabel = {}
 local orderedCells = {}
 local selectionStart = nil
 local selectionEnd = nil
+local selectionCornerFocus = "end"
+local selectionStartBackState = nil
+local selectionEndBackState = nil
 local activeTile = nil
+local subgridVisible = false
 local typed = ""
 local activeScreen = nil
 local activeFrame = nil
@@ -130,7 +134,11 @@ local function exitScreenshotTile()
     orderedCells = {}
     selectionStart = nil
     selectionEnd = nil
+    selectionCornerFocus = "end"
+    selectionStartBackState = nil
+    selectionEndBackState = nil
     activeTile = nil
+    subgridVisible = false
     typed = ""
     activeScreen = nil
     activeFrame = nil
@@ -162,15 +170,24 @@ local function prefixBounds(prefix)
     return bounds
 end
 
-local function prefixMidpointMarker(prefix)
+local function prefixMarker(prefix, role)
     local bounds = prefixBounds(prefix)
     if not bounds then return nil end
+
+    if role == "end" then
+        return {
+            kind = "point",
+            label = prefix,
+            x = bounds.x2,
+            y = bounds.y2,
+        }
+    end
 
     return {
         kind = "point",
         label = prefix,
-        x = bounds.x1 + ((bounds.x2 - bounds.x1) / 2),
-        y = bounds.y1 + ((bounds.y2 - bounds.y1) / 2),
+        x = bounds.x1,
+        y = bounds.y1,
     }
 end
 
@@ -223,6 +240,17 @@ local function markerBounds(marker)
     }
 end
 
+local function selectionRectBounds(startMarker, endMarker)
+    local startBounds = markerBounds(startMarker)
+    local endBounds = markerBounds(endMarker)
+    local x1 = math.min(startBounds.x1, endBounds.x2)
+    local y1 = math.min(startBounds.y1, endBounds.y2)
+    local x2 = math.max(startBounds.x1, endBounds.x2)
+    local y2 = math.max(startBounds.y1, endBounds.y2)
+
+    return { x1 = x1, y1 = y1, x2 = x2, y2 = y2 }
+end
+
 local function markerCenter(marker)
     local bounds = markerBounds(marker)
     return {
@@ -231,20 +259,44 @@ local function markerCenter(marker)
     }
 end
 
+local function markerAnchor(marker, role)
+    local bounds = markerBounds(marker)
+
+    if marker.kind == "point" then
+        return { x = bounds.x1, y = bounds.y1 }
+    end
+
+    if role == "end" then
+        return { x = bounds.x2, y = bounds.y2 }
+    end
+
+    return { x = bounds.x1, y = bounds.y1 }
+end
+
+local function focusedSelectionPoint()
+    if not selectionStart or not selectionEnd then return nil end
+
+    if selectionCornerFocus == "start" then
+        return markerAnchor(selectionStart, "start")
+    end
+
+    return markerAnchor(selectionEnd, "end")
+end
+
 local function activeCrossPoint()
     local point = nil
 
     if nudgedPoint then
         point = nudgedPoint
     elseif activeTile then
-        point = markerCenter(tileMarker(activeTile))
+        point = markerAnchor(tileMarker(activeTile), selectionStart and "end" or "start")
     elseif #typed == 1 then
-        local marker = prefixMidpointMarker(typed)
+        local marker = prefixMarker(typed, selectionStart and "end" or "start")
         point = marker and markerCenter(marker) or nil
     elseif selectionEnd then
-        point = markerCenter(selectionEnd)
+        point = markerAnchor(selectionEnd, "end")
     elseif selectionStart then
-        point = markerCenter(selectionStart)
+        point = markerAnchor(selectionStart, "start")
     end
 
     if point then
@@ -281,6 +333,7 @@ local function appendCrosshair()
         action = "stroke",
         strokeColor = { red = 0.2, green = 0.55, blue = 1, alpha = 0.95 },
         strokeWidth = 1,
+        strokeDashPattern = { 6, 4 },
         coordinates = {
             { x = 0, y = point.y },
             { x = frame.w, y = point.y },
@@ -290,6 +343,7 @@ local function appendCrosshair()
         action = "stroke",
         strokeColor = { red = 0.2, green = 0.55, blue = 1, alpha = 0.95 },
         strokeWidth = 1,
+        strokeDashPattern = { 6, 4 },
         coordinates = {
             { x = point.x, y = 0 },
             { x = point.x, y = frame.h },
@@ -316,28 +370,15 @@ local function isHighlighted(cell)
         return true, "selected"
     end
 
-    if selectionStart.kind == "point" and cell.label:sub(1, 1) == selectionStart.label then
-        return true, "selected"
-    end
-
-    if selectionEnd and selectionEnd.kind == "point" and cell.label:sub(1, 1) == selectionEnd.label then
-        return true, "selected"
-    end
-
     return false
 end
 
 local function selectedRect()
     if not selectionStart or not selectionEnd then return nil end
 
-    local startBounds = markerBounds(selectionStart)
-    local endBounds = markerBounds(selectionEnd)
-    local x1 = math.min(startBounds.x1, endBounds.x1)
-    local y1 = math.min(startBounds.y1, endBounds.y1)
-    local x2 = math.max(startBounds.x2, endBounds.x2)
-    local y2 = math.max(startBounds.y2, endBounds.y2)
+    local bounds = selectionRectBounds(selectionStart, selectionEnd)
 
-    return { x = x1, y = y1, w = x2 - x1, h = y2 - y1 }
+    return { x = bounds.x1, y = bounds.y1, w = bounds.x2 - bounds.x1, h = bounds.y2 - bounds.y1 }
 end
 
 local function appendOutsideShade()
@@ -374,12 +415,37 @@ local function appendSelectionPreview()
         action = "stroke",
         strokeColor = { red = 0.2, green = 0.55, blue = 1, alpha = 0.95 },
         strokeWidth = 2,
+        strokeDashPattern = { 8, 5 },
         frame = rect,
     })
 end
 
+local function appendDot(point)
+    if not point then return end
+
+    canvas:appendElements({
+        type = "rectangle",
+        action = "strokeAndFill",
+        strokeColor = { red = 1, green = 1, blue = 1, alpha = 1 },
+        fillColor = { red = 0.2, green = 0.55, blue = 1, alpha = 0.95 },
+        strokeWidth = 1,
+        roundedRectRadii = { xRadius = 5, yRadius = 5 },
+        frame = { x = point.x - 5, y = point.y - 5, w = 10, h = 10 },
+    })
+end
+
+local function appendStartDot()
+    if not selectionStart or selectionEnd then return end
+
+    appendDot(markerAnchor(selectionStart, "start"))
+end
+
+local function appendMotionDot()
+    appendDot(focusedSelectionPoint())
+end
+
 local function appendSubgrid()
-    if not activeTile then return end
+    if not activeTile or not subgridVisible then return end
 
     local cellWidth = activeTile.frame.w / obj.subgridColumns
     local cellHeight = activeTile.frame.h / obj.subgridRows
@@ -429,6 +495,7 @@ local function drawGrid()
     if selectionEnd then
         appendOutsideShade()
         appendSelectionPreview()
+        appendMotionDot()
         return
     end
 
@@ -437,13 +504,10 @@ local function drawGrid()
         local isPrefix = highlightKind == "prefix"
         local cellBackground = {
             type = "rectangle",
-            action = "strokeAndFill",
-            strokeColor = highlighted and { red = 1, green = 1, blue = 1, alpha = 0.9 }
-                or { red = 1, green = 1, blue = 1, alpha = 0.25 },
+            action = "fill",
             fillColor = highlighted and (isPrefix and { red = 1, green = 0.72, blue = 0.18, alpha = 0.35 }
                     or { red = 0.2, green = 0.55, blue = 1, alpha = 0.45 })
                 or { red = 0, green = 0, blue = 0, alpha = 0.32 },
-            strokeWidth = highlighted and 2 or 1,
             frame = cell.frame,
         }
 
@@ -470,16 +534,16 @@ local function drawGrid()
 
     appendSelectionPreview()
     appendCrosshair()
+    appendStartDot()
     appendSubgrid()
 end
 
 local function captureRect(startMarker, endMarker)
-    local startBounds = markerBounds(startMarker)
-    local endBounds = markerBounds(endMarker)
-    local x1 = activeFrame.x + math.min(startBounds.x1, endBounds.x1)
-    local y1 = activeFrame.y + math.min(startBounds.y1, endBounds.y1)
-    local x2 = activeFrame.x + math.max(startBounds.x2, endBounds.x2)
-    local y2 = activeFrame.y + math.max(startBounds.y2, endBounds.y2)
+    local bounds = selectionRectBounds(startMarker, endMarker)
+    local x1 = activeFrame.x + bounds.x1
+    local y1 = activeFrame.y + bounds.y1
+    local x2 = activeFrame.x + bounds.x2
+    local y2 = activeFrame.y + bounds.y2
 
     local rect = string.format("%d,%d,%d,%d", math.floor(x1), math.floor(y1), math.floor(x2 - x1), math.floor(y2 - y1))
     local command
@@ -512,21 +576,32 @@ local function captureRect(startMarker, endMarker)
 end
 
 local function setMarker(marker)
+    local backState = {
+        activeTile = activeTile,
+        subgridVisible = subgridVisible,
+        typed = typed,
+        nudgedPoint = nudgedPoint,
+    }
+
     typed = ""
     activeTile = nil
+    subgridVisible = false
     nudgedPoint = nil
     if not selectionStart then
         selectionStart = marker
+        selectionStartBackState = backState
         drawGrid()
         return
     end
 
     selectionEnd = marker
+    selectionEndBackState = backState
+    selectionCornerFocus = "end"
     drawGrid()
 end
 
 local function nudgeCurrentPoint(dx, dy)
-    local point = activeCrossPoint()
+    local point = selectionEnd and focusedSelectionPoint() or activeCrossPoint()
     if not point then return end
 
     local frame = canvas:frame()
@@ -536,7 +611,11 @@ local function nudgeCurrentPoint(dx, dy)
     }
 
     if selectionEnd then
-        selectionEnd = pointMarker(point, selectionEnd.label)
+        if selectionCornerFocus == "start" then
+            selectionStart = pointMarker(point, selectionStart.label)
+        else
+            selectionEnd = pointMarker(point, selectionEnd.label)
+        end
     elseif selectionStart and not activeTile and #typed == 0 then
         selectionStart = pointMarker(point, selectionStart.label)
     else
@@ -544,6 +623,13 @@ local function nudgeCurrentPoint(dx, dy)
     end
 
     lastCrossPoint = point
+    drawGrid()
+end
+
+local function toggleSelectionCornerFocus()
+    if not selectionEnd then return end
+
+    selectionCornerFocus = selectionCornerFocus == "end" and "start" or "end"
     drawGrid()
 end
 
@@ -569,6 +655,7 @@ local function handleKey(key)
     if not cell then return end
 
     activeTile = cell
+    subgridVisible = true
     typed = ""
     nudgedPoint = nil
     drawGrid()
@@ -597,7 +684,7 @@ local function handleSpace()
 
     if #typed ~= 1 then return end
 
-    local marker = prefixMidpointMarker(typed)
+    local marker = prefixMarker(typed, selectionStart and "end" or "start")
     if not marker then return end
 
     setMarker(marker)
@@ -606,16 +693,36 @@ end
 local function goBack()
     if selectionEnd then
         selectionEnd = nil
-        activeTile = nil
-        typed = ""
-        nudgedPoint = nil
+        if selectionEndBackState then
+            activeTile = selectionEndBackState.activeTile
+            subgridVisible = selectionEndBackState.subgridVisible
+            typed = selectionEndBackState.typed or ""
+            nudgedPoint = selectionEndBackState.nudgedPoint
+        else
+            activeTile = nil
+            subgridVisible = false
+            typed = ""
+            nudgedPoint = nil
+        end
+        selectionEndBackState = nil
+        selectionCornerFocus = "end"
         drawGrid()
         return
     end
 
     if activeTile then
+        if subgridVisible then
+            typed = activeTile.label:sub(1, 1)
+            activeTile = nil
+            subgridVisible = false
+            nudgedPoint = nil
+            drawGrid()
+            return
+        end
+
         typed = activeTile.label:sub(1, 1)
         activeTile = nil
+        subgridVisible = false
         nudgedPoint = nil
         drawGrid()
         return
@@ -629,9 +736,21 @@ local function goBack()
     end
 
     if selectionStart then
+        if selectionStartBackState then
+            activeTile = selectionStartBackState.activeTile
+            subgridVisible = selectionStartBackState.subgridVisible
+            typed = selectionStartBackState.typed or ""
+            nudgedPoint = selectionStartBackState.nudgedPoint
+        else
+            activeTile = nil
+            subgridVisible = false
+            typed = ""
+            nudgedPoint = nil
+            lastCrossPoint = nil
+        end
+
         selectionStart = nil
-        lastCrossPoint = nil
-        nudgedPoint = nil
+        selectionStartBackState = nil
         drawGrid()
     end
 end
@@ -642,6 +761,7 @@ local function bindKeys()
     obj.mode:bind({}, "escape", exitScreenshotTile)
     obj.mode:bind({}, "delete", goBack)
     obj.mode:bind({}, "forwarddelete", goBack)
+    obj.mode:bind({}, "tab", toggleSelectionCornerFocus)
     obj.mode:bind({}, "space", handleSpace)
     obj.mode:bind({}, "return", handleSpace)
     obj.mode:bind({}, "left", function() nudgeCurrentPoint(-1, 0) end, nil, function() nudgeCurrentPoint(-1, 0) end)
