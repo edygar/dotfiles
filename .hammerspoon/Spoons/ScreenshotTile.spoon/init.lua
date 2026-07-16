@@ -19,6 +19,8 @@ local activeScreen = nil
 local activeFrame = nil
 local lastCrossPoint = nil
 local nudgedPoint = nil
+local isNudging = false
+local nudgeTimer = nil
 local previewCanvas = nil
 local previewTimer = nil
 local keysBound = false
@@ -128,6 +130,10 @@ local function exitScreenshotTile()
     end
 
     obj.mode:exit()
+    if nudgeTimer then
+        nudgeTimer:stop()
+        nudgeTimer = nil
+    end
     obj.active = false
     obj.toClipboard = false
     cellsByLabel = {}
@@ -144,6 +150,8 @@ local function exitScreenshotTile()
     activeFrame = nil
     lastCrossPoint = nil
     nudgedPoint = nil
+    isNudging = false
+    nudgeTimer = nil
 end
 
 local function prefixBounds(prefix)
@@ -499,6 +507,13 @@ local function drawGrid()
         return
     end
 
+    if isNudging then
+        appendSelectionPreview()
+        appendCrosshair()
+        appendStartDot()
+        return
+    end
+
     for _, cell in ipairs(orderedCells) do
         local highlighted, highlightKind = isHighlighted(cell)
         local isPrefix = highlightKind == "prefix"
@@ -581,6 +596,7 @@ local function setMarker(marker)
         subgridVisible = subgridVisible,
         typed = typed,
         nudgedPoint = nudgedPoint,
+        isNudging = isNudging,
     }
 
     typed = ""
@@ -605,6 +621,15 @@ local function nudgeCurrentPoint(dx, dy)
     if not point then return end
 
     local frame = canvas:frame()
+    isNudging = true
+    if nudgeTimer then
+        nudgeTimer:stop()
+    end
+    nudgeTimer = hs.timer.doAfter(0.18, function()
+        isNudging = false
+        nudgeTimer = nil
+        drawGrid()
+    end)
     point = {
         x = math.max(0, math.min(frame.w, point.x + dx)),
         y = math.max(0, math.min(frame.h, point.y + dy)),
@@ -646,6 +671,7 @@ local function handleKey(key)
 
     typed = (typed .. key):upper():sub(-2)
     nudgedPoint = nil
+    isNudging = false
     if #typed < 2 then
         drawGrid()
         return
@@ -658,6 +684,7 @@ local function handleKey(key)
     subgridVisible = true
     typed = ""
     nudgedPoint = nil
+    isNudging = false
     drawGrid()
 end
 
@@ -693,16 +720,19 @@ end
 local function goBack()
     if selectionEnd then
         selectionEnd = nil
+        isNudging = false
         if selectionEndBackState then
             activeTile = selectionEndBackState.activeTile
             subgridVisible = selectionEndBackState.subgridVisible
             typed = selectionEndBackState.typed or ""
             nudgedPoint = selectionEndBackState.nudgedPoint
+            isNudging = selectionEndBackState.isNudging == true
         else
             activeTile = nil
             subgridVisible = false
             typed = ""
             nudgedPoint = nil
+            isNudging = false
         end
         selectionEndBackState = nil
         selectionCornerFocus = "end"
@@ -716,6 +746,7 @@ local function goBack()
             activeTile = nil
             subgridVisible = false
             nudgedPoint = nil
+            isNudging = false
             drawGrid()
             return
         end
@@ -724,6 +755,7 @@ local function goBack()
         activeTile = nil
         subgridVisible = false
         nudgedPoint = nil
+        isNudging = false
         drawGrid()
         return
     end
@@ -731,6 +763,7 @@ local function goBack()
     if #typed > 0 then
         typed = typed:sub(1, -2)
         nudgedPoint = nil
+        isNudging = false
         drawGrid()
         return
     end
@@ -741,11 +774,13 @@ local function goBack()
             subgridVisible = selectionStartBackState.subgridVisible
             typed = selectionStartBackState.typed or ""
             nudgedPoint = selectionStartBackState.nudgedPoint
+            isNudging = selectionStartBackState.isNudging == true
         else
             activeTile = nil
             subgridVisible = false
             typed = ""
             nudgedPoint = nil
+            isNudging = false
             lastCrossPoint = nil
         end
 
