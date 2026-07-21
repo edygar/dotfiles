@@ -6,8 +6,7 @@
 # @raycast.description Reload kitty, aerospace, hammerspoon, leader key, mouseless, sketchybar
 # @raycast.icon 🔄
 # @raycast.mode compact
-
-killall -SIGUSR1 kitty 2>/dev/null
+kitty @ load-config
 /opt/homebrew/bin/aerospace reload-config 2>/dev/null
 killall mouseless 2>/dev/null; sleep 0.5; open -a Mouseless 2>/dev/null
 brew services restart felixkratz/formulae/sketchybar 2>/dev/null
