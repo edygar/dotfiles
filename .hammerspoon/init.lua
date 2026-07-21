@@ -39,6 +39,7 @@ if okScreenshotTile and spoon.ScreenshotTile then
   spoon.ScreenshotTile:bindHotkeys({
     save = { { "cmd", "shift" }, "2" },
     clipboard = { { "cmd", "ctrl", "shift" }, "2" },
+    record = { { "cmd", "ctrl", "shift" }, "5" },
   })
 end
 

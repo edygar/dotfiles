@@ -3,6 +3,7 @@ obj.__index = obj
 
 obj.active = false
 obj.toClipboard = false
+obj.recordVideo = false
 
 local canvas = nil
 local cellsByLabel = {}
@@ -24,6 +25,9 @@ local nudgeTimer = nil
 local previewCanvas = nil
 local previewTimer = nil
 local keysBound = false
+local previousSelectionBounds = {}
+local recordingTask = nil
+local recordingStopRequested = false
 
 obj.mode = hs.hotkey.modal.new()
 
@@ -136,6 +140,7 @@ local function exitScreenshotTile()
     end
     obj.active = false
     obj.toClipboard = false
+    obj.recordVideo = false
     cellsByLabel = {}
     orderedCells = {}
     selectionStart = nil
@@ -555,6 +560,9 @@ end
 
 local function captureRect(startMarker, endMarker)
     local bounds = selectionRectBounds(startMarker, endMarker)
+    local recordingVideo = obj.recordVideo
+    local selectionType = recordingVideo and "recording" or "screenshot"
+    previousSelectionBounds[selectionType] = bounds
     local x1 = activeFrame.x + bounds.x1
     local y1 = activeFrame.y + bounds.y1
     local x2 = activeFrame.x + bounds.x2
@@ -565,7 +573,10 @@ local function captureRect(startMarker, endMarker)
     local savedPath = nil
     local previewScreen = activeScreen
 
-    if obj.toClipboard then
+    if recordingVideo then
+        local filename = os.date("Screen Recording %Y-%m-%d at %H.%M.%S.mov")
+        savedPath = os.getenv("HOME") .. "/Desktop/" .. filename
+    elseif obj.toClipboard then
         command = "/usr/sbin/screencapture -x -c -R" .. rect
     else
         local filename = os.date("Screenshot %Y-%m-%d at %H.%M.%S.png")
@@ -577,6 +588,23 @@ local function captureRect(startMarker, endMarker)
     exitScreenshotTile()
 
     hs.timer.doAfter(0.08, function()
+        if recordingVideo then
+            recordingTask = hs.task.new("/usr/sbin/screencapture", function(exitCode)
+                local stoppedByUser = recordingStopRequested
+                recordingTask = nil
+                recordingStopRequested = false
+                if exitCode ~= 0 and not stoppedByUser then
+                    hs.notify.show("ScreenshotTile", "Screen recording failed", rect)
+                end
+            end, { "-v", "-u", "-R" .. rect, savedPath })
+
+            if not recordingTask or not recordingTask:start() then
+                recordingTask = nil
+                hs.notify.show("ScreenshotTile", "Screen recording failed to start", rect)
+            end
+            return
+        end
+
         local _, ok = hs.execute(command, true)
         if ok then
             playScreenshotSound()
@@ -588,6 +616,37 @@ local function captureRect(startMarker, endMarker)
             hs.notify.show("ScreenshotTile", "Screenshot failed", rect)
         end
     end)
+end
+
+local function restorePreviousSelection()
+    if not canvas then return end
+
+    local selectionType = obj.recordVideo and "recording" or "screenshot"
+    local bounds = previousSelectionBounds[selectionType]
+    if not bounds then return end
+
+    local frame = canvas:frame()
+    selectionStart = {
+        kind = "point",
+        label = "previous",
+        x = math.max(0, math.min(frame.w, bounds.x1)),
+        y = math.max(0, math.min(frame.h, bounds.y1)),
+    }
+    selectionEnd = {
+        kind = "point",
+        label = "previous",
+        x = math.max(0, math.min(frame.w, bounds.x2)),
+        y = math.max(0, math.min(frame.h, bounds.y2)),
+    }
+    selectionCornerFocus = "end"
+    selectionStartBackState = nil
+    selectionEndBackState = nil
+    activeTile = nil
+    subgridVisible = false
+    typed = ""
+    nudgedPoint = nil
+    isNudging = false
+    drawGrid()
 end
 
 local function setMarker(marker)
@@ -659,7 +718,20 @@ local function toggleSelectionCornerFocus()
 end
 
 local function handleKey(key)
-    if selectionEnd then return end
+    if selectionEnd then
+        if key == "O" then
+            toggleSelectionCornerFocus()
+        elseif key == "H" then
+            nudgeCurrentPoint(-1, 0)
+        elseif key == "J" then
+            nudgeCurrentPoint(0, 1)
+        elseif key == "K" then
+            nudgeCurrentPoint(0, -1)
+        elseif key == "L" then
+            nudgeCurrentPoint(1, 0)
+        end
+        return
+    end
 
     if activeTile then
         local marker = subgridMarker(activeTile, key)
@@ -799,6 +871,7 @@ local function bindKeys()
     obj.mode:bind({}, "tab", toggleSelectionCornerFocus)
     obj.mode:bind({}, "space", handleSpace)
     obj.mode:bind({}, "return", handleSpace)
+    obj.mode:bind({ "cmd" }, "r", restorePreviousSelection)
     obj.mode:bind({}, "left", function() nudgeCurrentPoint(-1, 0) end, nil, function() nudgeCurrentPoint(-1, 0) end)
     obj.mode:bind({}, "right", function() nudgeCurrentPoint(1, 0) end, nil, function() nudgeCurrentPoint(1, 0) end)
     obj.mode:bind({}, "up", function() nudgeCurrentPoint(0, -1) end, nil, function() nudgeCurrentPoint(0, -1) end)
@@ -807,10 +880,18 @@ local function bindKeys()
     obj.mode:bind({ "shift" }, "right", function() nudgeCurrentPoint(10, 0) end, nil, function() nudgeCurrentPoint(10, 0) end)
     obj.mode:bind({ "shift" }, "up", function() nudgeCurrentPoint(0, -10) end, nil, function() nudgeCurrentPoint(0, -10) end)
     obj.mode:bind({ "shift" }, "down", function() nudgeCurrentPoint(0, 10) end, nil, function() nudgeCurrentPoint(0, 10) end)
+    obj.mode:bind({ "shift" }, "h", function() nudgeCurrentPoint(-10, 0) end, nil, function() nudgeCurrentPoint(-10, 0) end)
+    obj.mode:bind({ "shift" }, "j", function() nudgeCurrentPoint(0, 10) end, nil, function() nudgeCurrentPoint(0, 10) end)
+    obj.mode:bind({ "shift" }, "k", function() nudgeCurrentPoint(0, -10) end, nil, function() nudgeCurrentPoint(0, -10) end)
+    obj.mode:bind({ "shift" }, "l", function() nudgeCurrentPoint(10, 0) end, nil, function() nudgeCurrentPoint(10, 0) end)
 
     for _, key in ipairs(obj.gridKeys) do
         local bindKey = key:match("%a") and key:lower() or key
-        obj.mode:bind({}, bindKey, function() handleKey(key) end)
+        local repeatFn = nil
+        if key == "H" or key == "J" or key == "K" or key == "L" then
+            repeatFn = function() handleKey(key) end
+        end
+        obj.mode:bind({}, bindKey, function() handleKey(key) end, nil, repeatFn)
     end
 
     keysBound = true
@@ -820,19 +901,36 @@ function obj:bindHotkeys(mapping)
     local spec = {
         save = function() self:start(false) end,
         clipboard = function() self:start(true) end,
+        record = function() self:toggleRecording() end,
     }
 
     hs.spoons.bindHotkeysToSpec(spec, mapping)
 end
 
-function obj:start(toClipboard)
+function obj:toggleRecording()
+    if recordingTask then
+        recordingStopRequested = true
+        recordingTask:interrupt()
+        return
+    end
+
+    self:start(false, true)
+end
+
+function obj:start(toClipboard, recordVideo)
     if obj.active then
         exitScreenshotTile()
         return
     end
 
+    if recordVideo and recordingTask then
+        hs.notify.show("ScreenshotTile", "A screen recording is already in progress", "")
+        return
+    end
+
     obj.active = true
     obj.toClipboard = toClipboard == true
+    obj.recordVideo = recordVideo == true
     typed = ""
 
     activeScreen = hs.mouse.getCurrentScreen() or hs.screen.mainScreen()
