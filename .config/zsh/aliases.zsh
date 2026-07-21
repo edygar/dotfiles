@@ -15,7 +15,8 @@ alias -g ....='../../..'
 alias -g .....='../../../..'
 
 # zoxide (smart cd)
-eval "$(zoxide init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
+alias z=cd
 
 # ls / eza
 alias ls="eza --icons"
