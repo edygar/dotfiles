@@ -88,7 +88,7 @@
           "key": "P",
           "label": "Others' pull requests",
           "type": "url",
-          "value": "https://team-revolut.slack.com/archives/C06GD40TW3F"
+          "value": "slack://channel?team=TDQ7MSSSU&id=C06GD40TW3F&host=slack.com"
         },
         {
           "iconPath": "/Users/Shared/leader-key-icons/Jira.app/Contents/Resources/AppIcon.icns",
@@ -118,6 +118,13 @@
           "label": "Files",
           "type": "url",
           "value": "raycast-x://extensions/raycast/file-search/search-files"
+        },
+        {
+          "iconPath": "bell.fill",
+          "key": "n",
+          "label": "Notifications",
+          "type": "url",
+          "value": "raycast-x://extensions/edygar/notification-history/search-notifications"
         },
         {
           "iconPath": "/Applications/Slack.app",
