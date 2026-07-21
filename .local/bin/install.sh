@@ -51,6 +51,17 @@ else
   git --git-dir="$REPO_DIR" --work-tree="$HOME" pull --rebase 2>/dev/null || true
 fi
 
+# ~/.zshenv stays machine-local and only bootstraps the tracked environment.
+ZSHENV_FILE="$HOME/.zshenv"
+ZSHENV_BOOTSTRAP='source "$HOME/.config/zsh/env.zsh"'
+if [[ -L "$ZSHENV_FILE" && "$(readlink "$ZSHENV_FILE")" == *"/dotfiles/.zshenv" ]]; then
+  rm "$ZSHENV_FILE"
+fi
+if [[ ! -e "$ZSHENV_FILE" ]]; then
+  print -r -- "$ZSHENV_BOOTSTRAP" > "$ZSHENV_FILE"
+  echo "  Created local ~/.zshenv bootstrap."
+fi
+
 # ─── 2. Homebrew ──────────────────────────────────────────────────────────────
 
 if ! command -v brew >/dev/null 2>&1; then

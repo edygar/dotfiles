@@ -77,9 +77,11 @@ The install script handles:
 ### Zsh (`~/.config/zsh/`)
 
 - **`.zshrc`**: Main config — mise, starship, zsh-autosuggestions, .nvmrc auto-switching, gcloud SDK
+- **`env.zsh`**: Portable XDG paths, Zsh directory, and executable path
 - **`aliases.zsh`**: Git aliases, navigation, ls/eza with icons, zoxide, functions
 - **`key-bindings.zsh`**: Vi mode (`bindkey -v`), kitty window close, autosuggestions
-- **`.zshenv`**: XDG paths, mise shims first in PATH
+
+`~/.zshenv` is machine-local and only sources `~/.config/zsh/env.zsh`. Machine-local environment values and credentials belong in `~/.config/zsh/local.env.zsh`, which is ignored by Git and should use mode `600`.
 
 ### Key Features
 

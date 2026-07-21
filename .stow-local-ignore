@@ -4,6 +4,8 @@
 \.githooks
 README\.md
 \.stow-local-ignore
+\.zshenv
+\.config/zsh/local\.env\.zsh
 
 # Raycast extensions directory is managed by Raycast
 \.config/raycast-x/extensions
